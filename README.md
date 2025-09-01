@@ -11,6 +11,7 @@ Food Review App is an Android-based social application for food reviews. Users c
 - **Backend Services**: Firebase (Authentication, Firestore, Storage)  
 - **Map Services**: Google Maps API  
 - **Location Services**: Google Play Services Location  
+- **Real-time Analytics**: Firebase Analytics for crowd density tracking  
 - **Minimum SDK Version**: API 24 (Android 7.0)  
 - **Target SDK Version**: API 34 (Android 14)  
 
@@ -38,6 +39,18 @@ Food Review App is an Android-based social application for food reviews. Users c
 - **Location Permissions**: Smart management of location access  
 - **Restaurant Information**: Tap a restaurant marker to view related reviews  
 - **Review Filters**: Filter reviews by "before dining" or "after dining"  
+- **Crowd Density System**: Real-time restaurant crowding status display
+  - **Crowding Levels**: Three-tier system with color-coded indicators
+    - 🟢 Not Crowded (Green): Comfortable dining experience
+    - 🟡 Moderately Crowded (Yellow): Some waiting time expected
+    - 🔴 Very Crowded (Red): Long waiting time, consider alternatives
+  - **User Feedback**: Users can submit current crowding status
+  - **Real-time Updates**: System processes feedback within 1-hour window
+  - **Weighted Algorithm**: Time-based weighting system for accurate status
+    - Recent 10 minutes: Weight 1.0 (highest priority)
+    - Recent 30 minutes: Weight 0.7 (medium priority)
+    - Recent 1 hour: Weight 0.3 (lower priority)
+  - **Dynamic Status**: Crowding level automatically updates based on user submissions
 
 ### Profile
 
@@ -89,6 +102,8 @@ The app requires the following permissions:
 - **Smart Location Services**: Precise location with Google Maps  
 - **Rich Multimedia Support**: Image upload and voice-to-text input  
 - **User Experience**: Smooth navigation and interactive flow  
+- **Crowd Intelligence**: Community-driven restaurant crowding insights  
+- **Smart Analytics**: Time-weighted algorithm for accurate status updates  
 
 ## Development Status
 
@@ -101,3 +116,5 @@ The project is currently in the development phase, with the following components
 - Post system (in development)  
 - Review functionality (in development)  
 - Search functionality (in development)  
+- Crowd density system (planned)  
+- Real-time analytics engine (planned)
