@@ -56,7 +56,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         bottomNav.setSelectedItemId(R.id.nav_home);
+        
+        // 自动上传功能已删除，现在只从Firebase加载数据
     }
+    
+    // 上传功能已删除，现在只从Firebase加载数据
 
     private void switchFragment(Fragment fragment) {
         FragmentManager fm = getSupportFragmentManager();
