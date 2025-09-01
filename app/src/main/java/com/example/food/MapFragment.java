@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,18 +32,26 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.example.food.model.Restaurant;
+import com.example.food.utils.FirebaseDataUploader;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
+    private static final String TAG = "MapFragment";
     private GoogleMap googleMap;
     private FusedLocationProviderClient fusedLocationClient;
     private PlacesClient placesClient;
+    private FirebaseFirestore db;
 
     // 高分餐厅数据
     private List<Restaurant> highRatedRestaurants;
@@ -74,6 +83,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             Places.initialize(requireContext().getApplicationContext(), getString(R.string.google_maps_key));
         }
         placesClient = Places.createClient(requireContext());
+        
+        // 初始化Firebase Firestore
+        db = FirebaseFirestore.getInstance();
 
         FragmentManager fm = getChildFragmentManager();
         SupportMapFragment mapFragment = (SupportMapFragment) fm.findFragmentByTag("map");
@@ -97,8 +109,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(@NonNull Marker marker) {
-                // 显示餐厅名称
-                Toast.makeText(requireContext(), marker.getTitle(), Toast.LENGTH_SHORT).show();
+                // 显示餐厅名称和地址
+                Restaurant restaurant = (Restaurant) marker.getTag();
+                if (restaurant != null) {
+                    String info = restaurant.getName() + "\n地址: " + restaurant.getAddress();
+                    Toast.makeText(requireContext(), info, Toast.LENGTH_LONG).show();
+                }
                 return false;
             }
         });
@@ -112,28 +128,103 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             if (googleMap != null) {
                 try { googleMap.setMyLocationEnabled(true); } catch (SecurityException ignored) {}
             }
-            // 直接移动到墨尔本市中心
-            moveToMelbourne();
-            // 不再添加餐厅标记，只显示地图
         } else {
             permissionLauncher.launch(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION});
         }
+        
+        // 无论是否有位置权限，都显示地图和餐厅标记
+        moveToMelbourne();
+        addRestaurantMarkers();
+    }
+    
+    // 公共方法：强制上传数据到Firebase
+    public void forceUploadDataToFirebase() {
+        Log.d(TAG, "强制上传数据到Firebase");
+        Toast.makeText(requireContext(), "开始强制上传餐厅数据...", Toast.LENGTH_SHORT).show();
+        uploadDataToFirebase();
     }
 
     private void moveToMelbourne() {
         // 墨尔本市中心坐标（更精确的坐标）
         LatLng melbourne = new LatLng(-37.810272, 144.962646);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(melbourne, 11f));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(melbourne, 10f));
     }
     
-    // 餐厅数据类 - 保留但不使用
-    private static class Restaurant {
-        String name;
-        LatLng location;
+    // 从Firebase加载餐厅数据并添加标记
+    private void addRestaurantMarkers() {
+        if (googleMap == null) {
+            return;
+        }
         
-        Restaurant(String name, LatLng location) {
-            this.name = name;
-            this.location = location;
+        // 显示加载提示
+        Toast.makeText(requireContext(), "正在从Firebase加载餐厅数据...", Toast.LENGTH_SHORT).show();
+        
+        Log.d(TAG, "开始从Firebase加载餐厅数据...");
+        
+        db.collection("restaurants")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    Log.d(TAG, "Firebase连接成功，文档数量: " + queryDocumentSnapshots.size());
+                    
+                    if (queryDocumentSnapshots.isEmpty()) {
+                        // Firebase中没有数据
+                        Log.d(TAG, "Firebase中无餐厅数据");
+                        Toast.makeText(requireContext(), "Firebase中暂无餐厅数据，请等待数据上传完成", Toast.LENGTH_LONG).show();
+                    } else {
+                        // Firebase中有数据，加载并显示
+                        List<Restaurant> restaurants = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            try {
+                                Restaurant restaurant = document.toObject(Restaurant.class);
+                                restaurant.setId(document.getId());
+                                restaurants.add(restaurant);
+                                
+                                // 添加地图标记
+                                LatLng position = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
+                                MarkerOptions markerOptions = new MarkerOptions()
+                                        .position(position)
+                                        .title(restaurant.getName())
+                                        .snippet(restaurant.getAddress())
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                                
+                                Marker marker = googleMap.addMarker(markerOptions);
+                                if (marker != null) {
+                                    marker.setTag(restaurant);
+                                }
+                            } catch (Exception e) {
+                                Log.e(TAG, "解析餐厅数据失败: " + document.getId(), e);
+                            }
+                        }
+                        
+                        Log.d(TAG, "成功加载 " + restaurants.size() + " 家餐厅");
+                        Toast.makeText(requireContext(), "已从Firebase加载 " + restaurants.size() + " 家好评餐厅", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Firebase加载失败", e);
+                    Toast.makeText(requireContext(), "Firebase连接失败: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+    }
+    
+    // 上传数据到Firebase
+    private void uploadDataToFirebase() {
+        Log.d(TAG, "开始上传餐厅数据到Firebase...");
+        
+        try {
+            FirebaseDataUploader uploader = new FirebaseDataUploader(requireContext());
+            uploader.uploadAllRestaurantData();
+            
+            // 上传完成后重新加载数据
+            new android.os.Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "重新尝试从Firebase加载数据...");
+                    addRestaurantMarkers();
+                }
+            }, 5000); // 等待5秒让上传完成
+        } catch (Exception e) {
+            Log.e(TAG, "上传数据失败", e);
+            Toast.makeText(requireContext(), "数据上传失败: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 }
