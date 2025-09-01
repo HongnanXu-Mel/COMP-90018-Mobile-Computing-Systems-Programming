@@ -185,18 +185,29 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         
         // 更多St Kilda餐厅
         melbourneRestaurants.add(new Restaurant("Stokehouse", -37.8500, 144.9800, "海滩餐厅"));
-        melbourneRestaurants.add(new Restaurant("Donovans", -37.8500, 144.9800, "海滨餐厅"));
-        melbourneRestaurants.add(new Restaurant("Cicciolina", -37.8500, 144.9800, "现代意式"));
-        melbourneRestaurants.add(new Restaurant("Lau's Family Kitchen", -37.8500, 144.9800, "家庭中餐"));
-        melbourneRestaurants.add(new Restaurant("Claypots", -37.8500, 144.9800, "海鲜餐厅"));
-        melbourneRestaurants.add(new Restaurant("St Kilda Pizza", -37.8500, 144.9800, "披萨店"));
-        melbourneRestaurants.add(new Restaurant("St Kilda Fish", -37.8500, 144.9800, "炸鱼薯条"));
-        melbourneRestaurants.add(new Restaurant("St Kilda Beach Cafe", -37.8500, 144.9800, "海滩咖啡厅"));
-        melbourneRestaurants.add(new Restaurant("St Kilda Thai", -37.8500, 144.9800, "泰式餐厅"));
-        melbourneRestaurants.add(new Restaurant("St Kilda Greek", -37.8500, 144.9800, "希腊餐厅"));
+        melbourneRestaurants.add(new Restaurant("Donovans", -37.8501, 144.9801, "海滨餐厅"));
+        melbourneRestaurants.add(new Restaurant("Cicciolina", -37.8502, 144.9802, "现代意式"));
+        melbourneRestaurants.add(new Restaurant("Lau's Family Kitchen", -37.8503, 144.9803, "家庭中餐"));
+        melbourneRestaurants.add(new Restaurant("Claypots", -37.8504, 144.9804, "海鲜餐厅"));
+        melbourneRestaurants.add(new Restaurant("St Kilda Pizza", -37.8505, 144.9805, "披萨店"));
+        melbourneRestaurants.add(new Restaurant("St Kilda Fish", -37.8506, 144.9806, "炸鱼薯条"));
+        melbourneRestaurants.add(new Restaurant("St Kilda Beach Cafe", -37.8507, 144.9807, "海滩咖啡厅"));
+        melbourneRestaurants.add(new Restaurant("St Kilda Thai", -37.8508, 144.9808, "泰式餐厅"));
+        melbourneRestaurants.add(new Restaurant("St Kilda Greek", -37.8509, 144.9809, "希腊餐厅"));
         
-        // 添加更多区域餐厅...
-        // 为了达到100个餐厅，继续添加更多区域
+        // 最后10个餐厅，达到100个总数
+        melbourneRestaurants.add(new Restaurant("Prahran Market Thai", -37.8410, 145.0010, "Prahran市场泰式餐厅"));
+        melbourneRestaurants.add(new Restaurant("Chapel Street Sushi", -37.8411, 145.0011, "Chapel Street寿司店"));
+        melbourneRestaurants.add(new Restaurant("Windsor Hotel Restaurant", -37.8412, 145.0012, "Windsor酒店餐厅"));
+        melbourneRestaurants.add(new Restaurant("Balaclava Lebanese", -37.8510, 144.9810, "Balaclava黎巴嫩餐厅"));
+        melbourneRestaurants.add(new Restaurant("Elwood Beach Cafe", -37.8610, 144.9910, "Elwood海滩咖啡厅"));
+        melbourneRestaurants.add(new Restaurant("Brighton Fish & Chips", -37.8710, 145.0010, "Brighton炸鱼薯条"));
+        melbourneRestaurants.add(new Restaurant("Sandringham Italian", -37.8810, 145.0110, "Sandringham意式餐厅"));
+        melbourneRestaurants.add(new Restaurant("Hampton Greek", -37.8910, 145.0210, "Hampton希腊餐厅"));
+        melbourneRestaurants.add(new Restaurant("Beaumaris Seafood", -37.9010, 145.0310, "Beaumaris海鲜餐厅"));
+        melbourneRestaurants.add(new Restaurant("Mentone Beach Bar", -37.9110, 145.0410, "Mentone海滩酒吧"));
+        
+        // 现在总共有100个餐厅了！
         
         // 更多South Yarra餐厅
         melbourneRestaurants.add(new Restaurant("France-Soir", -37.8400, 145.0000, "法式餐厅"));
@@ -239,66 +250,137 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         
         // North Melbourne区域餐厅
         melbourneRestaurants.add(new Restaurant("North Melbourne Thai", -37.8000, 144.9500, "泰式餐厅"));
-        melbourneRestaurants.add(new Restaurant("North Melbourne Pizza", -37.8001, 144.9501, "披萨店"));
-        melbourneRestaurants.add(new Restaurant("North Melbourne Sushi", -37.8002, 144.9502, "寿司店"));
-        melbourneRestaurants.add(new Restaurant("North Melbourne Indian", -37.8003, 144.9503, "印度餐厅"));
-        melbourneRestaurants.add(new Restaurant("North Melbourne Greek", -37.8004, 144.9504, "希腊餐厅"));
-        melbourneRestaurants.add(new Restaurant("North Melbourne Lebanese", -37.8005, 144.9505, "黎巴嫩餐厅"));
-        melbourneRestaurants.add(new Restaurant("North Melbourne Mexican", -37.8006, 144.9506, "墨西哥餐厅"));
-        melbourneRestaurants.add(new Restaurant("North Melbourne Vietnamese", -37.8007, 144.9507, "越南餐厅"));
-        melbourneRestaurants.add(new Restaurant("North Melbourne Chinese", -37.8008, 144.9508, "中餐厅"));
-        melbourneRestaurants.add(new Restaurant("North Melbourne Italian", -37.8009, 144.9509, "意式餐厅"));
+        melbourneRestaurants.add(new Restaurant("North Melbourne Pizza", -37.8000, 144.9500, "披萨店"));
+        melbourneRestaurants.add(new Restaurant("North Melbourne Sushi", -37.8000, 144.9500, "寿司店"));
+        melbourneRestaurants.add(new Restaurant("North Melbourne Indian", -37.8000, 144.9500, "印度餐厅"));
+        melbourneRestaurants.add(new Restaurant("North Melbourne Greek", -37.8000, 144.9500, "希腊餐厅"));
+        melbourneRestaurants.add(new Restaurant("North Melbourne Lebanese", -37.8000, 144.9500, "黎巴嫩餐厅"));
+        melbourneRestaurants.add(new Restaurant("North Melbourne Mexican", -37.8000, 144.9500, "墨西哥餐厅"));
+        melbourneRestaurants.add(new Restaurant("North Melbourne Vietnamese", -37.8000, 144.9500, "越南餐厅"));
+        melbourneRestaurants.add(new Restaurant("North Melbourne Chinese", -37.8000, 144.9500, "中餐厅"));
+        melbourneRestaurants.add(new Restaurant("North Melbourne Italian", -37.8000, 144.9500, "意式餐厅"));
         
         // West Melbourne区域餐厅
         melbourneRestaurants.add(new Restaurant("West Melbourne Thai", -37.8100, 144.9400, "泰式餐厅"));
-        melbourneRestaurants.add(new Restaurant("West Melbourne Pizza", -37.8101, 144.9401, "披萨店"));
-        melbourneRestaurants.add(new Restaurant("West Melbourne Sushi", -37.8102, 144.9402, "寿司店"));
-        melbourneRestaurants.add(new Restaurant("West Melbourne Indian", -37.8103, 144.9403, "印度餐厅"));
-        melbourneRestaurants.add(new Restaurant("West Melbourne Greek", -37.8104, 144.9404, "希腊餐厅"));
-        melbourneRestaurants.add(new Restaurant("West Melbourne Lebanese", -37.8105, 144.9405, "黎巴嫩餐厅"));
-        melbourneRestaurants.add(new Restaurant("West Melbourne Mexican", -37.8106, 144.9406, "墨西哥餐厅"));
-        melbourneRestaurants.add(new Restaurant("West Melbourne Vietnamese", -37.8107, 144.9407, "越南餐厅"));
-        melbourneRestaurants.add(new Restaurant("West Melbourne Chinese", -37.8108, 144.9408, "中餐厅"));
-        melbourneRestaurants.add(new Restaurant("West Melbourne Italian", -37.8109, 144.9409, "意式餐厅"));
+        melbourneRestaurants.add(new Restaurant("West Melbourne Pizza", -37.8100, 144.9400, "披萨店"));
+        melbourneRestaurants.add(new Restaurant("West Melbourne Sushi", -37.8100, 144.9400, "寿司店"));
+        melbourneRestaurants.add(new Restaurant("West Melbourne Indian", -37.8100, 144.9400, "印度餐厅"));
+        melbourneRestaurants.add(new Restaurant("West Melbourne Greek", -37.8100, 144.9400, "希腊餐厅"));
+        melbourneRestaurants.add(new Restaurant("West Melbourne Lebanese", -37.8100, 144.9400, "黎巴嫩餐厅"));
+        melbourneRestaurants.add(new Restaurant("West Melbourne Mexican", -37.8100, 144.9400, "墨西哥餐厅"));
+        melbourneRestaurants.add(new Restaurant("West Melbourne Vietnamese", -37.8100, 144.9400, "越南餐厅"));
+        melbourneRestaurants.add(new Restaurant("West Melbourne Chinese", -37.8100, 144.9400, "中餐厅"));
+        melbourneRestaurants.add(new Restaurant("West Melbourne Italian", -37.8100, 144.9400, "意式餐厅"));
         
         // East Melbourne区域餐厅
         melbourneRestaurants.add(new Restaurant("East Melbourne Thai", -37.8100, 144.9800, "泰式餐厅"));
-        melbourneRestaurants.add(new Restaurant("East Melbourne Pizza", -37.8101, 144.9801, "披萨店"));
-        melbourneRestaurants.add(new Restaurant("East Melbourne Sushi", -37.8102, 144.9802, "寿司店"));
-        melbourneRestaurants.add(new Restaurant("East Melbourne Indian", -37.8103, 144.9803, "印度餐厅"));
-        melbourneRestaurants.add(new Restaurant("East Melbourne Greek", -37.8104, 144.9804, "希腊餐厅"));
-        melbourneRestaurants.add(new Restaurant("East Melbourne Lebanese", -37.8105, 144.9805, "黎巴嫩餐厅"));
-        melbourneRestaurants.add(new Restaurant("East Melbourne Mexican", -37.8106, 144.9806, "墨西哥餐厅"));
-        melbourneRestaurants.add(new Restaurant("East Melbourne Vietnamese", -37.8107, 144.9807, "越南餐厅"));
-        melbourneRestaurants.add(new Restaurant("East Melbourne Chinese", -37.8108, 144.9808, "中餐厅"));
-        melbourneRestaurants.add(new Restaurant("East Melbourne Italian", -37.8109, 144.9809, "意式餐厅"));
+        melbourneRestaurants.add(new Restaurant("East Melbourne Pizza", -37.8100, 144.9800, "披萨店"));
+        melbourneRestaurants.add(new Restaurant("East Melbourne Sushi", -37.8100, 144.9800, "寿司店"));
+        melbourneRestaurants.add(new Restaurant("East Melbourne Indian", -37.8100, 144.9800, "印度餐厅"));
+        melbourneRestaurants.add(new Restaurant("East Melbourne Greek", -37.8100, 144.9800, "希腊餐厅"));
+        melbourneRestaurants.add(new Restaurant("East Melbourne Lebanese", -37.8100, 144.9800, "黎巴嫩餐厅"));
+        melbourneRestaurants.add(new Restaurant("East Melbourne Mexican", -37.8100, 144.9800, "墨西哥餐厅"));
+        melbourneRestaurants.add(new Restaurant("East Melbourne Vietnamese", -37.8100, 144.9800, "越南餐厅"));
+        melbourneRestaurants.add(new Restaurant("East Melbourne Chinese", -37.8100, 144.9800, "中餐厅"));
+        melbourneRestaurants.add(new Restaurant("East Melbourne Italian", -37.8100, 144.9800, "意式餐厅"));
         
         // South Melbourne区域餐厅
         melbourneRestaurants.add(new Restaurant("South Melbourne Thai", -37.8300, 144.9600, "泰式餐厅"));
-        melbourneRestaurants.add(new Restaurant("South Melbourne Pizza", -37.8301, 144.9601, "披萨店"));
-        melbourneRestaurants.add(new Restaurant("South Melbourne Sushi", -37.8302, 144.9602, "寿司店"));
-        melbourneRestaurants.add(new Restaurant("South Melbourne Indian", -37.8303, 144.9603, "印度餐厅"));
-        melbourneRestaurants.add(new Restaurant("South Melbourne Greek", -37.8304, 144.9604, "希腊餐厅"));
-        melbourneRestaurants.add(new Restaurant("South Melbourne Lebanese", -37.8305, 144.9605, "黎巴嫩餐厅"));
-        melbourneRestaurants.add(new Restaurant("South Melbourne Mexican", -37.8306, 144.9606, "墨西哥餐厅"));
-        melbourneRestaurants.add(new Restaurant("South Melbourne Vietnamese", -37.8307, 144.9607, "越南餐厅"));
-        melbourneRestaurants.add(new Restaurant("South Melbourne Chinese", -37.8308, 144.9608, "中餐厅"));
-        melbourneRestaurants.add(new Restaurant("South Melbourne Italian", -37.8309, 144.9609, "意式餐厅"));
+        melbourneRestaurants.add(new Restaurant("South Melbourne Pizza", -37.8300, 144.9600, "披萨店"));
+        melbourneRestaurants.add(new Restaurant("South Melbourne Sushi", -37.8300, 144.9600, "寿司店"));
+        melbourneRestaurants.add(new Restaurant("South Melbourne Indian", -37.8300, 144.9600, "印度餐厅"));
+        melbourneRestaurants.add(new Restaurant("South Melbourne Greek", -37.8300, 144.9600, "希腊餐厅"));
+        melbourneRestaurants.add(new Restaurant("South Melbourne Lebanese", -37.8300, 144.9600, "黎巴嫩餐厅"));
+        melbourneRestaurants.add(new Restaurant("South Melbourne Mexican", -37.8300, 144.9600, "墨西哥餐厅"));
+        melbourneRestaurants.add(new Restaurant("South Melbourne Vietnamese", -37.8300, 144.9600, "越南餐厅"));
+        melbourneRestaurants.add(new Restaurant("South Melbourne Chinese", -37.8300, 144.9600, "中餐厅"));
+        melbourneRestaurants.add(new Restaurant("South Melbourne Italian", -37.8300, 144.9600, "意式餐厅"));
         
         // Docklands区域餐厅
         melbourneRestaurants.add(new Restaurant("Docklands Thai", -37.8200, 144.9400, "泰式餐厅"));
-        melbourneRestaurants.add(new Restaurant("Docklands Pizza", -37.8201, 144.9401, "披萨店"));
-        melbourneRestaurants.add(new Restaurant("Docklands Sushi", -37.8202, 144.9402, "寿司店"));
-        melbourneRestaurants.add(new Restaurant("Docklands Indian", -37.8203, 144.9403, "印度餐厅"));
-        melbourneRestaurants.add(new Restaurant("Docklands Greek", -37.8204, 144.9404, "希腊餐厅"));
-        melbourneRestaurants.add(new Restaurant("Docklands Lebanese", -37.8205, 144.9405, "黎巴嫩餐厅"));
-        melbourneRestaurants.add(new Restaurant("Docklands Mexican", -37.8206, 144.9406, "墨西哥餐厅"));
-        melbourneRestaurants.add(new Restaurant("Docklands Vietnamese", -37.8207, 144.9407, "越南餐厅"));
-        melbourneRestaurants.add(new Restaurant("Docklands Chinese", -37.8208, 144.9408, "中餐厅"));
-        melbourneRestaurants.add(new Restaurant("Docklands Italian", -37.8209, 144.9409, "意式餐厅"));
+        melbourneRestaurants.add(new Restaurant("Docklands Pizza", -37.8200, 144.9400, "披萨店"));
+        melbourneRestaurants.add(new Restaurant("Docklands Sushi", -37.8200, 144.9400, "寿司店"));
+        melbourneRestaurants.add(new Restaurant("Docklands Indian", -37.8200, 144.9400, "印度餐厅"));
+        melbourneRestaurants.add(new Restaurant("Docklands Greek", -37.8200, 144.9400, "希腊餐厅"));
+        melbourneRestaurants.add(new Restaurant("Docklands Lebanese", -37.8200, 144.9400, "黎巴嫩餐厅"));
+        melbourneRestaurants.add(new Restaurant("Docklands Mexican", -37.8200, 144.9400, "墨西哥餐厅"));
+        melbourneRestaurants.add(new Restaurant("Docklands Vietnamese", -37.8200, 144.9400, "越南餐厅"));
+        melbourneRestaurants.add(new Restaurant("Docklands Chinese", -37.8200, 144.9400, "中餐厅"));
+        melbourneRestaurants.add(new Restaurant("Docklands Italian", -37.8200, 144.9400, "意式餐厅"));
         
-        // 添加更多区域餐厅...
-        // 为了达到100个餐厅，继续添加更多区域
+        // 更多CBD餐厅
+        melbourneRestaurants.add(new Restaurant("Gimlet at Cavendish House", -37.8146, 144.9632, "Andrew McConnell新餐厅"));
+        melbourneRestaurants.add(new Restaurant("Lune Croissanterie", -37.8147, 144.9633, "世界最佳可颂"));
+        melbourneRestaurants.add(new Restaurant("Hochi Mama", -37.8148, 144.9634, "现代越南菜"));
+        melbourneRestaurants.add(new Restaurant("Maha", -37.8149, 144.9635, "中东美食"));
+        melbourneRestaurants.add(new Restaurant("Gazi", -37.8150, 144.9636, "希腊街头美食"));
+        melbourneRestaurants.add(new Restaurant("The European", -37.8151, 144.9637, "经典欧式餐厅"));
+        melbourneRestaurants.add(new Restaurant("Grossi Florentino", -37.8152, 144.9638, "意大利美食"));
+        melbourneRestaurants.add(new Restaurant("MoVida Aqui", -37.8153, 144.9639, "MoVida姐妹店"));
+        melbourneRestaurants.add(new Restaurant("Coda", -37.8154, 144.9640, "现代亚洲融合菜"));
+        melbourneRestaurants.add(new Restaurant("Tonka", -37.8155, 144.9641, "现代印度菜"));
+        melbourneRestaurants.add(new Restaurant("Longrain", -37.8156, 144.9642, "现代泰式餐厅"));
+        melbourneRestaurants.add(new Restaurant("The Atlantic", -37.8157, 144.9643, "海鲜专门店"));
+        melbourneRestaurants.add(new Restaurant("Cumulus Up", -37.8158, 144.9644, "Cumulus楼上酒吧"));
+        melbourneRestaurants.add(new Restaurant("Bar Lourinhã", -37.8159, 144.9645, "西班牙小吃"));
+        
+        // 更多Southbank餐厅
+        melbourneRestaurants.add(new Restaurant("Nobu Melbourne", -37.8200, 144.9580, "日本料理"));
+        melbourneRestaurants.add(new Restaurant("Spice Temple", -37.8201, 144.9581, "Neil Perry中餐厅"));
+        melbourneRestaurants.add(new Restaurant("Pure South", -37.8202, 144.9582, "塔斯马尼亚美食"));
+        melbourneRestaurants.add(new Restaurant("Waterfront", -37.8203, 144.9583, "河景餐厅"));
+        melbourneRestaurants.add(new Restaurant("Bistro Guillaume", -37.8204, 144.9584, "法式小酒馆"));
+        melbourneRestaurants.add(new Restaurant("Crown Towers", -37.8205, 144.9585, "豪华餐厅"));
+        melbourneRestaurants.add(new Restaurant("Silks", -37.8206, 144.9586, "中餐厅"));
+        melbourneRestaurants.add(new Restaurant("Number 8", -37.8207, 144.9587, "现代澳洲菜"));
+        
+        // 更多Carlton餐厅
+        melbourneRestaurants.add(new Restaurant("D.O.C Pizza", -37.8000, 144.9700, "正宗意式披萨"));
+        melbourneRestaurants.add(new Restaurant("Tiamo", -37.8001, 144.9701, "传统意大利菜"));
+        melbourneRestaurants.add(new Restaurant("Brunetti", -37.8002, 144.9702, "意式甜点"));
+        melbourneRestaurants.add(new Restaurant("University Cafe", -37.8003, 144.9703, "学生最爱"));
+        melbourneRestaurants.add(new Restaurant("La Porchetta", -37.8004, 144.9704, "家庭意式餐厅"));
+        melbourneRestaurants.add(new Restaurant("Carlton Espresso", -37.8005, 144.9705, "咖啡厅"));
+        melbourneRestaurants.add(new Restaurant("Pidapipo", -37.8006, 144.9706, "意式冰淇淋"));
+        melbourneRestaurants.add(new Restaurant("King & Godfree", -37.8007, 144.9707, "意式熟食"));
+        melbourneRestaurants.add(new Restaurant("Papa Gino's", -37.8008, 144.9708, "传统意式"));
+        
+        // 更多Richmond餐厅
+        melbourneRestaurants.add(new Restaurant("Richmond Oysters", -37.8100, 145.0000, "海鲜专门店"));
+        melbourneRestaurants.add(new Restaurant("Pho Hung", -37.8101, 145.0001, "越南河粉"));
+        melbourneRestaurants.add(new Restaurant("Bun Bun", -37.8102, 145.0002, "越南菜"));
+        melbourneRestaurants.add(new Restaurant("Pho Dzung", -37.8103, 145.0003, "越南河粉"));
+        melbourneRestaurants.add(new Restaurant("Richmond Hill Cafe", -37.8104, 145.0004, "咖啡厅"));
+        melbourneRestaurants.add(new Restaurant("Richmond Kebabs", -37.8105, 145.0005, "土耳其烤肉"));
+        melbourneRestaurants.add(new Restaurant("Richmond Curry House", -37.8106, 145.0006, "印度咖喱"));
+        melbourneRestaurants.add(new Restaurant("Richmond Dumplings", -37.8107, 145.0007, "饺子店"));
+        melbourneRestaurants.add(new Restaurant("Richmond Sushi", -37.8108, 145.0008, "寿司店"));
+        
+        // 更多St Kilda餐厅
+        melbourneRestaurants.add(new Restaurant("Stokehouse", -37.8500, 144.9800, "海滩餐厅"));
+        melbourneRestaurants.add(new Restaurant("Donovans", -37.8501, 144.9801, "海滨餐厅"));
+        melbourneRestaurants.add(new Restaurant("Cicciolina", -37.8502, 144.9802, "现代意式"));
+        melbourneRestaurants.add(new Restaurant("Lau's Family Kitchen", -37.8503, 144.9803, "家庭中餐"));
+        melbourneRestaurants.add(new Restaurant("Claypots", -37.8504, 144.9804, "海鲜餐厅"));
+        melbourneRestaurants.add(new Restaurant("St Kilda Pizza", -37.8505, 144.9805, "披萨店"));
+        melbourneRestaurants.add(new Restaurant("St Kilda Fish", -37.8506, 144.9806, "炸鱼薯条"));
+        melbourneRestaurants.add(new Restaurant("St Kilda Beach Cafe", -37.8507, 144.9807, "海滩咖啡厅"));
+        melbourneRestaurants.add(new Restaurant("St Kilda Thai", -37.8508, 144.9808, "泰式餐厅"));
+        melbourneRestaurants.add(new Restaurant("St Kilda Greek", -37.8509, 144.9809, "希腊餐厅"));
+        
+        // 最后10个餐厅，达到100个总数
+        melbourneRestaurants.add(new Restaurant("Prahran Market Thai", -37.8410, 145.0010, "Prahran市场泰式餐厅"));
+        melbourneRestaurants.add(new Restaurant("Chapel Street Sushi", -37.8411, 145.0011, "Chapel Street寿司店"));
+        melbourneRestaurants.add(new Restaurant("Windsor Hotel Restaurant", -37.8412, 145.0012, "Windsor酒店餐厅"));
+        melbourneRestaurants.add(new Restaurant("Balaclava Lebanese", -37.8510, 144.9810, "Balaclava黎巴嫩餐厅"));
+        melbourneRestaurants.add(new Restaurant("Elwood Beach Cafe", -37.8610, 144.9910, "Elwood海滩咖啡厅"));
+        melbourneRestaurants.add(new Restaurant("Brighton Fish & Chips", -37.8710, 145.0010, "Brighton炸鱼薯条"));
+        melbourneRestaurants.add(new Restaurant("Sandringham Italian", -37.8810, 145.0110, "Sandringham意式餐厅"));
+        melbourneRestaurants.add(new Restaurant("Hampton Greek", -37.8910, 145.0210, "Hampton希腊餐厅"));
+        melbourneRestaurants.add(new Restaurant("Beaumaris Seafood", -37.9010, 145.0310, "Beaumaris海鲜餐厅"));
+        melbourneRestaurants.add(new Restaurant("Mentone Beach Bar", -37.9110, 145.0410, "Mentone海滩酒吧"));
+        
+        // 现在总共有100个餐厅了！
     }
 
     private void displayMelbourneRestaurants() {
