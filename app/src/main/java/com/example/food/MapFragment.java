@@ -298,15 +298,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         
         // Docklands区域餐厅
         melbourneRestaurants.add(new Restaurant("Docklands Thai", -37.8200, 144.9400, "泰式餐厅"));
-        melbourneRestaurants.add(new Restaurant("Docklands Pizza", -37.8200, 144.9400, "披萨店"));
-        melbourneRestaurants.add(new Restaurant("Docklands Sushi", -37.8200, 144.9400, "寿司店"));
-        melbourneRestaurants.add(new Restaurant("Docklands Indian", -37.8200, 144.9400, "印度餐厅"));
-        melbourneRestaurants.add(new Restaurant("Docklands Greek", -37.8200, 144.9400, "希腊餐厅"));
-        melbourneRestaurants.add(new Restaurant("Docklands Lebanese", -37.8200, 144.9400, "黎巴嫩餐厅"));
-        melbourneRestaurants.add(new Restaurant("Docklands Mexican", -37.8200, 144.9400, "墨西哥餐厅"));
-        melbourneRestaurants.add(new Restaurant("Docklands Vietnamese", -37.8200, 144.9400, "越南餐厅"));
-        melbourneRestaurants.add(new Restaurant("Docklands Chinese", -37.8200, 144.9400, "中餐厅"));
-        melbourneRestaurants.add(new Restaurant("Docklands Italian", -37.8200, 144.9400, "意式餐厅"));
+        melbourneRestaurants.add(new Restaurant("Docklands Pizza", -37.8201, 144.9401, "披萨店"));
+        melbourneRestaurants.add(new Restaurant("Docklands Sushi", -37.8202, 144.9402, "寿司店"));
+        melbourneRestaurants.add(new Restaurant("Docklands Indian", -37.8203, 144.9403, "印度餐厅"));
+        melbourneRestaurants.add(new Restaurant("Docklands Greek", -37.8204, 144.9404, "希腊餐厅"));
+        melbourneRestaurants.add(new Restaurant("Docklands Lebanese", -37.8205, 144.9405, "黎巴嫩餐厅"));
+        melbourneRestaurants.add(new Restaurant("Docklands Mexican", -37.8206, 144.9406, "墨西哥餐厅"));
+        melbourneRestaurants.add(new Restaurant("Docklands Vietnamese", -37.8207, 144.9407, "越南餐厅"));
+        melbourneRestaurants.add(new Restaurant("Docklands Chinese", -37.8208, 144.9408, "中餐厅"));
+        melbourneRestaurants.add(new Restaurant("Docklands Italian", -37.8209, 144.9409, "意式餐厅"));
         
         // 更多CBD餐厅
         melbourneRestaurants.add(new Restaurant("Gimlet at Cavendish House", -37.8146, 144.9632, "Andrew McConnell新餐厅"));
