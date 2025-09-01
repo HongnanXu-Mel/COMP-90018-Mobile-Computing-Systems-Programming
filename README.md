@@ -116,5 +116,5 @@ The project is currently in the development phase, with the following components
 - Post system (in development)  
 - Review functionality (in development)  
 - Search functionality (in development)  
-- Crowd density system (planned)  
-- Real-time analytics engine (planned)
+- Crowd density system (in development)
+
