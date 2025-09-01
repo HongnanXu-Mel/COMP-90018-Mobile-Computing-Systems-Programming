@@ -1,0 +1,826 @@
+[
+  {
+    "name": "Grand Hotel Melbourne",
+    "address": "33 Spencer Street, Docklands",
+    "latitude": -37.8207602,
+    "longitude": 144.9544764,
+    "category": "Hotel Restaurant",
+    "region": "CBD"
+  },
+  {
+    "name": "La Camera, Italian Restaurant",
+    "address": "MR2/3 Southgate Avenue, Southbank",
+    "latitude": -37.8200651,
+    "longitude": 144.9666394,
+    "category": "Italian",
+    "region": "CBD"
+  },
+  {
+    "name": "The Savoy Hotel on Little Collins Melbourne",
+    "address": "630 Little Collins Street, Melbourne",
+    "latitude": -37.8177279,
+    "longitude": 144.9539335,
+    "category": "Hotel Restaurant",
+    "region": "CBD"
+  },
+  {
+    "name": "Rendezvous Hotel Melbourne",
+    "address": "328 Flinders Street, Melbourne",
+    "latitude": -37.8183324,
+    "longitude": 144.9635426,
+    "category": "Hotel Restaurant",
+    "region": "CBD"
+  },
+  {
+    "name": "Oriental Teahouse Melbourne CBD",
+    "address": "378 Little Collins Street, Melbourne",
+    "latitude": -37.8155739,
+    "longitude": 144.9620832,
+    "category": "Asian",
+    "region": "CBD"
+  },
+  {
+    "name": "Ginza Teppanyaki",
+    "address": "139 Little Bourke Street, Melbourne",
+    "latitude": -37.8117282,
+    "longitude": 144.9684233,
+    "category": "Japanese",
+    "region": "CBD"
+  },
+  {
+    "name": "Steakhouse Grill 66 Docklands",
+    "address": "66 Newquay Promenade, Docklands",
+    "latitude": -37.8151558,
+    "longitude": 144.9407774,
+    "category": "Steakhouse",
+    "region": "CBD"
+  },
+  {
+    "name": "Japanese Teppanyaki Inn",
+    "address": "182 Collins Street, Melbourne",
+    "latitude": -37.8149706,
+    "longitude": 144.9674068,
+    "category": "Japanese",
+    "region": "CBD"
+  },
+  {
+    "name": "Flower Drum Restaurant Melbourne",
+    "address": "17 Market Lane, Melbourne",
+    "latitude": -37.8118772,
+    "longitude": 144.9692458,
+    "category": "Chinese",
+    "region": "CBD"
+  },
+  {
+    "name": "The Aviary Hotel - Home of The W Club",
+    "address": "271 Victoria Street, Abbotsford",
+    "latitude": -37.8096675,
+    "longitude": 144.9935587,
+    "category": "Hotel Restaurant",
+    "region": "Inner Suburbs"
+  },
+  {
+    "name": "Bedi's Indian Restaurant",
+    "address": "118 Park Street, South Melbourne",
+    "latitude": -37.8335251,
+    "longitude": 144.9669253,
+    "category": "Indian",
+    "region": "Inner Suburbs"
+  },
+  {
+    "name": "Copacabana International",
+    "address": "139 Smith Street, Fitzroy",
+    "latitude": -37.80494489999999,
+    "longitude": 144.9829698,
+    "category": "International",
+    "region": "Inner Suburbs"
+  },
+  {
+    "name": "The Royce Hotel",
+    "address": "379 Saint Kilda Road, Melbourne",
+    "latitude": -37.8352734,
+    "longitude": 144.9753841,
+    "category": "Hotel Restaurant",
+    "region": "CBD"
+  },
+  {
+    "name": "Red Spice Road",
+    "address": "141 Queen Street, Melbourne",
+    "latitude": -37.81534440000001,
+    "longitude": 144.9606767,
+    "category": "Asian Fusion",
+    "region": "CBD"
+  },
+  {
+    "name": "MoVida",
+    "address": "1 Hosier Lane, Melbourne",
+    "latitude": -37.81671670000001,
+    "longitude": 144.9691417,
+    "category": "Spanish",
+    "region": "CBD"
+  },
+  {
+    "name": "Chapati CBD",
+    "address": "Ground floor/27-29 Crossley Street, Melbourne",
+    "latitude": -37.81122469999999,
+    "longitude": 144.9708995,
+    "category": "Indian",
+    "region": "CBD"
+  },
+  {
+    "name": "Chocolate Buddha",
+    "address": "Federation Square, Swanston St & Flinders St, Melbourne",
+    "latitude": -37.8177174,
+    "longitude": 144.9687344,
+    "category": "Asian",
+    "region": "CBD"
+  },
+  {
+    "name": "Brunetti Classico Carlton",
+    "address": "380 Lygon Street, Carlton",
+    "latitude": -37.79804170000001,
+    "longitude": 144.9678255,
+    "category": "Italian Cafe",
+    "region": "Inner Suburbs"
+  },
+  {
+    "name": "Añada Bar & Restaurant",
+    "address": "197 Gertrude Street, Fitzroy",
+    "latitude": -37.8060458,
+    "longitude": 144.9811721,
+    "category": "Spanish",
+    "region": "Inner Suburbs"
+  },
+  {
+    "name": "Left Bank Melbourne Restaurant & Cocktail Bar",
+    "address": "Riverside of, 1 Southbank Boulevard, Southbank",
+    "latitude": -37.8210084,
+    "longitude": 144.9628614,
+    "category": "Modern Australian",
+    "region": "CBD"
+  },
+  {
+    "name": "Cookie",
+    "address": "252 Swanston Street, Melbourne",
+    "latitude": -37.8120053,
+    "longitude": 144.965164,
+    "category": "Thai",
+    "region": "CBD"
+  },
+  {
+    "name": "Naked For Satan",
+    "address": "285 Brunswick Street, Fitzroy",
+    "latitude": -37.798765,
+    "longitude": 144.978198,
+    "category": "Spanish Tapas",
+    "region": "Inner Suburbs"
+  },
+  {
+    "name": "Grill Steak Seafood",
+    "address": "68 Hardware Lane, Melbourne",
+    "latitude": -37.8130284,
+    "longitude": 144.9610756,
+    "category": "Steakhouse",
+    "region": "CBD"
+  },
+  {
+    "name": "D.O.C Pizza & Mozzarella Bar - Carlton",
+    "address": "295 Drummond Street, Carlton",
+    "latitude": -37.79898970000001,
+    "longitude": 144.9685103,
+    "category": "Italian",
+    "region": "Inner Suburbs"
+  },
+  {
+    "name": "MAMASITA",
+    "address": "Level 1/11 Collins Street, Melbourne",
+    "latitude": -37.81363940000001,
+    "longitude": 144.9733909,
+    "category": "Mexican",
+    "region": "CBD"
+  },
+  {
+    "name": "Rockpool Bar & Grill Melbourne",
+    "address": "Crown Casino, 8 Whiteman Street, Southbank",
+    "latitude": -37.8218482,
+    "longitude": 144.96027,
+    "category": "Fine Dining",
+    "region": "CBD"
+  },
+  {
+    "name": "Hopscotch Melbourne",
+    "address": "Ground Floor/4 Riverside Quay, Southbank",
+    "latitude": -37.820722,
+    "longitude": 144.963457,
+    "category": "Modern Australian",
+    "region": "CBD"
+  },
+  {
+    "name": "The Meat & Wine Co Southbank",
+    "address": "Freshwater Place, 3 Queens Bridge Street, Southbank",
+    "latitude": -37.82154609999999,
+    "longitude": 144.961854,
+    "category": "Steakhouse",
+    "region": "CBD"
+  },
+  {
+    "name": "Melba Restaurant",
+    "address": "1 Southgate Avenue, Southbank",
+    "latitude": -37.8206644,
+    "longitude": 144.965638,
+    "category": "Modern Australian",
+    "region": "CBD"
+  },
+  {
+    "name": "MoVida Aqui",
+    "address": "500 Bourke Street, Melbourne",
+    "latitude": -37.8145546,
+    "longitude": 144.9584584,
+    "category": "Spanish",
+    "region": "CBD"
+  },
+  {
+    "name": "Florentino",
+    "address": "80 Bourke Street, Melbourne",
+    "latitude": -37.8117411,
+    "longitude": 144.9708059,
+    "category": "Italian",
+    "region": "CBD"
+  },
+  {
+    "name": "Rare Steakhouse Midtown",
+    "address": "12 Goldie Place, Melbourne",
+    "latitude": -37.81338600000001,
+    "longitude": 144.960767,
+    "category": "Steakhouse",
+    "region": "CBD"
+  },
+  {
+    "name": "Pizze Societe",
+    "address": "2 South Wharf Drive, Docklands",
+    "latitude": -37.8235128,
+    "longitude": 144.9407563,
+    "category": "Italian",
+    "region": "CBD"
+  },
+  {
+    "name": "The Wharf Hotel Melbourne",
+    "address": "18/38 Siddeley Street, Docklands",
+    "latitude": -37.8226739,
+    "longitude": 144.953839,
+    "category": "Hotel Restaurant",
+    "region": "CBD"
+  },
+  {
+    "name": "Cutler",
+    "address": "Level 1/57 Gertrude Street, Fitzroy",
+    "latitude": -37.805465,
+    "longitude": 144.9758993,
+    "category": "Modern Australian",
+    "region": "Inner Suburbs"
+  },
+  {
+    "name": "Ladro",
+    "address": "224 Gertrude Street, Fitzroy",
+    "latitude": -37.8063239,
+    "longitude": 144.9821369,
+    "category": "Italian",
+    "region": "Inner Suburbs"
+  },
+  {
+    "name": "Witches In Britches",
+    "address": "84 Dudley Street, West Melbourne",
+    "latitude": -37.808871,
+    "longitude": 144.952557,
+    "category": "Modern Australian",
+    "region": "Inner Suburbs"
+  },
+  {
+    "name": "Amigos y Familia Hardware Lane",
+    "address": "75-77 Hardware Lane, Melbourne",
+    "latitude": -37.813143,
+    "longitude": 144.960867,
+    "category": "Mexican",
+    "region": "CBD"
+  },
+  {
+    "name": "The Metropolitan Hotel",
+    "address": "265 William Street, Melbourne",
+    "latitude": -37.812902,
+    "longitude": 144.9566615,
+    "category": "Hotel Restaurant",
+    "region": "CBD"
+  },
+  {
+    "name": "The Bottom End",
+    "address": "579 Little Collins Street, Melbourne",
+    "latitude": -37.8177961,
+    "longitude": 144.9555902,
+    "category": "Modern Australian",
+    "region": "CBD"
+  },
+  {
+    "name": "Blue Chillies",
+    "address": "182 Brunswick Street, Fitzroy",
+    "latitude": -37.8020795,
+    "longitude": 144.9780303,
+    "category": "Indian",
+    "region": "Inner Suburbs"
+  },
+  {
+    "name": "Longrain Melbourne",
+    "address": "44 Little Bourke Street, Melbourne",
+    "latitude": -37.8106475,
+    "longitude": 144.9712096,
+    "category": "Thai",
+    "region": "CBD"
+  },
+  {
+    "name": "Hofbräuhaus Melbourne",
+    "address": "18-28 Market Lane, Melbourne",
+    "latitude": -37.8116657,
+    "longitude": 144.9692918,
+    "category": "German",
+    "region": "CBD"
+  },
+  {
+    "name": "Dock 37 Bar and Kitchen",
+    "address": "2 Convention Centre Place, South Wharf",
+    "latitude": -37.8250869,
+    "longitude": 144.9511558,
+    "category": "Modern Australian",
+    "region": "CBD"
+  },
+  {
+    "name": "Maha Restaurant",
+    "address": "21 Bond Street, Melbourne",
+    "latitude": -37.8181528,
+    "longitude": 144.962662,
+    "category": "Middle Eastern",
+    "region": "CBD"
+  },
+  {
+    "name": "Imperial Hotel",
+    "address": "2-8 Bourke Street, Melbourne",
+    "latitude": -37.81124,
+    "longitude": 144.97277,
+    "category": "Hotel Restaurant",
+    "region": "CBD"
+  },
+  {
+    "name": "Berth",
+    "address": "45 Newquay Promenade, Docklands",
+    "latitude": -37.8151185,
+    "longitude": 144.9418269,
+    "category": "Seafood",
+    "region": "CBD"
+  },
+  {
+    "name": "The French Brasserie",
+    "address": "2 Malthouse Lane, Melbourne",
+    "latitude": -37.8154573,
+    "longitude": 144.9715812,
+    "category": "French",
+    "region": "CBD"
+  },
+  {
+    "name": "Kwan's Table",
+    "address": "7 Inkerman Street, St Kilda",
+    "latitude": -37.864316,
+    "longitude": 144.9821205,
+    "category": "Asian",
+    "region": "Inner Suburbs"
+  },
+  {
+    "name": "Saints Kitchen Pizzeria & Italian Bar",
+    "address": "302 Saint Kilda Road, St Kilda",
+    "latitude": -37.8644013,
+    "longitude": 144.9860692,
+    "category": "Italian",
+    "region": "Inner Suburbs"
+  },
+  {
+    "name": "Daneli's Food Emporium",
+    "address": "310a Carlisle Street, Balaclava",
+    "latitude": -37.8687332,
+    "longitude": 144.9947328,
+    "category": "International",
+    "region": "Inner Suburbs"
+  },
+  {
+    "name": "Chez Olivier Le Bistro",
+    "address": "268 Toorak Road, South Yarra",
+    "latitude": -37.8397369,
+    "longitude": 144.9962228,
+    "category": "French",
+    "region": "Inner Suburbs"
+  },
+  {
+    "name": "White Oaks Saloon Bar & Dining",
+    "address": "115-117 Greville Street, Prahran",
+    "latitude": -37.8490938,
+    "longitude": 144.9907352,
+    "category": "American",
+    "region": "Inner Suburbs"
+  },
+  {
+    "name": "Middle Ground Café",
+    "address": "3 Springfield Road, Blackburn North",
+    "latitude": -37.8090387,
+    "longitude": 145.1415477,
+    "category": "Cafe",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Mason Lane Café",
+    "address": "2 Hamilton Street, Mont Albert",
+    "latitude": -37.8211151,
+    "longitude": 145.1051222,
+    "category": "Cafe",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "VegieHut 老地方",
+    "address": "984 Whitehorse Road, Box Hill",
+    "latitude": -37.8184749,
+    "longitude": 145.1245972,
+    "category": "Vegetarian",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Crust Pizza Box Hill",
+    "address": "967 Whitehorse Road, Box Hill",
+    "latitude": -37.8178121,
+    "longitude": 145.1243535,
+    "category": "Pizza",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Fountains Licensed Restaurant",
+    "address": "Building 3/465 Elgar Road, Box Hill",
+    "latitude": -37.815384,
+    "longitude": 145.1150776,
+    "category": "Chinese",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Cafe Rubix",
+    "address": "519 Middleborough Road, Box Hill North",
+    "latitude": -37.808829,
+    "longitude": 145.140183,
+    "category": "Cafe",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Esfahan Restaurant",
+    "address": "768 Station Street, Box Hill North",
+    "latitude": -37.8134958,
+    "longitude": 145.1249702,
+    "category": "Persian",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Una Una",
+    "address": "G2/712 Station Street, Box Hill",
+    "latitude": -37.8168808,
+    "longitude": 145.1242788,
+    "category": "Japanese",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Bak Kut Teh King Box Hill",
+    "address": "966 Whitehorse Road, Box Hill",
+    "latitude": -37.818487,
+    "longitude": 145.124104,
+    "category": "Malaysian",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Moohan Korean BBQ Buffet",
+    "address": "970-972 Whitehorse Road, Box Hill",
+    "latitude": -37.8184937,
+    "longitude": 145.1241792,
+    "category": "Korean",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Cheong-chun Sushi (청춘초밥)",
+    "address": "2/990 Whitehorse Road, Box Hill",
+    "latitude": -37.8185095,
+    "longitude": 145.1247295,
+    "category": "Japanese",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "The Wokkers (청춘반점)",
+    "address": "980 Whitehorse Road, Box Hill",
+    "latitude": -37.81853799999999,
+    "longitude": 145.124512,
+    "category": "Korean",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "One Thai Restaurant",
+    "address": "6/346 Belmore Road, Balwyn",
+    "latitude": -37.8037585,
+    "longitude": 145.1023519,
+    "category": "Thai",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Vegie Mum vegetarian restaurant",
+    "address": "27 Village Avenue, Doncaster",
+    "latitude": -37.7818032,
+    "longitude": 145.1090596,
+    "category": "Vegetarian",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Bite Me - Grill & Burger Bar",
+    "address": "323A Doncaster Road, Balwyn North",
+    "latitude": -37.790795,
+    "longitude": 145.0957096,
+    "category": "Burger",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Don't Tell Mama Shh Korean Restaurant",
+    "address": "751-753 Doncaster Road, Doncaster",
+    "latitude": -37.786758,
+    "longitude": 145.133822,
+    "category": "Korean",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Eastern Bell",
+    "address": "399 Belmore Road, Balwyn",
+    "latitude": -37.80307769999999,
+    "longitude": 145.1024475,
+    "category": "Chinese",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Sweet Crown Patisserie & Cafe - Shirin Taj",
+    "address": "945A Station Street, Box Hill North",
+    "latitude": -37.80140339999999,
+    "longitude": 145.1264722,
+    "category": "Persian Cafe",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Persian Halal Kebabery & Restaurant - Box Hill North",
+    "address": "949 Station Street, Box Hill North",
+    "latitude": -37.80140859999999,
+    "longitude": 145.1266392,
+    "category": "Persian",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Bin 3 Cafe And Wine Bar",
+    "address": "395B Belmore Road, Balwyn",
+    "latitude": -37.803289,
+    "longitude": 145.1021215,
+    "category": "Wine Bar",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Goodfellas Kebab and Grill",
+    "address": "Shop 5/346 Belmore Road, Balwyn",
+    "latitude": -37.8036915,
+    "longitude": 145.1025412,
+    "category": "Middle Eastern",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Westfield Doncaster Food Court",
+    "address": "619 Doncaster Road, Doncaster",
+    "latitude": -37.7869602,
+    "longitude": 145.1255673,
+    "category": "Food Court",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Woodfire and Stone Pizza & Pasta",
+    "address": "389A Belmore Road, Balwyn",
+    "latitude": -37.8037408,
+    "longitude": 145.1015366,
+    "category": "Italian",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Bar None",
+    "address": "72 Auburn Parade, Hawthorn East",
+    "latitude": -37.8267702,
+    "longitude": 145.0571263,
+    "category": "Modern Australian",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Amici Trattoria Restaurant",
+    "address": "728 Burke Road, Camberwell",
+    "latitude": -37.8259485,
+    "longitude": 145.0578847,
+    "category": "Italian",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Afghan Village",
+    "address": "923 Burke Road, Camberwell",
+    "latitude": -37.82568699999999,
+    "longitude": 145.057626,
+    "category": "Afghan",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Little Thai Princess",
+    "address": "285 Burke Road, Glen Iris",
+    "latitude": -37.853682,
+    "longitude": 145.05204,
+    "category": "Thai",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Ignite Cafe",
+    "address": "340 Camberwell Road, Camberwell",
+    "latitude": -37.8341637,
+    "longitude": 145.0589436,
+    "category": "Cafe",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Chicken and Jokbal",
+    "address": "467 Riversdale Road, Hawthorn East",
+    "latitude": -37.8310014,
+    "longitude": 145.0553718,
+    "category": "Korean",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Dish & Spoon Cafe",
+    "address": "122 Highfield Road, Camberwell",
+    "latitude": -37.8378891,
+    "longitude": 145.0844389,
+    "category": "Cafe",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Baba Sus",
+    "address": "15 Bardolph Street, Glen Iris",
+    "latitude": -37.851802,
+    "longitude": 145.079924,
+    "category": "Middle Eastern",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Fiorelli Restaurant",
+    "address": "209 Camberwell Road, Hawthorn East",
+    "latitude": -37.830406,
+    "longitude": 145.05586,
+    "category": "Italian",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Charntra Classic Thai Restaurant",
+    "address": "740 Riversdale Road, Camberwell",
+    "latitude": -37.833922,
+    "longitude": 145.076767,
+    "category": "Thai",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Garage At Night",
+    "address": "2A Glen Iris Road, Camberwell",
+    "latitude": -37.8427725,
+    "longitude": 145.0692152,
+    "category": "Modern Australian",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Pizza Republica Camberwell",
+    "address": "533 Camberwell Road, Camberwell",
+    "latitude": -37.8424527,
+    "longitude": 145.0695827,
+    "category": "Pizza",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Chan Korean Cuisine (으뜸찬)",
+    "address": "383-385 Camberwell Road, Camberwell",
+    "latitude": -37.834713,
+    "longitude": 145.060959,
+    "category": "Korean",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Chapter21",
+    "address": "371 Camberwell Road, Camberwell",
+    "latitude": -37.8345868,
+    "longitude": 145.0606971,
+    "category": "Modern Australian",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Linger Cafe",
+    "address": "101 Bowen Street, Camberwell",
+    "latitude": -37.8462061,
+    "longitude": 145.0623662,
+    "category": "Cafe",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Minori Cafe",
+    "address": "267 Camberwell Road, Camberwell",
+    "latitude": -37.8321009,
+    "longitude": 145.0579132,
+    "category": "Cafe",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Viet Table Camberwell",
+    "address": "1/555 Riversdale Road, Camberwell",
+    "latitude": -37.8315192,
+    "longitude": 145.0589696,
+    "category": "Vietnamese",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Gracie Greco",
+    "address": "536 Riversdale Road, Camberwell",
+    "latitude": -37.83172100000001,
+    "longitude": 145.0582421,
+    "category": "Modern Australian",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Con Noi Italian Trattoria",
+    "address": "259 Camberwell Road, Camberwell",
+    "latitude": -37.8319146,
+    "longitude": 145.0577254,
+    "category": "Italian",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Cielo Pizza & More",
+    "address": "477 Burke Road, Camberwell",
+    "latitude": -37.8452443,
+    "longitude": 145.0538169,
+    "category": "Pizza",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Black Flat Coffee Brewers",
+    "address": "6/39 Kingsway, Glen Waverley",
+    "latitude": -37.8795956,
+    "longitude": 145.1635406,
+    "category": "Cafe",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "YOMG Glen Waverley",
+    "address": "65-67 Kingsway, Glen Waverley",
+    "latitude": -37.880279,
+    "longitude": 145.1633451,
+    "category": "Korean",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Shira Nui",
+    "address": "247 Springvale Road, Glen Waverley",
+    "latitude": -37.8787496,
+    "longitude": 145.1657336,
+    "category": "Japanese",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Jumbo Buns and Kebabs",
+    "address": "203 Gallaghers Road, Glen Waverley",
+    "latitude": -37.87582769999999,
+    "longitude": 145.1785157,
+    "category": "Middle Eastern",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "ATHURA",
+    "address": "2 Kerrie Road, Glen Waverley",
+    "latitude": -37.8757196,
+    "longitude": 145.178042,
+    "category": "Sri Lankan",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Caesars Veggie",
+    "address": "2 Kerrie Road, Glen Waverley",
+    "latitude": -37.8757196,
+    "longitude": 145.178042,
+    "category": "Vegetarian",
+    "region": "Outer Suburbs"
+  },
+  {
+    "name": "Master Lanzhou Noodle Bar - The Glen",
+    "address": "The Glen Food Court, g050, Ground Floor/235 Springvale Road, Glen Waverley",
+    "latitude": -37.8751007,
+    "longitude": 145.1659297,
+    "category": "Chinese",
+    "region": "Outer Suburbs"
+  }
+]

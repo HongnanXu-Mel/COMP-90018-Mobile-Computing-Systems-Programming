@@ -16,8 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+// FragmentManager和FragmentTransaction不再需要，已简化地图初始化
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -40,7 +39,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.example.food.model.Restaurant;
-import com.example.food.utils.FirebaseDataUploader;
+// FirebaseDataUploader已删除，不再需要上传功能
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,14 +86,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // 初始化Firebase Firestore
         db = FirebaseFirestore.getInstance();
 
-        FragmentManager fm = getChildFragmentManager();
-        SupportMapFragment mapFragment = (SupportMapFragment) fm.findFragmentByTag("map");
-        if (mapFragment == null) {
-            mapFragment = SupportMapFragment.newInstance();
-            FragmentTransaction tx = fm.beginTransaction();
-            tx.replace(R.id.map_container, mapFragment, "map");
-            tx.commitNowAllowingStateLoss();
-        }
+        // 简化地图初始化
+        SupportMapFragment mapFragment = SupportMapFragment.newInstance();
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.map_container, mapFragment)
+                .commit();
         mapFragment.getMapAsync(this);
     }
 
@@ -137,12 +133,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         addRestaurantMarkers();
     }
     
-    // 公共方法：强制上传数据到Firebase
-    public void forceUploadDataToFirebase() {
-        Log.d(TAG, "强制上传数据到Firebase");
-        Toast.makeText(requireContext(), "开始强制上传餐厅数据...", Toast.LENGTH_SHORT).show();
-        uploadDataToFirebase();
-    }
+    // 上传功能已删除，现在只从Firebase加载数据
 
     private void moveToMelbourne() {
         // 墨尔本市中心坐标（更精确的坐标）
@@ -206,25 +197,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 });
     }
     
-    // 上传数据到Firebase
-    private void uploadDataToFirebase() {
-        Log.d(TAG, "开始上传餐厅数据到Firebase...");
-        
-        try {
-            FirebaseDataUploader uploader = new FirebaseDataUploader(requireContext());
-            uploader.uploadAllRestaurantData();
-            
-            // 上传完成后重新加载数据
-            new android.os.Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Log.d(TAG, "重新尝试从Firebase加载数据...");
-                    addRestaurantMarkers();
-                }
-            }, 5000); // 等待5秒让上传完成
-        } catch (Exception e) {
-            Log.e(TAG, "上传数据失败", e);
-            Toast.makeText(requireContext(), "数据上传失败: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-    }
+    // 上传功能已删除，现在只从Firebase加载数据
 }
