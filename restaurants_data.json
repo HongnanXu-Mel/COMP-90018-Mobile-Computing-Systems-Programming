@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Grand Hotel Melbourne",
+    "address": "33 Spencer Street, Docklands",
+    "latitude": -37.8207602,
+    "longitude": 144.9544764,
+    "category": "Hotel Restaurant",
+    "region": "CBD"
+  },
+  {
+    "name": "La Camera, Italian Restaurant",
+    "address": "MR2/3 Southgate Avenue, Southbank",
+    "latitude": -37.8200651,
+    "longitude": 144.9666394,
+    "category": "Italian",
+    "region": "CBD"
+  },
+  {
+    "name": "The Savoy Hotel on Little Collins Melbourne",
+    "address": "630 Little Collins Street, Melbourne",
+    "latitude": -37.8177279,
+    "longitude": 144.9539335,
+    "category": "Hotel Restaurant",
+    "region": "CBD"
+  },
+  {
+    "name": "Rendezvous Hotel Melbourne",
+    "address": "328 Flinders Street, Melbourne",
+    "latitude": -37.8183324,
+    "longitude": 144.9635426,
+    "category": "Hotel Restaurant",
+    "region": "CBD"
+  },
+  {
+    "name": "Oriental Teahouse Melbourne CBD",
+    "address": "378 Little Collins Street, Melbourne",
+    "latitude": -37.8155739,
+    "longitude": 144.9620832,
+    "category": "Asian",
+    "region": "CBD"
+  },
+  {
+    "name": "Ginza Teppanyaki",
+    "address": "139 Little Bourke Street, Melbourne",
+    "latitude": -37.8117282,
+    "longitude": 144.9684233,
+    "category": "Japanese",
+    "region": "CBD"
+  },
+  {
+    "name": "Chin Chin",
+    "address": "125 Flinders Lane, Melbourne",
+    "latitude": -37.8177279,
+    "longitude": 144.9684233,
+    "category": "Asian",
+    "region": "CBD"
+  },
+  {
+    "name": "Cumulus Inc.",
+    "address": "45 Flinders Lane, Melbourne",
+    "latitude": -37.8177279,
+    "longitude": 144.9684233,
+    "category": "Modern Australian",
+    "region": "CBD"
+  },
+  {
+    "name": "Flower Drum",
+    "address": "17 Market Lane, Melbourne",
+    "latitude": -37.8177279,
+    "longitude": 144.9684233,
+    "category": "Chinese",
+    "region": "CBD"
+  },
+  {
+    "name": "Attica",
+    "address": "74 Glen Eira Road, Ripponlea",
+    "latitude": -37.8765,
+    "longitude": 145.0019,
+    "category": "Fine Dining",
+    "region": "Inner South"
+  }
+]

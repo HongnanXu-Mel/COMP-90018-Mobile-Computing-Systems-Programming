@@ -16,4 +16,3 @@
         android:title="You"
         android:iconTint="@color/bottom_nav_selector"/>
 </menu>
-
