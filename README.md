@@ -117,4 +117,3 @@ The project is currently in the development phase, with the following components
 - Review functionality (in development)  
 - Search functionality (in development)  
 - Crowd density system (in development)
-
