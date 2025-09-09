@@ -7,5 +7,42 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="orange_500">#FF7A00</color>
+    <color name="orange_500">#EF7722</color>
+    
+    <!-- Modern Light Theme Colors -->
+    <color name="background_light">#FFFFFF</color>
+    <color name="surface_light">#EBEBEB</color>
+    <color name="text_primary_light">#1A1A1A</color>
+    <color name="text_secondary_light">#6B7280</color>
+    <color name="text_hint_light">#9CA3AF</color>
+    
+    <!-- Modern Gradient Colors - Orange Theme -->
+    <color name="primary_gradient_start">#EF7722</color>
+    <color name="primary_gradient_end">#FAA533</color>
+    
+    <!-- Input Field Colors - Orange Theme -->
+    <color name="input_background_light">#FFFFFF</color>
+    <color name="input_border_light">#EBEBEB</color>
+    <color name="input_border_focused">#EF7722</color>
+    <color name="input_shadow">#F3F4F6</color>
+    
+    <!-- Tab Colors - Orange Theme -->
+    <color name="tab_selected">#FFFFFF</color>
+    <color name="tab_selected_text">#EF7722</color>
+    <color name="tab_unselected">#EBEBEB</color>
+    <color name="tab_unselected_text">#6B7280</color>
+    
+    <!-- Modern Accent Colors -->
+    <color name="accent_blue">#0BA6DF</color>
+    <color name="accent_success">#10B981</color>
+    <color name="accent_warning">#FAA533</color>
+    
+    <!-- Shadows and Elevation -->
+    <color name="shadow_light">#1A000000</color>
+    <color name="shadow_medium">#33000000</color>
+    
+    <!-- Premium Logo Colors -->
+    <color name="logo_primary">#EF7722</color>
+    <color name="logo_accent">#0BA6DF</color>
+    <color name="logo_shadow">#40000000</color>
 </resources>
