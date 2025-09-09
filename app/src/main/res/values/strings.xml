@@ -3,4 +3,25 @@
     <string name="google_maps_key">AIzaSyBWx26gVbla-E_mQhOS59zD_CHu0SD6fs4</string>
     <!-- 可选：若你的 Places Web Service 使用单独 Key，则在这里填入 -->
     <string name="google_places_key">AIzaSyBWx26gVbla-E_mQhOS59zD_CHu0SD6fs4</string>
+    
+    <!-- Accessibility strings -->
+    <string name="back_button">Back</string>
+    <string name="toggle_password_visibility">Toggle password visibility</string>
+    
+    <!-- Login/Register strings -->
+    <string name="welcome_back_header">Welcome Back</string>
+    <string name="create_account_header">Create Account</string>
+    <string name="tab_login">Login</string>
+    <string name="tab_register">Register</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="full_name_hint">Full Name</string>
+    <string name="confirm_password_hint">Confirm Password</string>
+    <string name="remember_me">Remember me</string>
+    <string name="forgot_password"><u>Forgot Password?</u></string>
+    <string name="login_button">Login</string>
+    <string name="register_button">Register</string>
+    <string name="login">Login</string>
+    <string name="app_name_display">Palate</string>
+    <string name="accent_dot">accent_dot</string>
 </resources>

@@ -3,9 +3,12 @@ package com.example.food;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -28,9 +32,12 @@ public class RegisterActivity extends AppCompatActivity {
 
     private TextInputEditText etName, etEmail, etPassword, etConfirmPassword;
     private Button btnRegister;
-    private TextView tvSignIn;
+    private TextView tabLogin, tabRegister;
+    private ImageView ivPasswordToggle, ivConfirmPasswordToggle;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private boolean isPasswordVisible = false;
+    private boolean isConfirmPasswordVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +49,8 @@ public class RegisterActivity extends AppCompatActivity {
         // 初始化Firestore实例
         db = FirebaseFirestore.getInstance();
 
-        // 初始化视图
         initViews();
+        setupPasswordToggle();
 
         // 设置点击事件
         btnRegister.setOnClickListener(new View.OnClickListener() {
@@ -53,11 +60,19 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        tvSignIn.setOnClickListener(new View.OnClickListener() {
+        // Tab click listeners
+        tabLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                 finish();
+            }
+        });
+
+        tabRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Already on register page, do nothing
             }
         });
     }
@@ -68,9 +83,40 @@ public class RegisterActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.etPassword);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
         btnRegister = findViewById(R.id.btnRegister);
-        tvSignIn = findViewById(R.id.tvSignIn);
+        tabLogin = findViewById(R.id.tabLogin);
+        tabRegister = findViewById(R.id.tabRegister);
+        ivPasswordToggle = findViewById(R.id.ivPasswordToggle);
+        ivConfirmPasswordToggle = findViewById(R.id.ivConfirmPasswordToggle);
     }
 
+    private void setupPasswordToggle() {
+        ivPasswordToggle.setOnClickListener(v -> {
+            if (isPasswordVisible) {
+                etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                ivPasswordToggle.setImageResource(R.drawable.ic_eye_visible);
+                isPasswordVisible = false;
+            } else {
+                etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                ivPasswordToggle.setImageResource(R.drawable.ic_eye_hidden);
+                isPasswordVisible = true;
+            }
+            etPassword.setSelection(etPassword.getText().length());
+        });
+
+        ivConfirmPasswordToggle.setOnClickListener(v -> {
+            if (isConfirmPasswordVisible) {
+                etConfirmPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                ivConfirmPasswordToggle.setImageResource(R.drawable.ic_eye_visible);
+                isConfirmPasswordVisible = false;
+            } else {
+                etConfirmPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                ivConfirmPasswordToggle.setImageResource(R.drawable.ic_eye_hidden);
+                isConfirmPasswordVisible = true;
+            }
+            etConfirmPassword.setSelection(etConfirmPassword.getText().length());
+        });
+    }
+    
     private void registerUser() {
         String name = etName.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
