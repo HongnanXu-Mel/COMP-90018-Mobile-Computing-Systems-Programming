@@ -24,4 +24,39 @@
     <string name="login">Login</string>
     <string name="app_name_display">Palate</string>
     <string name="accent_dot">accent_dot</string>
+    
+    <!-- Settings strings -->
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="security">Security</string>
+    <string name="logout">Logout</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="cannot_be_changed">Cannot be changed</string>
+    
+    <!-- Contact information -->
+    <string name="contact_phone">+61 3 9123 4567</string>
+    <string name="contact_email">palate@mail.com</string>
+    
+    <!-- Password change strings -->
+    <string name="current_password">Current Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
+    <string name="change_password">Change Password</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="password_changed_successfully">Password changed successfully</string>
+    <string name="current_password_incorrect">Current password is incorrect</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="password_too_short">Password must be at least 6 characters</string>
+    <string name="arrow">Arrow</string>
+    <string name="edit">Edit</string>
+    <string name="settings">Settings</string>
+    
+    <!-- Dialog strings -->
+    <string name="privacy_policy_title">Privacy Policy</string>
+    <string name="contact_us_title">Contact Us</string>
+    <string name="contact_us_message">We\'re here to help! Feel free to reach out to us with any questions or concerns.</string>
+    <string name="got_it">Got it</string>
+    <string name="understood">Understood</string>
+    <string name="change_password_title">Change Password</string>
 </resources>
