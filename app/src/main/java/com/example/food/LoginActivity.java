@@ -25,7 +25,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText etEmail, etPassword;
     private Button btnLogin;
-    private TextView tvForgotPassword, tvSignUp;
+    private TextView tvForgotPassword, tvSignUp, tvLoginError;
     private ImageView ivPasswordToggle;
     private FirebaseAuth mAuth;
     private boolean isPasswordVisible = false;
@@ -71,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
         tvForgotPassword = findViewById(R.id.tvForgotPassword);
         tvSignUp = findViewById(R.id.tabRegister);
         ivPasswordToggle = findViewById(R.id.ivPasswordToggle);
+        tvLoginError = findViewById(R.id.tvLoginError);
     }
 
     private void setupPasswordToggle() {
@@ -91,6 +92,8 @@ public class LoginActivity extends AppCompatActivity {
     private void loginUser() {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
+
+        tvLoginError.setVisibility(View.GONE);
 
         if (TextUtils.isEmpty(email)) {
             etEmail.setError("Email is required");
@@ -118,8 +121,8 @@ public class LoginActivity extends AppCompatActivity {
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         } else {
-                            Toast.makeText(LoginActivity.this, "Login failed: " + task.getException().getMessage(),
-                                    Toast.LENGTH_LONG).show();
+                            tvLoginError.setText("Email or password is incorrect");
+                            tvLoginError.setVisibility(View.VISIBLE);
                         }
                     }
                 });
