@@ -185,7 +185,8 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_medium">
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/passwordInputLayout"
@@ -238,7 +239,17 @@
 
 
 
-                    
+                    <!-- Login Error Text -->
+                    <TextView
+                        android:id="@+id/tvLoginError"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/logout_red"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:layout_marginBottom="@dimen/margin_small"
+                        android:visibility="gone" />
 
 
 
