@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light">
+
+    <!-- Main Content Container -->
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@+id/btnLogout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="0dp"
+            android:paddingStart="@dimen/padding_xlarge"
+            android:paddingTop="48dp"
+            android:paddingEnd="@dimen/padding_xlarge"
+            android:paddingBottom="@dimen/padding_xlarge">
+
+            <!-- Settings Header -->
+            <TextView
+                android:id="@+id/tvSettingsHeader"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_xlarge"
+                android:gravity="start"
+                android:text="@string/settings"
+                android:textColor="@color/text_primary_light"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Settings Form -->
+            <LinearLayout
+                android:id="@+id/settingsForm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_xlarge"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvSettingsHeader">
+
+                <!-- Email Input (Read-only) - First -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:textColorHint="@color/text_hint_light"
+                    app:boxBackgroundMode="none"
+                    app:boxStrokeColor="@color/input_border_light"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/input_field_height"
+                        android:background="@drawable/input_field_background"
+                        android:gravity="center_vertical"
+                        android:hint="@string/email_hint"
+                        android:inputType="textEmailAddress"
+                        android:drawableStart="@drawable/ic_email"
+                        android:drawablePadding="@dimen/padding_medium"
+                        android:nextFocusDown="@+id/etUsername"
+                        android:nextFocusForward="@+id/etUsername"
+                        android:textColor="@color/text_primary_light"
+                        android:textColorHint="@color/text_hint_light"
+                        android:textStyle="bold"
+                        android:typeface="sans"
+                        android:focusable="false"
+                        android:clickable="false" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Cannot be changed text -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:text="@string/cannot_be_changed"
+                    android:textColor="@color/text_hint_light"
+                    android:textSize="12sp" />
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:background="@drawable/divider_line" />
+
+                <!-- Full Name Input -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_medium">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/usernameInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/text_hint_light"
+                        app:boxBackgroundMode="none"
+                        app:hintEnabled="false"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etUsername"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/input_field_height"
+                            android:background="@drawable/input_field_background"
+                            android:gravity="center_vertical"
+                            android:hint="@string/full_name_hint"
+                            android:inputType="textPersonName"
+                            android:drawableStart="@drawable/ic_person"
+                            android:drawablePadding="@dimen/padding_medium"
+                            android:nextFocusDown="@+id/btnUpdateProfile"
+                            android:nextFocusForward="@+id/btnUpdateProfile"
+                            android:textColor="@color/text_primary_light"
+                            android:textColorHint="@color/text_hint_light"
+                            android:textStyle="bold"
+                            android:typeface="sans" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_edit"
+                        android:contentDescription="@string/edit"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        app:layout_constraintEnd_toEndOf="@id/usernameInputLayout"
+                        app:layout_constraintTop_toTopOf="@id/usernameInputLayout"
+                        app:layout_constraintBottom_toBottomOf="@id/usernameInputLayout"
+                        app:layout_constraintVertical_bias="0.5"
+                        android:layout_marginEnd="16dp"
+                        app:tint="@color/text_hint_light" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!-- Username Error Text -->
+                <TextView
+                    android:id="@+id/tvUsernameError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/logout_red"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp"
+                    android:paddingBottom="@dimen/padding_medium"
+                    android:visibility="gone" />
+
+                <!-- Update Profile Button -->
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnUpdateProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:background="@drawable/gradient_button_background"
+                    android:text="@string/save_changes"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:background="@drawable/divider_line" />
+
+                <!-- Privacy Policy Button -->
+                <LinearLayout
+                    android:id="@+id/btnPrivacyPolicy"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/privacy_policy"
+                        android:textColor="@color/text_primary_light"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_arrow_right"
+                        android:contentDescription="@string/arrow"
+                        app:tint="@color/text_primary_light" />
+
+                </LinearLayout>
+
+                <!-- Contact Us Button -->
+                <LinearLayout
+                    android:id="@+id/btnContactUs"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/contact_us"
+                        android:textColor="@color/text_primary_light"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_arrow_right"
+                        android:contentDescription="@string/arrow"
+                        app:tint="@color/text_primary_light" />
+
+                </LinearLayout>
+
+                <!-- Security Button -->
+                <LinearLayout
+                    android:id="@+id/btnSecurity"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/security"
+                        android:textColor="@color/text_primary_light"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_arrow_right"
+                        android:contentDescription="@string/arrow"
+                        app:tint="@color/text_primary_light" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <!-- Logout Button at Bottom -->
+    <LinearLayout
+        android:id="@+id/btnLogout"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="@dimen/padding_xlarge"
+        android:layout_marginEnd="@dimen/padding_xlarge"
+        android:layout_marginBottom="16dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/logout"
+            android:textColor="@color/logout_red"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_arrow_right"
+            android:contentDescription="@string/arrow"
+            app:tint="@color/logout_red" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

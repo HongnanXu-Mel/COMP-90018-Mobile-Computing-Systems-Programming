@@ -163,6 +163,18 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Name Error Text -->
+                <TextView
+                    android:id="@+id/tvNameError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/logout_red"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:visibility="gone" />
+
                 <!-- Email Input -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -191,6 +203,18 @@
                         android:typeface="sans" />
 
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Email Error Text -->
+                <TextView
+                    android:id="@+id/tvEmailError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/logout_red"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:visibility="gone" />
 
                 <!-- Password Input -->
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -250,7 +274,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_large">
+                    android:layout_marginBottom="@dimen/margin_medium">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/confirmPasswordInputLayout"
@@ -300,6 +324,29 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <!-- Password Mismatch Error Text -->
+                <TextView
+                    android:id="@+id/tvPasswordMismatchError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/logout_red"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:visibility="gone" />
+
+                <!-- Password Strength Error Text -->
+                <TextView
+                    android:id="@+id/tvPasswordStrengthError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/logout_red"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:visibility="gone" />
+
                 <!-- Register Button -->
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnRegister"
@@ -310,7 +357,8 @@
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:layout_marginTop="@dimen/margin_medium"/>
 
 
             </LinearLayout>
