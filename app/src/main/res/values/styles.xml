@@ -27,6 +27,20 @@
         <item name="android:textColor">@color/text_secondary_light</item>
         <item name="android:letterSpacing">-0.01</item>
     </style>
+    
+    <style name="NavTextStyle">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/primary_gradient_start</item>
+    </style>
+    
+    <style name="SectionTitleStyle">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/primary_gradient_start</item>
+    </style>
 </resources>
 
 
