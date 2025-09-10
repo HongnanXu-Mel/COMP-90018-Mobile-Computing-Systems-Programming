@@ -32,7 +32,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private TextInputEditText etName, etEmail, etPassword, etConfirmPassword;
     private Button btnRegister;
-    private TextView tabLogin, tabRegister;
+    private TextView tabLogin, tabRegister, tvNameError, tvEmailError, tvPasswordMismatchError, tvPasswordStrengthError;
     private ImageView ivPasswordToggle, ivConfirmPasswordToggle;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -87,6 +87,10 @@ public class RegisterActivity extends AppCompatActivity {
         tabRegister = findViewById(R.id.tabRegister);
         ivPasswordToggle = findViewById(R.id.ivPasswordToggle);
         ivConfirmPasswordToggle = findViewById(R.id.ivConfirmPasswordToggle);
+        tvNameError = findViewById(R.id.tvNameError);
+        tvEmailError = findViewById(R.id.tvEmailError);
+        tvPasswordMismatchError = findViewById(R.id.tvPasswordMismatchError);
+        tvPasswordStrengthError = findViewById(R.id.tvPasswordStrengthError);
     }
 
     private void setupPasswordToggle() {
@@ -123,34 +127,51 @@ public class RegisterActivity extends AppCompatActivity {
         String password = etPassword.getText().toString().trim();
         String confirmPassword = etConfirmPassword.getText().toString().trim();
 
-        // 验证输入
+        // Clear all error messages
+        tvNameError.setVisibility(View.GONE);
+        tvEmailError.setVisibility(View.GONE);
+        tvPasswordMismatchError.setVisibility(View.GONE);
+        tvPasswordStrengthError.setVisibility(View.GONE);
+
         if (TextUtils.isEmpty(name)) {
-            etName.setError("Name is required");
+            tvNameError.setText("Name is required");
+            tvNameError.setVisibility(View.VISIBLE);
             etName.requestFocus();
             return;
         }
 
         if (TextUtils.isEmpty(email)) {
-            etEmail.setError("Email is required");
+            tvEmailError.setText("Email is required");
+            tvEmailError.setVisibility(View.VISIBLE);
+            etEmail.requestFocus();
+            return;
+        }
+
+        // Validate email format
+        if (!isValidEmail(email)) {
+            tvEmailError.setText("Please enter a valid email address");
+            tvEmailError.setVisibility(View.VISIBLE);
             etEmail.requestFocus();
             return;
         }
 
         if (TextUtils.isEmpty(password)) {
-            etPassword.setError("Password is required");
-            etPassword.requestFocus();
-            return;
-        }
-
-        if (password.length() < 6) {
-            etPassword.setError("Password must be at least 6 characters");
+            tvPasswordStrengthError.setText("Password is required");
+            tvPasswordStrengthError.setVisibility(View.VISIBLE);
             etPassword.requestFocus();
             return;
         }
 
         if (!password.equals(confirmPassword)) {
-            etConfirmPassword.setError("Passwords do not match");
-            etConfirmPassword.requestFocus();
+            tvPasswordMismatchError.setText("Passwords don't match");
+            tvPasswordMismatchError.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        String passwordError = validatePasswordStrength(password);
+        if (!passwordError.isEmpty()) {
+            tvPasswordStrengthError.setText(passwordError);
+            tvPasswordStrengthError.setVisibility(View.VISIBLE);
             return;
         }
 
@@ -201,5 +222,40 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private String validatePasswordStrength(String password) {
+        StringBuilder errors = new StringBuilder();
+        
+        if (password.length() < 8) {
+            errors.append("• At least 8 characters\n");
+        }
+        
+        if (!password.matches(".*[A-Z].*")) {
+            errors.append("• At least one uppercase letter\n");
+        }
+        
+        if (!password.matches(".*[a-z].*")) {
+            errors.append("• At least one lowercase letter\n");
+        }
+        
+        if (!password.matches(".*\\d.*")) {
+            errors.append("• At least one number\n");
+        }
+        
+        if (!password.matches(".*[!@#$%^&*(),.?\":{}|<>].*")) {
+            errors.append("• At least one special character");
+        }
+        
+        String errorList = errors.toString().trim();
+        if (!errorList.isEmpty()) {
+            return "Passwords must be:\n" + errorList;
+        }
+        
+        return errorList;
+    }
+
+    private boolean isValidEmail(String email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 }
