@@ -26,26 +26,13 @@
     <string name="accent_dot">accent_dot</string>
     
     <!-- Settings strings -->
-    <string name="privacy_policy">Privacy Policy</string>
-    <string name="contact_us">Contact Us</string>
     <string name="security">Security</string>
-    <string name="logout">Logout</string>
-    <string name="save_changes">Save Changes</string>
     <string name="cannot_be_changed">Cannot be changed</string>
     
-    <!-- Contact information -->
-    <string name="contact_phone">+61 3 9123 4567</string>
-    <string name="contact_email">palate@mail.com</string>
-    
     <!-- Password change strings -->
-    <string name="current_password">Current Password</string>
-    <string name="new_password">New Password</string>
-    <string name="confirm_new_password">Confirm New Password</string>
     <string name="change_password">Change Password</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
-    <string name="password_changed_successfully">Password changed successfully</string>
-    <string name="current_password_incorrect">Current password is incorrect</string>
     <string name="passwords_do_not_match">Passwords do not match</string>
     <string name="password_too_short">Password must be at least 6 characters</string>
     <string name="arrow">Arrow</string>
@@ -53,10 +40,102 @@
     <string name="settings">Settings</string>
     
     <!-- Dialog strings -->
-    <string name="privacy_policy_title">Privacy Policy</string>
-    <string name="contact_us_title">Contact Us</string>
-    <string name="contact_us_message">We\'re here to help! Feel free to reach out to us with any questions or concerns.</string>
     <string name="got_it">Got it</string>
     <string name="understood">Understood</string>
+    
+    <!-- Bypass login strings -->
+    <string name="bypass_login">Skip Login (Demo Mode)</string>
+    
+    <!-- Settings Page Strings -->
+    <string name="settings_title">Settings</string>
+    <string name="profile_settings">Profile Settings</string>
+    <string name="account_settings">Account Settings</string>
+    <string name="support_information">Support &amp; Information</string>
+    <string name="change_profile_picture">Change Profile Picture</string>
+    <string name="name">Name</string>
+    <string name="name_hint">Enter your name</string>
+    <string name="bio">Bio</string>
+    <string name="bio_hint">Tell us about yourself</string>
+    <string name="email">Email</string>
+    <string name="read_only">Read-only</string>
+    <string name="security_privacy">Security &amp; Privacy</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="logout">Logout</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="no_changes_to_save">No changes to save</string>
+    <string name="profile_updated_successfully">Profile updated successfully</string>
+    <string name="failed_to_update_profile">Failed to update profile</string>
+    <string name="please_log_in_to_view_settings">Please log in to view settings</string>
+    <string name="error_loading_settings_page">Error loading settings page</string>
+    <string name="error_initializing_settings">Error initializing settings</string>
+    <string name="error_setting_up_settings">Error setting up settings</string>
+    <string name="error_loading_user_data">Error loading user data</string>
+    <string name="error_creating_profile">Error creating profile</string>
+    <string name="logged_out_successfully">Logged out successfully</string>
+    <string name="logout_confirmation_title">Logout</string>
+    <string name="logout_confirmation_message">Are you sure you want to logout?</string>
+    <string name="username_cannot_be_empty">Username cannot be empty</string>
+    <string name="username_too_short">Username must be at least 2 characters</string>
+    <string name="username_too_long">Username must be less than 20 characters</string>
+    
+    <!-- Profile Picture Dialog Strings -->
+    <string name="change_profile_picture_title">Change Profile Picture</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="choose_from_gallery">Choose from Gallery</string>
+    <string name="remove_photo">Remove Photo</string>
+    <string name="camera_not_available">Camera not available</string>
+    <string name="gallery_not_available">Gallery not available</string>
+    <string name="uploading_profile_picture">Uploading profile picture...</string>
+    <string name="profile_picture_updated_successfully">Profile picture updated successfully</string>
+    <string name="failed_to_upload_profile_picture">Failed to upload profile picture</string>
+    <string name="failed_to_update_profile_picture">Failed to update profile picture</string>
+    <string name="profile_picture_removed_successfully">Profile picture removed successfully</string>
+    <string name="failed_to_remove_profile_picture">Failed to remove profile picture</string>
+    
+    <!-- Contact Us Dialog Strings -->
+    <string name="contact_us_title">Contact Us</string>
+    <string name="contact_us_message">We\'re here to help! Feel free to reach out to us with any questions or concerns.</string>
+    <string name="contact_email">palate.support@example.com</string>
+    <string name="contact_phone">+1 (555) 123-4567</string>
+    <string name="no_email_app_found">No email app found</string>
+    <string name="no_phone_app_found">No phone app found</string>
+    <string name="food_review_app_support">Food Review App Support</string>
+    
+    <!-- Privacy Policy Dialog Strings -->
+    <string name="privacy_policy_title">Privacy Policy</string>
+    <string name="privacy_policy_content_1">This project is made by students for educational purposes.</string>
+    <string name="privacy_policy_content_2">This is a social media app for food reviews where users can share their dining experiences, discover restaurants, and connect with other food enthusiasts.</string>
+    <string name="privacy_policy_content_3">We collect and store your email and password for authentication purposes only. Your personal information is protected and will not be shared with third parties.</string>
+    <string name="privacy_policy_content_4">By using this app, you agree to our terms of service and privacy policy. For any questions or concerns, please contact us.</string>
+    
+    <!-- Password Change Dialog Strings -->
     <string name="change_password_title">Change Password</string>
+    <string name="current_password">Current Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
+    <string name="current_password_required">Current password is required</string>
+    <string name="new_password_required">New password is required</string>
+    <string name="confirm_password_required">Please confirm your new password</string>
+    <string name="password_changed_successfully">Password changed successfully</string>
+    <string name="current_password_incorrect">Current password is incorrect</string>
+    <string name="password_too_weak">Password is too weak</string>
+    <string name="failed_to_change_password">Failed to change password</string>
+    <string name="user_not_authenticated">User not authenticated</string>
+    <string name="changing">Changing...</string>
+    <string name="shield">shield</string>
+    <string name="logout_icon">logout</string>
+    
+    <!-- Forgot Password strings -->
+    <string name="forgot_password_title">Reset Password</string>
+    <string name="forgot_password_subtitle">Enter your email to receive password reset instructions</string>
+    <string name="send_reset_email">Send Reset Email</string>
+    <string name="reset_email_sent">Password reset email sent to %s</string>
+    <string name="reset_email_failed">Failed to send reset email</string>
+    <string name="invalid_email_format">Please enter a valid email address</string>
+    <string name="email_required">Email is required</string>
+    <string name="back_to_login">Back to Login</string>
+    <string name="check_email_instructions">Check your email for password reset instructions</string>
+    <string name="resend_email">Resend Email</string>
+    <string name="email_not_found">No account found with this email address</string>
 </resources>
