@@ -8,7 +8,7 @@
     </style>
     
     <style name="AppLogoStyle">
-        <item name="android:textSize">36sp</item>
+        <item name="android:textSize">32sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textColor">@color/logo_primary</item>
@@ -21,10 +21,10 @@
     </style>
     
     <style name="WelcomeHeaderStyle">
-        <item name="android:textSize">36sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textColor">@color/text_secondary_light</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/text_primary_light</item>
         <item name="android:letterSpacing">-0.01</item>
     </style>
     
