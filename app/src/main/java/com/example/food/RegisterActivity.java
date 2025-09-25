@@ -44,15 +44,15 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // 初始化FirebaseAuth实例
+        // Initialize FirebaseAuth instance
         mAuth = FirebaseAuth.getInstance();
-        // 初始化Firestore实例
+        // Initialize Firestore instance
         db = FirebaseFirestore.getInstance();
 
         initViews();
         setupPasswordToggle();
 
-        // 设置点击事件
+        // Set click listeners
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,7 +133,11 @@ public class RegisterActivity extends AppCompatActivity {
         tvPasswordMismatchError.setVisibility(View.GONE);
         tvPasswordStrengthError.setVisibility(View.GONE);
 
+        // Show loading state
+        setLoadingState(true);
+
         if (TextUtils.isEmpty(name)) {
+            setLoadingState(false);
             tvNameError.setText("Name is required");
             tvNameError.setVisibility(View.VISIBLE);
             etName.requestFocus();
@@ -141,6 +145,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         if (TextUtils.isEmpty(email)) {
+            setLoadingState(false);
             tvEmailError.setText("Email is required");
             tvEmailError.setVisibility(View.VISIBLE);
             etEmail.requestFocus();
@@ -149,6 +154,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Validate email format
         if (!isValidEmail(email)) {
+            setLoadingState(false);
             tvEmailError.setText("Please enter a valid email address");
             tvEmailError.setVisibility(View.VISIBLE);
             etEmail.requestFocus();
@@ -156,6 +162,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         if (TextUtils.isEmpty(password)) {
+            setLoadingState(false);
             tvPasswordStrengthError.setText("Password is required");
             tvPasswordStrengthError.setVisibility(View.VISIBLE);
             etPassword.requestFocus();
@@ -163,6 +170,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         if (!password.equals(confirmPassword)) {
+            setLoadingState(false);
             tvPasswordMismatchError.setText("Passwords don't match");
             tvPasswordMismatchError.setVisibility(View.VISIBLE);
             return;
@@ -170,20 +178,22 @@ public class RegisterActivity extends AppCompatActivity {
 
         String passwordError = validatePasswordStrength(password);
         if (!passwordError.isEmpty()) {
+            setLoadingState(false);
             tvPasswordStrengthError.setText(passwordError);
             tvPasswordStrengthError.setVisibility(View.VISIBLE);
             return;
         }
 
-        // 使用Firebase创建用户
+        // Create user with Firebase
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // 注册成功，保存用户信息到Firestore
+                            // Registration successful, save user info to Firestore
                             saveUserInfo(name, email);
                         } else {
+                            setLoadingState(false);
                             Exception e = task.getException();
                             String code = (e instanceof FirebaseAuthException) ? ((FirebaseAuthException) e).getErrorCode() : "N/A";
                             String message = e != null ? e.getMessage() : "Unknown error";
@@ -196,22 +206,23 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void saveUserInfo(String name, String email) {
-        // 创建用户信息映射
+        // Create user info mapping
         Map<String, Object> user = new HashMap<>();
         user.put("name", name);
         user.put("email", email);
 
-        // 将用户信息保存到Firestore
+        // Save user info to Firestore
         db.collection("users")
                 .document(mAuth.getCurrentUser().getUid())
                 .set(user)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        setLoadingState(false);
                         if (task.isSuccessful()) {
-                            // 注册成功
-                            // 跳转到主页
-                            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                            // Registration successful, redirect to login page
+                            Toast.makeText(RegisterActivity.this, "Registration successful! Please login.", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                             finish();
                         } else {
                             Exception e = task.getException();
@@ -257,5 +268,15 @@ public class RegisterActivity extends AppCompatActivity {
 
     private boolean isValidEmail(String email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private void setLoadingState(boolean isLoading) {
+        if (isLoading) {
+            btnRegister.setEnabled(false);
+            btnRegister.setText("Creating account...");
+        } else {
+            btnRegister.setEnabled(true);
+            btnRegister.setText("Register");
+        }
     }
 }
