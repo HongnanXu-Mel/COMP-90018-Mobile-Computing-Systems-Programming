@@ -22,8 +22,8 @@
     <dimen name="text_size_header">28sp</dimen>
     
     <!-- Input Field Heights -->
-    <dimen name="input_field_height">56dp</dimen>
-    <dimen name="button_height">60dp</dimen>
+    <dimen name="input_field_height">52dp</dimen>
+    <dimen name="button_height">52dp</dimen>
     
     <!-- Corner Radius -->
     <dimen name="corner_radius_small">4dp</dimen>
