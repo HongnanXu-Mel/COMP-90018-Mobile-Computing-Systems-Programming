@@ -53,11 +53,11 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     
-    // 添加Java支持和AndroidX依赖
+    // Add Java support and AndroidX dependencies
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.0")
     
-    // 添加Material Design依赖
+    // Add Material Design dependencies
     implementation("com.google.android.material:material:1.12.0")
     
     // Firebase dependencies
