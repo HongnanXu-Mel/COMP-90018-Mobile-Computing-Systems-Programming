@@ -21,7 +21,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.food.adapter.PostAdapter;
 import com.example.food.model.Post;
 import com.example.food.service.PostService;
-import com.example.food.utils.DataSeeder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,16 +111,8 @@ public class HomeFragment extends Fragment {
                 getActivity().runOnUiThread(() -> {
                     allPosts.clear();
                     allPosts.addAll(posts);
-                    
-                    // If no posts data, automatically generate test data
-                    if (posts.isEmpty()) {
-                        Log.d(TAG, "No posts found, generating sample data...");
-                        Toast.makeText(getContext(), "Generating sample data...", Toast.LENGTH_SHORT).show();
-                        generateSampleData();
-                    } else {
-                        updateUI();
-                        showLoading(false);
-                    }
+                    updateUI();
+                    showLoading(false);
                 });
             }
 
@@ -137,38 +128,6 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-
-    /**
-     * Automatically generate sample data and upload to Firebase
-     */
-    private void generateSampleData() {
-        DataSeeder seeder = new DataSeeder();
-        seeder.seedPosts(new DataSeeder.SeedCallback() {
-            @Override
-            public void onSuccess(int count) {
-                if (getActivity() == null) return;
-                
-                getActivity().runOnUiThread(() -> {
-                    Log.d(TAG, "Successfully uploaded " + count + " sample posts");
-                    Toast.makeText(getContext(), "✅ Generated " + count + " sample posts", Toast.LENGTH_LONG).show();
-                    // Reload posts
-                    loadPosts();
-                });
-            }
-
-            @Override
-            public void onError(Exception e) {
-                if (getActivity() == null) return;
-                
-                getActivity().runOnUiThread(() -> {
-                    showLoading(false);
-                    showError("Failed to generate sample data: " + e.getMessage());
-                    Log.e(TAG, "Error generating sample data", e);
-                });
-            }
-        });
-    }
-
 
     private void refreshPosts() {
         postService.loadPosts(new PostService.PostsLoadCallback() {
