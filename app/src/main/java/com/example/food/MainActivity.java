@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.widget.FrameLayout;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private TextView tvWelcome;
     private Button btnLogout;
+    private FrameLayout addButtonOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +63,13 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNav.setSelectedItemId(R.id.nav_home);
         
-        // 自动上传功能已删除，现在只从Firebase加载数据
+        // Setup add button click listener
+        addButtonOverlay = findViewById(R.id.add_button_overlay);
+        addButtonOverlay.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, CreatePostActivity.class);
+            startActivity(intent);
+        });
     }
-    
-    // 上传功能已删除，现在只从Firebase加载数据
 
     private void switchFragment(Fragment fragment) {
         FragmentManager fm = getSupportFragmentManager();

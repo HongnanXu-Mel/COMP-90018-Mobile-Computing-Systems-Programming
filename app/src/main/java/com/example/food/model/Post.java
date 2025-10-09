@@ -13,6 +13,9 @@ public class Post {
     private int likesCount;
     private int commentsCount;
     private String category;
+    private String restaurantId;
+    private String restaurantName;
+    private String restaurantAddress;
 
     // Default constructor required for Firebase
     public Post() {
@@ -123,6 +126,30 @@ public class Post {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
+    }
+
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
+    }
+
+    public String getRestaurantAddress() {
+        return restaurantAddress;
+    }
+
+    public void setRestaurantAddress(String restaurantAddress) {
+        this.restaurantAddress = restaurantAddress;
     }
 
     @Override
