@@ -1,5 +1,6 @@
 package com.example.food;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -72,9 +73,9 @@ public class HomeFragment extends Fragment {
         
         // Set post click listener
         postAdapter.setOnPostClickListener(post -> {
-            // TODO: Navigate to post details
-            Toast.makeText(getContext(), "Post clicked: " + post.getTitle(), Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "Post clicked: " + post.getPostId());
+            Intent intent = new Intent(getContext(), PostDetailActivity.class);
+            intent.putExtra(PostDetailActivity.EXTRA_POST_ID, post.getPostId());
+            startActivity(intent);
         });
     }
 

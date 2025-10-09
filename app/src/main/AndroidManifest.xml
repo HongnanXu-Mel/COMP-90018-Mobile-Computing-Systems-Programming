@@ -43,6 +43,10 @@
             android:name=".CreatePostActivity"
             android:exported="false"
             android:theme="@style/Theme.Food" />
+        <activity
+            android:name=".PostDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Food" />
         <!-- SuccessActivity已删除，不再需要 -->
     </application>
 
