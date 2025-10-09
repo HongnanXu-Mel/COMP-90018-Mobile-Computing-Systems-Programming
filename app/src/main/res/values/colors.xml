@@ -20,6 +20,12 @@
     <color name="primary_gradient_start">#EF7722</color>
     <color name="primary_gradient_end">#FAA533</color>
     
+    <!-- Rating and Accuracy Colors -->
+    <color name="rating_text_color">#FAA533</color>
+    <color name="accuracy_text_color">#10B981</color>
+    <color name="rating_icon_color">#FAA533</color>
+    <color name="accuracy_icon_color">#10B981</color>
+    
     <!-- Input Field Colors - Orange Theme -->
     <color name="input_background_light">#FFFFFF</color>
     <color name="input_border_light">#E5E5EA</color>
@@ -63,17 +69,32 @@
     <color name="rating_average">#F97316</color>
     <color name="rating_poor">#EF4444</color>
     
-    <!-- Achievement Colors -->
-    <color name="achievement_gold">#F59E0B</color>
-    <color name="achievement_silver">#6B7280</color>
-    <color name="achievement_bronze">#CD7F32</color>
-    <color name="achievement_background">#FEF3C7</color>
-    <color name="achievement_border">#F59E0B</color>
+    <!-- Additional Colors for Review Dialog -->
+    <color name="profile_text_primary">#1A1A1A</color>
+    <color name="profile_text_secondary">#8E8E93</color>
+    <color name="profile_text_tertiary">#C7C7CC</color>
+    <color name="profile_bg_tertiary">#F8F9FA</color>
+    <color name="profile_warning">#FAA533</color>
+    <color name="profile_success">#10B981</color>
+    <color name="modern_success">#10B981</color>
+    <color name="bottom_sheet_background">#FFFFFF</color>
+    <color name="cardview_shadow_start_color">#F8F9FA</color>
+
+    <color name="primary_color">#EF7722</color>
+    <color name="profile_chip_text">#1A1A1A</color>
+    <color name="profile_metric_text_secondary">#8E8E93</color>
+    <color name="profile_metric_text_primary">#1A1A1A</color>
     
-    <!-- Cuisine Colors -->
-    <color name="cuisine_italian">#EF4444</color>
-    <color name="cuisine_japanese">#3B82F6</color>
-    <color name="cuisine_chinese">#F59E0B</color>
-    <color name="cuisine_mexican">#10B981</color>
-    <color name="cuisine_indian">#8B5CF6</color>
+    
+    <!-- Profile Colors -->
+    <color name="profile_border">#E5E5EA</color>
+    <color name="profile_accent">#EF7722</color>
+    <color name="profile_border_light">#F3F4F6</color>
+    
+    <!-- Error Colors -->
+    <color name="modern_error">#EF4444</color>
+    
+    <!-- Review Dialog Colors -->
+    <color name="star_badge_color">#FAA533</color>
+    <color name="accuracy_badge_color">#10B981</color>
 </resources>

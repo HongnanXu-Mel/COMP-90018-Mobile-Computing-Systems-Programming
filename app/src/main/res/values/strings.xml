@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Food</string>
     <string name="google_maps_key">AIzaSyBWx26gVbla-E_mQhOS59zD_CHu0SD6fs4</string>
-    <!-- 可选：若你的 Places Web Service 使用单独 Key，则在这里填入 -->
     <string name="google_places_key">AIzaSyBWx26gVbla-E_mQhOS59zD_CHu0SD6fs4</string>
     
     <!-- Accessibility strings -->
@@ -138,4 +137,147 @@
     <string name="check_email_instructions">Check your email for password reset instructions</string>
     <string name="resend_email">Resend Email</string>
     <string name="email_not_found">No account found with this email address</string>
+    
+    <!-- Profile Page Strings -->
+    <string name="profile_title">Profile</string>
+    <string name="credibility_score">Credibility</string>
+    <string name="experience_level">Experience</string>
+    <string name="score_out_of">/100</string>
+    <string name="total_reviews">Reviews</string>
+    <string name="member_since">Member since</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="view_reviews">View Reviews</string>
+    <string name="achievements">Achievements</string>
+    <string name="favorite_cuisines">Favorite Cuisines</string>
+    <string name="recent_activity">Recent Activity</string>
+    
+    <!-- Credibility Score Tooltip -->
+    <string name="credibility_tooltip_title">Credibility Score Breakdown</string>
+    <string name="credibility_tooltip_message">Your credibility score is calculated from:\n\n• Helpful Vote Ratio: %1$d%% (%2$d/%3$d votes)\n• Review Quality: %4$d%% (based on content depth)\n• Community Engagement: %5$d%% (comments, likes, shares)\n• Consistency Score: %6$d%% (regular activity)\n\nTotal Score: %7$d/100</string>
+    
+    <!-- Experience Level Tooltip -->
+    <string name="experience_tooltip_title">Experience Level Breakdown</string>
+    <string name="experience_tooltip_message">Your experience level is calculated from:\n\n• Review Count: %1$d reviews (%2$d%% of max)\n• Cuisine Variety: %3$d cuisines (%4$d%% of max)\n• Time Active: %5$d days (%6$d%% of max)\n• Restaurant Variety: %7$d restaurants (%8$d%% of max)\n\nTotal Score: %9$d/100</string>
+    
+    <!-- Level Names -->
+    <string name="level_beginner">Beginner</string>
+    <string name="level_explorer">Explorer</string>
+    <string name="level_enthusiast">Enthusiast</string>
+    <string name="level_expert">Expert</string>
+    <string name="level_master">Master</string>
+    
+    <!-- Achievement Strings -->
+    <string name="achievement_first_review">First Review</string>
+    <string name="achievement_food_explorer">Food Explorer</string>
+    <string name="achievement_helpful_reviewer">Helpful Reviewer</string>
+    <string name="achievement_community_leader">Community Leader</string>
+    
+    <!-- Profile Actions -->
+    <string name="share_profile">Share Profile</string>
+    <string name="report_user">Report User</string>
+    <string name="block_user">Block User</string>
+    
+    <!-- Profile Stats -->
+    <string name="reviews_count">%d reviews</string>
+    <string name="helpful_votes">%d helpful votes</string>
+    <string name="cuisines_tried">%d cuisines</string>
+    <string name="restaurants_visited">%d restaurants</string>
+    
+    <!-- Profile Screen -->
+    <string name="member_since_format">Member since %s</string>
+    <string name="level_format">Level %d</string>
+    
+    <!-- Level descriptions -->
+    <string name="level_beginner_desc">New to food reviewing. Building credibility through quality reviews.</string>
+    <string name="level_explorer_desc">Active food explorer. Regularly shares experiences and discoveries.</string>
+    <string name="level_enthusiast_desc">Passionate food enthusiast. Known for detailed and helpful reviews.</string>
+    <string name="level_expert_desc">Food expert with extensive knowledge. Highly trusted by the community.</string>
+    <string name="level_master_desc">Master food critic. Recognized authority with exceptional expertise.</string>
+    <string name="credibility_score_label">Credibility Score</string>
+    <string name="experience_level_label">Experience Level</string>
+    <string name="score_max_format">%d/100</string>
+    <string name="badges_section">Badges</string>
+    <string name="no_badges">No badges yet</string>
+    <string name="recent_reviews">Recent Reviews</string>
+    <string name="no_reviews">No reviews yet</string>
+    <string name="view_all_reviews">View All</string>
+    
+    <!-- Metric Tooltips -->
+    <string name="profile_metric_credibility_title">Credibility Score</string>
+    <string name="profile_metric_credibility_body">Your credibility score is based on the helpfulness of your reviews, community engagement, and accuracy. Higher scores indicate more trusted and valuable contributions to the food community.</string>
+    <string name="profile_metric_experience_title">Experience Level</string>
+    <string name="profile_metric_experience_body">Your experience level reflects your activity in the food community, including the number of reviews written, variety of restaurants visited, and time spent contributing to the platform.</string>
+    
+    <!-- Enhanced bottom sheet -->
+    <string name="score_interpretation">Score Interpretation</string>
+    <string name="credibility_score_interpretation">Higher credibility scores mean your reviews are more trusted and helpful to the community.</string>
+    <string name="experience_score_interpretation">Higher experience levels reflect greater activity and expertise in food reviewing.</string>
+    
+    <!-- Engagement Score Strings -->
+    <string name="engagement_score_title">Engagement Score</string>
+    <string name="engagement_score_body">Your engagement score measures how actively you participate in the community through reviews, comments, and interactions with other food enthusiasts.</string>
+    <string name="engagement_score_interpretation">Higher engagement scores show you\'re an active and valuable community member.</string>
+    
+    <!-- Dynamic Score Placeholders -->
+    <string name="credibility_score_value">0</string>
+    <string name="experience_score_value">0</string>
+    <string name="engagement_score_value">0</string>
+    
+    <!-- Tabs -->
+    <string name="tab_reviews">Reviews</string>
+    <string name="tab_activity">Activity</string>
+    <string name="tab_achievements">Achievements</string>
+    <string name="home">Home</string>
+    <string name="map">Map</string>
+    <string name="profile">Profile</string>
+    <string name="settings_name">Settings</string>
+    <string name="back">Back</string>
+    <string name="loading">Loading...</string>
+    
+    <!-- Review Dialog Strings -->
+    <string name="rating_label">RATING</string>
+    <string name="accuracy_label">ACCURACY</string>
+    <string name="rating_placeholder">5.0</string>
+    <string name="accuracy_placeholder">100%</string>
+    <string name="restaurant_placeholder">Restaurant Name</string>
+    <string name="description_placeholder">No description provided</string>
+    <string name="more_options">More Options</string>
+    <string name="accurate">Accurate</string>
+    <string name="inaccurate">Inaccurate</string>
+    <string name="comments">Comments</string>
+    
+    <!-- Profile Placeholder Values -->
+    <string name="credibility_placeholder">0</string>
+    <string name="experience_placeholder">0</string>
+    <string name="engagement_placeholder">0</string>
+    <string name="bio_placeholder">Welcome to my food journey!</string>
+    <string name="username_placeholder">Food Explorer</string>
+    <string name="review_caption_placeholder">Amazing food experience</string>
+    <string name="close">Close</string>
+    
+    <!-- Profile Fragment Strings -->
+    <string name="member_since_placeholder">Member since Jan 2024</string>
+    <string name="credibility_label">CREDIBILITY</string>
+    <string name="experience_label">EXPERIENCE</string>
+    <string name="engagement_label">ENGAGEMENT</string>
+    <string name="score_out_of_100">/100</string>
+    <string name="engagement_placeholder_value">0</string>
+    <string name="reviews_tab">Reviews</string>
+    <string name="analytics_tab">Analytics</string>
+    <string name="no_reviews_yet">No Reviews Yet</string>
+    <string name="start_exploring_message">Start exploring restaurants and share your experiences</string>
+    <string name="total_reviews_label">TOTAL REVIEWS</string>
+    <string name="reviews_written">reviews written</string>
+    <string name="average_rating_label">AVERAGE RATING</string>
+    <string name="stars_average">stars average</string>
+    <string name="restaurants_label">RESTAURANTS</string>
+    <string name="unique_places">unique places</string>
+    <string name="community_votes_label">COMMUNITY VOTES</string>
+    <string name="votes_received">votes received</string>
+    <string name="member_since_label">MEMBER SINCE</string>
+    <string name="member_since_date">January 2024</string>
+    <string name="read_more">Read more</string>
+    <string name="read_less">Read less</string>
+    <string name="category_placeholder">Restaurant</string>
+    <string name="location_placeholder">Location</string>
 </resources>
