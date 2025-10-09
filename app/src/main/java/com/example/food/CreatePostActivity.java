@@ -146,29 +146,65 @@ public class CreatePostActivity extends AppCompatActivity {
             return;
         }
 
-        String username = currentUser.getDisplayName() != null ? currentUser.getDisplayName() : "Anonymous";
         String userId = currentUser.getUid();
-
-        // Create post object
-        Post post = new Post();
-        post.setTitle(title);
-        post.setContent(content);
-        post.setUsername(username);
-        post.setUserId(userId);
-        post.setTimestamp(Timestamp.now());
-        post.setLikesCount(0);
-        post.setCommentsCount(0);
-        post.setCategory("Restaurant Review");
 
         // Show loading
         btnPost.setEnabled(false);
         btnPost.setText("Posting...");
 
-        if (selectedImageUri != null) {
-            uploadImageAndCreatePost(post);
-        } else {
-            savePostToFirestore(post, null);
-        }
+        // Fetch username from Firestore users collection
+        db.collection("users").document(userId)
+            .get()
+            .addOnSuccessListener(documentSnapshot -> {
+                String username;
+                if (documentSnapshot.exists() && documentSnapshot.getString("name") != null) {
+                    username = documentSnapshot.getString("name");
+                } else {
+                    // Fallback: use email prefix if name not found
+                    username = currentUser.getEmail() != null ?
+                        currentUser.getEmail().split("@")[0] : "Anonymous";
+                }
+
+                // Create post object
+                Post post = new Post();
+                post.setTitle(title);
+                post.setContent(content);
+                post.setUsername(username);
+                post.setUserId(userId);
+                post.setTimestamp(Timestamp.now());
+                post.setLikesCount(0);
+                post.setCommentsCount(0);
+                post.setCategory("Restaurant Review");
+
+                if (selectedImageUri != null) {
+                    uploadImageAndCreatePost(post);
+                } else {
+                    savePostToFirestore(post, null);
+                }
+            })
+            .addOnFailureListener(e -> {
+                Log.e(TAG, "Error fetching user info", e);
+                // Fallback: use email prefix if fetch fails
+                String username = currentUser.getEmail() != null ?
+                    currentUser.getEmail().split("@")[0] : "Anonymous";
+
+                // Create post object with fallback username
+                Post post = new Post();
+                post.setTitle(title);
+                post.setContent(content);
+                post.setUsername(username);
+                post.setUserId(userId);
+                post.setTimestamp(Timestamp.now());
+                post.setLikesCount(0);
+                post.setCommentsCount(0);
+                post.setCategory("Restaurant Review");
+
+                if (selectedImageUri != null) {
+                    uploadImageAndCreatePost(post);
+                } else {
+                    savePostToFirestore(post, null);
+                }
+            });
     }
 
     private List<String> getSelectedComments() {
