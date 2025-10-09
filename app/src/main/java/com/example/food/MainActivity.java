@@ -36,12 +36,12 @@ public class MainActivity extends AppCompatActivity {
         
         setContentView(R.layout.activity_main);
 
-        // 初始化FirebaseAuth实例
+        // Initialize FirebaseAuth instance
         mAuth = FirebaseAuth.getInstance();
 
-        // 检查用户是否已登录
+        // Check if user is already logged in
         if (mAuth.getCurrentUser() == null) {
-            // 用户未登录，跳转到登录页面
+            // User not logged in, redirect to login page
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
             return;
@@ -50,11 +50,19 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
+            
+            // Update icons based on selection
+            updateNavIcons(bottomNav, id);
+            
             if (id == R.id.nav_home) {
                 switchFragment(new HomeFragment());
                 return true;
             } else if (id == R.id.nav_map) {
                 switchFragment(new MapFragment());
+                return true;
+            } else if (id == R.id.nav_add) {
+                // TODO: Implement add review functionality
+                Toast.makeText(this, "Add Review - Coming Soon!", Toast.LENGTH_SHORT).show();
                 return true;
             } else if (id == R.id.nav_profile) {
                 switchFragment(new ProfileFragment());
@@ -67,11 +75,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         bottomNav.setSelectedItemId(R.id.nav_home);
+        updateNavIcons(bottomNav, R.id.nav_home);
         
-        // 自动上传功能已删除，现在只从Firebase加载数据
+        // Auto-upload functionality deleted, now only loads data from Firebase
     }
     
-    // 上传功能已删除，现在只从Firebase加载数据
+    // Upload functionality deleted, now only loads data from Firebase
 
     private void setupSystemBars() {
         Window window = getWindow();
@@ -108,5 +117,28 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction tx = fm.beginTransaction();
         tx.replace(R.id.fragment_container, fragment);
         tx.commit();
+    }
+    
+    private void updateNavIcons(BottomNavigationView bottomNav, int selectedId) {
+        // Reset all icons to outline versions
+        bottomNav.getMenu().findItem(R.id.nav_home).setIcon(R.drawable.ic_home_outline);
+        bottomNav.getMenu().findItem(R.id.nav_map).setIcon(R.drawable.ic_map_outline);
+        bottomNav.getMenu().findItem(R.id.nav_add).setIcon(R.drawable.ic_add_outline);
+        bottomNav.getMenu().findItem(R.id.nav_profile).setIcon(R.drawable.ic_profile_outline);
+        bottomNav.getMenu().findItem(R.id.nav_settings).setIcon(R.drawable.ic_settings_outline);
+        
+        // Set the selected icon to filled version
+        if (selectedId == R.id.nav_home) {
+            bottomNav.getMenu().findItem(R.id.nav_home).setIcon(R.drawable.ic_home_filled);
+        } else if (selectedId == R.id.nav_map) {
+            bottomNav.getMenu().findItem(R.id.nav_map).setIcon(R.drawable.ic_map_filled);
+        } else if (selectedId == R.id.nav_add) {
+            // Add button becomes filled when selected
+            bottomNav.getMenu().findItem(R.id.nav_add).setIcon(R.drawable.ic_add_filled);
+        } else if (selectedId == R.id.nav_profile) {
+            bottomNav.getMenu().findItem(R.id.nav_profile).setIcon(R.drawable.ic_profile_filled);
+        } else if (selectedId == R.id.nav_settings) {
+            bottomNav.getMenu().findItem(R.id.nav_settings).setIcon(R.drawable.ic_settings_filled);
+        }
     }
 }
