@@ -118,7 +118,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_delete"
-                android:tint="#DC2626" />
+                android:tint="@color/modern_error" />
 
             <TextView
                 android:layout_width="0dp"
@@ -126,7 +126,7 @@
                 android:layout_weight="1"
                 android:layout_marginStart="16dp"
                 android:text="@string/remove_photo"
-                android:textColor="#DC2626"
+                android:textColor="@color/modern_error"
                 android:textSize="16sp"
                 android:fontFamily="sans-serif-medium" />
 
