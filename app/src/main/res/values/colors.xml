@@ -53,4 +53,8 @@
     
     <!-- Action Colors -->
     <color name="logout_red">#DC2626</color>
+    
+    <!-- Post Card Colors -->
+    <color name="gray">#9CA3AF</color>
+    <color name="light_gray">#F3F4F6</color>
 </resources>
