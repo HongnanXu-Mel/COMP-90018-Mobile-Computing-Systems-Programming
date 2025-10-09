@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_directions"
+        android:title="Get Directions"
+        android:icon="@drawable/ic_map_filled" />
+    <item
+        android:id="@+id/action_search_restaurant"
+        android:title="Search This Restaurant"
+        android:icon="@drawable/ic_search" />
+</menu>
