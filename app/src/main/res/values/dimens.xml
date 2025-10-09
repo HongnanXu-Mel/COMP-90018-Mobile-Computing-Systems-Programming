@@ -39,4 +39,9 @@
     <dimen name="elevation_low">2dp</dimen>
     <dimen name="elevation_medium">4dp</dimen>
     <dimen name="elevation_high">8dp</dimen>
+
+    <!-- Spacing -->
+    <dimen name="spacing_s">8dp</dimen>
+    <dimen name="spacing_m">16dp</dimen>
+    <dimen name="spacing_l">24dp</dimen>
 </resources>
