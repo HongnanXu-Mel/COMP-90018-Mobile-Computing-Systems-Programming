@@ -33,6 +33,7 @@ import com.example.food.adapters.CommentsAdapter;
 import com.example.food.adapters.ImagePagerAdapter;
 import com.example.food.data.Review;
 import com.example.food.model.Restaurant;
+import com.example.food.services.UserStatsService;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -59,8 +60,10 @@ public class ReviewDetailsDialog extends Dialog {
     private ImageView btnMoreOptions;
     private TextView tvAuthorName;
     private TextView tvRestaurantName;
+    private TextView tvRestaurantAddress;
     private TextView tvRestaurantCategory;
     private TextView tvRestaurantLocation;
+    private LinearLayout categoryLocationContainer;
     private ViewPager2 imagePager;
     private LinearLayout starContainer;
     private ImageView[] stars;
@@ -121,8 +124,10 @@ public class ReviewDetailsDialog extends Dialog {
         btnClose = findViewById(R.id.btnClose);
         tvAuthorName = findViewById(R.id.tvAuthorName);
         tvRestaurantName = findViewById(R.id.tvRestaurantName);
+        tvRestaurantAddress = findViewById(R.id.tvRestaurantAddress);
         tvRestaurantCategory = findViewById(R.id.tvRestaurantCategory);
         tvRestaurantLocation = findViewById(R.id.tvRestaurantLocation);
+        categoryLocationContainer = findViewById(R.id.categoryLocationContainer);
         btnMoreOptions = findViewById(R.id.btnMoreOptions);
 
         // Image gallery
@@ -182,6 +187,10 @@ public class ReviewDetailsDialog extends Dialog {
         if (tvRestaurantName != null) {
             if (restaurant != null) {
                 tvRestaurantName.setText(restaurant.getName());
+                // Set address from restaurant object if available
+                if (tvRestaurantAddress != null) {
+                    tvRestaurantAddress.setText(restaurant.getAddress() != null ? restaurant.getAddress() : "Address not available");
+                }
                 // Set category and location from restaurant object if available
                 if (tvRestaurantCategory != null) {
                     tvRestaurantCategory.setText(restaurant.getCategory() != null ? restaurant.getCategory() : "Restaurant");
@@ -193,6 +202,9 @@ public class ReviewDetailsDialog extends Dialog {
                 fetchRestaurantName(review.getRestaurantId());
             } else {
                 tvRestaurantName.setText(getContext().getString(R.string.restaurant_placeholder));
+                if (tvRestaurantAddress != null) {
+                    tvRestaurantAddress.setText("Address not available");
+                }
                 if (tvRestaurantCategory != null) {
                     tvRestaurantCategory.setText("Restaurant");
                 }
@@ -439,6 +451,8 @@ public class ReviewDetailsDialog extends Dialog {
                 .update(updates)
                 .addOnSuccessListener(aVoid -> {
                     Log.d(TAG, "Vote and accuracy updated successfully");
+                    // Update the review author's scores when their review gets voted on
+                    UserStatsService.updateUserScoresOnVoteChange(review.getId());
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error updating vote", e);
@@ -533,6 +547,9 @@ public class ReviewDetailsDialog extends Dialog {
     private void fetchRestaurantName(String restaurantId) {
         if (restaurantId == null || restaurantId.trim().isEmpty()) {
             tvRestaurantName.setText(getContext().getString(R.string.restaurant_placeholder));
+            if (tvRestaurantAddress != null) {
+                tvRestaurantAddress.setText("Address not available");
+            }
             tvRestaurantCategory.setText("Restaurant");
             tvRestaurantLocation.setText("Location");
             return;
@@ -551,6 +568,12 @@ public class ReviewDetailsDialog extends Dialog {
                         tvRestaurantName.setText(getContext().getString(R.string.restaurant_placeholder));
                     }
 
+                    // Set restaurant address
+                    String address = documentSnapshot.getString("address");
+                    if (tvRestaurantAddress != null) {
+                        tvRestaurantAddress.setText(address != null && !address.trim().isEmpty() ? address : "Address not available");
+                    }
+
                     // Set restaurant category
                     String category = documentSnapshot.getString("category");
                     if (tvRestaurantCategory != null) {
@@ -564,6 +587,9 @@ public class ReviewDetailsDialog extends Dialog {
                     }
                 } else {
                     tvRestaurantName.setText(getContext().getString(R.string.restaurant_placeholder));
+                    if (tvRestaurantAddress != null) {
+                        tvRestaurantAddress.setText("Address not available");
+                    }
                     tvRestaurantCategory.setText("Restaurant");
                     tvRestaurantLocation.setText("Location");
                 }
@@ -646,6 +672,10 @@ public class ReviewDetailsDialog extends Dialog {
             btnExpandCaption.setText(getContext().getString(R.string.read_less));
             // Add background when expanded
             bottomBar.setBackgroundResource(R.drawable.dialog_background);
+            // Show category and location when expanded
+            if (categoryLocationContainer != null) {
+                categoryLocationContainer.setVisibility(View.VISIBLE);
+            }
             // Hide action icons when footer is expanded
             View actionIcons = findViewById(R.id.actionIcons);
             if (actionIcons != null) {
@@ -662,6 +692,10 @@ public class ReviewDetailsDialog extends Dialog {
             btnExpandCaption.setText(getContext().getString(R.string.read_more));
             // Remove background when collapsed
             bottomBar.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+            // Hide category and location when collapsed
+            if (categoryLocationContainer != null) {
+                categoryLocationContainer.setVisibility(View.GONE);
+            }
             // Show action icons when footer is collapsed
             View actionIcons = findViewById(R.id.actionIcons);
             if (actionIcons != null) {
