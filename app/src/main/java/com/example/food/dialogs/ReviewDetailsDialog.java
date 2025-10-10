@@ -523,6 +523,9 @@ public class ReviewDetailsDialog extends Dialog {
                 // TODO: Implement search restaurant functionality
                 Toast.makeText(getContext(), "Search restaurant feature coming soon", Toast.LENGTH_SHORT).show();
                 return true;
+            } else if (itemId == R.id.action_delete_post) {
+                showDeleteConfirmation();
+                return true;
             }
             return false;
         });
@@ -673,5 +676,43 @@ public class ReviewDetailsDialog extends Dialog {
         tvDialogCaption.requestLayout();
         captionScrollView.requestLayout();
         btnExpandCaption.requestLayout();
+    }
+
+    private void showDeleteConfirmation() {
+        // Check if current user is the author of the review
+        if (currentUserId == null || !currentUserId.equals(review.getUserId())) {
+            Toast.makeText(getContext(), "You can only delete your own posts", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        com.example.food.dialogs.DeletePostConfirmationDialog dialog = 
+            new com.example.food.dialogs.DeletePostConfirmationDialog(getContext(), this::deletePost);
+        dialog.show();
+    }
+
+    private void deletePost() {
+        if (review.getId() == null || review.getId().trim().isEmpty()) {
+            Toast.makeText(getContext(), getContext().getString(R.string.failed_to_delete_post), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Show loading state
+        Toast.makeText(getContext(), "Deleting post...", Toast.LENGTH_SHORT).show();
+
+        // Delete from Firestore
+        db.collection("reviews")
+            .document(review.getId())
+            .delete()
+            .addOnSuccessListener(aVoid -> {
+                Log.d(TAG, "Review deleted successfully");
+                Toast.makeText(getContext(), getContext().getString(R.string.post_deleted_successfully), Toast.LENGTH_SHORT).show();
+                
+                // Close the dialog
+                dismiss();
+            })
+            .addOnFailureListener(e -> {
+                Log.e(TAG, "Error deleting review", e);
+                Toast.makeText(getContext(), getContext().getString(R.string.failed_to_delete_post), Toast.LENGTH_SHORT).show();
+            });
     }
 }
