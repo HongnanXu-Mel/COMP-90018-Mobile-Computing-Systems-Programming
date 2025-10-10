@@ -1,5 +1,7 @@
 package com.example.food.data;
 
+import java.util.Map;
+
 public class UserProfile {
     private String uid;
     private String name;
@@ -8,6 +10,9 @@ public class UserProfile {
     private String bio;
     private long createdAt;
     private long updatedAt;
+    private double credibilityScore;
+    private double experienceScore;
+    private Map<String, Object> stats;
 
     // Default constructor required for Firebase
     public UserProfile() {
@@ -81,6 +86,30 @@ public class UserProfile {
         this.updatedAt = updatedAt;
     }
 
+    public double getCredibilityScore() {
+        return credibilityScore;
+    }
+
+    public void setCredibilityScore(double credibilityScore) {
+        this.credibilityScore = credibilityScore;
+    }
+
+    public double getExperienceScore() {
+        return experienceScore;
+    }
+
+    public void setExperienceScore(double experienceScore) {
+        this.experienceScore = experienceScore;
+    }
+
+    public Map<String, Object> getStats() {
+        return stats;
+    }
+
+    public void setStats(Map<String, Object> stats) {
+        this.stats = stats;
+    }
+
     @Override
     public String toString() {
         return "UserProfile{" +
@@ -91,6 +120,8 @@ public class UserProfile {
                 ", bio='" + bio + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
+                ", credibilityScore=" + credibilityScore +
+                ", experienceScore=" + experienceScore +
                 '}';
     }
 }
