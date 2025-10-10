@@ -3,6 +3,7 @@ package com.example.food.data;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 public class Comment {
     private String id;
@@ -10,6 +11,7 @@ public class Comment {
     private String userName;
     private String text;
     private Date createdAt;
+    private Map<String, Boolean> likes;
 
     public Comment() {
         // Default constructor for Firestore
@@ -44,4 +46,7 @@ public class Comment {
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
         return sdf.format(createdAt);
     }
+
+    public Map<String, Boolean> getLikes() { return likes; }
+    public void setLikes(Map<String, Boolean> likes) { this.likes = likes; }
 }
