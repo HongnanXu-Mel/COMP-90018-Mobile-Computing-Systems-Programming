@@ -26,6 +26,7 @@ import com.example.food.data.Review;
 import com.example.food.data.UserProfile;
 import com.example.food.dialogs.ReviewDetailsDialog;
 import com.example.food.model.Restaurant;
+import com.example.food.services.UserStatsService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -130,27 +131,100 @@ public class ProfileFragment extends Fragment {
 
     private void showMetricInfoBottomSheet(String title, String message, String interpretation, String metricType) {
         BottomSheetDialog sheet = new BottomSheetDialog(requireContext());
-        View view = View.inflate(requireContext(), R.layout.bottom_sheet_metric_info, null);
+        View view = View.inflate(requireContext(), R.layout.bottom_sheet_score_detail, null);
 
         TextView tvTitle = view.findViewById(R.id.tvTitle);
         TextView tvMessage = view.findViewById(R.id.tvMessage);
-        TextView tvScoreInterpretation = view.findViewById(R.id.tvScoreInterpretation);
+        ImageView ivScoreIcon = view.findViewById(R.id.ivScoreIcon);
+        TextView tvScoreLabel = view.findViewById(R.id.tvScoreLabel);
+        TextView tvScoreValue = view.findViewById(R.id.tvScoreValue);
+        TextView tvScoreBreakdown = view.findViewById(R.id.tvScoreBreakdown);
         ImageView btnClose = view.findViewById(R.id.btnClose);
 
         tvTitle.setText(title);
         tvMessage.setText(message);
-        tvScoreInterpretation.setText(interpretation);
 
+        // Set icon, label, and colors based on metric type
+        int scoreColor = 0;
+        switch (metricType) {
+            case "credibility":
+                ivScoreIcon.setImageResource(R.drawable.ic_verified_user);
+                scoreColor = getResources().getColor(R.color.logo_accent);
+                ivScoreIcon.setColorFilter(scoreColor);
+                tvScoreLabel.setText(getString(R.string.credibility_label));
+                tvScoreLabel.setTextColor(scoreColor);
+                break;
+            case "experience":
+                ivScoreIcon.setImageResource(R.drawable.ic_trending_up);
+                scoreColor = getResources().getColor(R.color.profile_warning);
+                ivScoreIcon.setColorFilter(scoreColor);
+                tvScoreLabel.setText(getString(R.string.experience_label));
+                tvScoreLabel.setTextColor(scoreColor);
+                break;
+            case "engagement":
+                ivScoreIcon.setImageResource(R.drawable.ic_comments);
+                scoreColor = getResources().getColor(R.color.profile_success);
+                ivScoreIcon.setColorFilter(scoreColor);
+                tvScoreLabel.setText(getString(R.string.engagement_label));
+                tvScoreLabel.setTextColor(scoreColor);
+                break;
+        }
         
-        loadMetricScore(metricType, tvScoreInterpretation, interpretation);
+        // Set the score value color to match the card
+        tvScoreValue.setTextColor(scoreColor);
 
-        
-
+        loadMetricScoreWithBreakdown(metricType, tvScoreValue, tvScoreBreakdown, interpretation);
 
         btnClose.setOnClickListener(v -> sheet.dismiss());
 
         sheet.setContentView(view);
         sheet.show();
+    }
+
+    private void loadMetricScoreWithBreakdown(String metricType, TextView scoreValueView, TextView breakdownView, String baseInterpretation) {
+        if (auth.getCurrentUser() == null) return;
+
+        // fetch fresh scores from firestore to ensure consistency with cards
+        UserStatsService.getUserScores(auth.getCurrentUser().getUid(), new UserStatsService.OnScoresRetrievedListener() {
+            @Override
+            public void onScoresRetrieved(double credibilityScore, double experienceScore) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        int score = 0;
+                        String breakdown = "";
+                        
+                        switch (metricType) {
+                            case "credibility":
+                                score = (int) Math.round(credibilityScore);
+                                breakdown = getCredibilityBreakdown();
+                                break;
+                            case "experience":
+                                score = (int) Math.round(experienceScore);
+                                breakdown = getExperienceBreakdown();
+                                break;
+                            case "engagement":
+                                score = 0;
+                                breakdown = "Engagement score coming soon!";
+                                break;
+                        }
+                        
+                        // Set the score value in the card UI
+                        scoreValueView.setText(formatScore(score));
+                        
+                        // Set the breakdown text
+                        breakdownView.setText(breakdown);
+                    });
+                }
+            }
+        });
+    }
+
+    private String getCredibilityBreakdown() {
+        return getString(R.string.credibility_breakdown);
+    }
+
+    private String getExperienceBreakdown() {
+        return getString(R.string.experience_breakdown);
     }
 
     private void loadMetricScore(String metricType, TextView scoreView, String baseInterpretation) {
@@ -177,7 +251,7 @@ public class ProfileFragment extends Fragment {
                             break;
                     }
                     
-                    String dynamicInterpretation = baseInterpretation + "\n\nCurrent Score: " + score + "/100";
+                    String dynamicInterpretation = baseInterpretation + "\n\nCurrent Score: " + score;
                     scoreView.setText(dynamicInterpretation);
                 }
             })
@@ -223,14 +297,11 @@ public class ProfileFragment extends Fragment {
             return;
         }
 
-        // Load cached data
         loadCachedData();
         
-        // Set default scores from strings placeholder
         tvCredibilityScore.setText(getString(R.string.credibility_placeholder));
         tvExperienceScore.setText(getString(R.string.experience_placeholder));
         tvEngagementScore.setText(getString(R.string.engagement_placeholder));
-        
         
         loadUserProfileOnce();
     }
@@ -253,9 +324,9 @@ public class ProfileFragment extends Fragment {
                 if (documentSnapshot != null && documentSnapshot.exists()) {
                     userProfile = documentSnapshot.toObject(UserProfile.class);
                     if (userProfile != null) {
-                        // Cache the fresh data
                         cacheManager.cacheUserProfile(userProfile);
                         updateUserUI();
+                        UserStatsService.updateUserScores(userId);
                     }
                 } else {
                     // Create default profile if doesn't exist
@@ -270,19 +341,47 @@ public class ProfileFragment extends Fragment {
     private void updateUserUI() {
         if (userProfile == null) return;
 
-        // Set username from Firestore
         String name = userProfile.getName();
         if (name == null || name.trim().isEmpty()) {
             name = getString(R.string.username_placeholder);
         }
         tvUsername.setText(name);
 
-        // Set bio from Firestore
         String bio = userProfile.getBio();
         if (bio == null || bio.trim().isEmpty()) {
             bio = getString(R.string.bio_placeholder);
         }
         tvBio.setText(bio);
+
+        updateScoreDisplays();
+    }
+
+    private void updateScoreDisplays() {
+        if (auth.getCurrentUser() == null) return;
+
+        // always fetch fresh scores from firestore to ensure consistency
+        UserStatsService.getUserScores(auth.getCurrentUser().getUid(), new UserStatsService.OnScoresRetrievedListener() {
+            @Override
+            public void onScoresRetrieved(double credibilityScore, double experienceScore) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        tvCredibilityScore.setText(formatScore(credibilityScore));
+                        tvExperienceScore.setText(formatScore(experienceScore));
+                        tvEngagementScore.setText("0");
+                    });
+                }
+            }
+        });
+    }
+
+    private String formatScore(double score) {
+        int roundedScore = (int) Math.round(score);
+        
+        if (roundedScore >= 1000) {
+            return String.format("%.1fk", roundedScore / 1000.0);
+        } else {
+            return String.valueOf(roundedScore);
+        }
     }
 
     private void createDefaultProfile() {
@@ -301,10 +400,8 @@ public class ProfileFragment extends Fragment {
             getString(R.string.bio_placeholder)
         );
 
-        // Update UI straight away
         updateUserUI();
 
-        // Save to Firestore db
         db.collection("users").document(auth.getCurrentUser().getUid())
             .set(userProfile)
             .addOnSuccessListener(aVoid -> Log.d(TAG, "User profile created successfully"))
@@ -314,7 +411,6 @@ public class ProfileFragment extends Fragment {
     private void loadProfilePicture() {
         if (auth.getCurrentUser() == null) return;
 
-        // Set default image to avoid errors
         ivProfilePicture.setImageResource(R.drawable.ic_person);
         Log.d(TAG, "Profile picture set to default to avoid 404 errors");
     }
@@ -327,23 +423,17 @@ public class ProfileFragment extends Fragment {
 
         String userId = auth.getCurrentUser().getUid();
 
-        // Show skeleton loading
         reviewAdapter.setLoading(true);
 
-        // Remove previous listener if exists
         if (profileListener != null) {
             profileListener.remove();
         }
-
-        // Listen in real-time for any changes to this user's reviews so the UI always stays up to date
         profileListener = db.collection("reviews")
             .whereEqualTo("userId", userId)
             .limit(200)
             .addSnapshotListener((queryDocumentSnapshots, e) -> {
                 if (e != null) {
                     Log.e(TAG, "Error listening to reviews", e);
-                    // Hide skeleton loading on error
-                
                     reviewAdapter.setLoading(false);
                     showEmptyState();
                     return;
@@ -361,7 +451,6 @@ public class ProfileFragment extends Fragment {
                         }
                     }
 
-                    // Hide skeleton loading
                     reviewAdapter.setLoading(false);
 
                     if (reviews.isEmpty()) {
@@ -377,7 +466,6 @@ public class ProfileFragment extends Fragment {
     private void loadRestaurants() {
         if (reviews.isEmpty()) return;
 
-        // Get unique restaurant IDs
         List<String> restaurantIds = new ArrayList<>();
         for (Review review : reviews) {
             if (review.getRestaurantId() != null && !restaurantIds.contains(review.getRestaurantId())) {
@@ -390,7 +478,6 @@ public class ProfileFragment extends Fragment {
             return;
         }
 
-        // Load restaurants
         for (String restaurantId : restaurantIds) {
             db.collection("restaurants")
                 .document(restaurantId)
