@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.util.TypedValue;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,11 +23,12 @@ import java.util.Map;
 public class ReviewWidgetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_REVIEW = 0;
     private static final int VIEW_TYPE_SKELETON = 1;
-    
+
     private List<Review> reviews;
     private Map<String, Restaurant> restaurantMap;
     private OnReviewClickListener listener;
     private boolean isLoading = false;
+
 
     public interface OnReviewClickListener {
         void onReviewClick(Review review, Restaurant restaurant);
@@ -143,35 +145,49 @@ public class ReviewWidgetAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 ivRestaurantImage.setPadding(0, 0, 0, 0);
                 
                 if (review.getImageUrls() != null && !review.getImageUrls().isEmpty()) {
+                    String imageUrl = review.getImageUrls().get(0);
+
+                    // Set ImageView height and scale type based on Firestore field BEFORE loading
+                    if (review.getFirstImageType() != null) {
+                        int heightPx;
+                        if ("PORTRAIT".equals(review.getFirstImageType())) {
+                            // Portrait: taller height, centerCrop
+                            heightPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, itemView.getContext().getResources().getDisplayMetrics());
+                            ivRestaurantImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        } else if ("SQUARE".equals(review.getFirstImageType())) {
+                            // Square: medium height, centerCrop
+                            heightPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, itemView.getContext().getResources().getDisplayMetrics());
+                            ivRestaurantImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        } else if ("HORIZONTAL".equals(review.getFirstImageType())) {
+                            // Horizontal: shorter height, centerCrop
+                            heightPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, itemView.getContext().getResources().getDisplayMetrics());
+                            ivRestaurantImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        } else {
+                            heightPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, itemView.getContext().getResources().getDisplayMetrics());
+                            ivRestaurantImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        }
+                        ivRestaurantImage.getLayoutParams().height = heightPx;
+                        ivRestaurantImage.requestLayout();
+                    } else {
+                        // Default fallback
+                        int defaultHeightPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, itemView.getContext().getResources().getDisplayMetrics());
+                        ivRestaurantImage.getLayoutParams().height = defaultHeightPx;
+                        ivRestaurantImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        ivRestaurantImage.requestLayout();
+                    }
+
+                    // Load the image with predetermined size
                     Glide.with(itemView.getContext())
-                            .load(review.getImageUrls().get(0))
+                            .load(imageUrl)
                             .placeholder(R.drawable.ic_restaurant)
                             .error(R.drawable.ic_restaurant)
-                            .listener(new com.bumptech.glide.request.RequestListener<android.graphics.drawable.Drawable>() {
-                                @Override
-                                public boolean onLoadFailed(com.bumptech.glide.load.engine.GlideException e, Object model, com.bumptech.glide.request.target.Target<android.graphics.drawable.Drawable> target, boolean isFirstResource) {
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(android.graphics.drawable.Drawable resource, Object model, com.bumptech.glide.request.target.Target<android.graphics.drawable.Drawable> target, com.bumptech.glide.load.DataSource dataSource, boolean isFirstResource) {
-                                    // Check if image is portrait (height > width)
-                                    int width = resource.getIntrinsicWidth();
-                                    int height = resource.getIntrinsicHeight();
-                                    if (height > width) {
-                                        // Portrait image - use centerCrop to fill the view
-                                        ivRestaurantImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                                    } else {
-                                        // Square or landscape - use centerInside to maintain aspect ratio
-                                        ivRestaurantImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-                                    }
-                                    return false;
-                                }
-                            })
                             .into(ivRestaurantImage);
                 } else {
                     ivRestaurantImage.setImageResource(R.drawable.ic_restaurant);
-                    ivRestaurantImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                    int defaultHeightPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, itemView.getContext().getResources().getDisplayMetrics());
+                    ivRestaurantImage.getLayoutParams().height = defaultHeightPx;
+                    ivRestaurantImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    ivRestaurantImage.requestLayout();
                 }
             }
         }

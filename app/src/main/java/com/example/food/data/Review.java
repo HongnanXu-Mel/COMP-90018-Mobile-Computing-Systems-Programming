@@ -15,6 +15,7 @@ public class Review {
     private int accuracy;
     private double accuracyPercent;
     private List<String> imageUrls;
+    private String firstImageType;
     private Date createdAt;
     private Date updatedAt;
     private int helpfulCount;
@@ -73,6 +74,9 @@ public class Review {
     public List<String> getImageUrls() { return imageUrls; }
     public void setImageUrls(List<String> imageUrls) { this.imageUrls = imageUrls; }
 
+    public String getFirstImageType() { return firstImageType; }
+    public void setFirstImageType(String firstImageType) { this.firstImageType = firstImageType; }
+
     public Date getCreatedAt() { return createdAt; }
     public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
 
@@ -90,4 +94,22 @@ public class Review {
 
     public List<Comment> getComments() { return comments; }
     public void setComments(List<Comment> comments) { this.comments = comments; }
+
+    //if the first image is portrait based on stored image type
+    //return true if the first image is portrait, false otherwise
+    public boolean isFirstImagePortrait() {
+        return "PORTRAIT".equals(firstImageType);
+    }
+
+    //if the first image is square based on stored image type
+    //return true if the first image is square, false otherwise
+    public boolean isFirstImageSquare() {
+        return "SQUARE".equals(firstImageType);
+    }
+
+    //if the first image is horizontal based on stored image type
+    //return true if the first image is horizontal, false otherwise
+    public boolean isFirstImageHorizontal() {
+        return "HORIZONTAL".equals(firstImageType);
+    }
 }
