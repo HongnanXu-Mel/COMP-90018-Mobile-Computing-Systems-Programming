@@ -299,37 +299,52 @@ public class PostDetailActivity extends AppCompatActivity {
             return;
         }
 
-        String username = currentUser.getDisplayName() != null ? 
-            currentUser.getDisplayName() : "Anonymous";
-
-        // Create comment data map
-        Map<String, Object> commentData = new HashMap<>();
-        commentData.put("userId", currentUser.getUid());
-        commentData.put("username", username);
-        commentData.put("content", content);
-        commentData.put("timestamp", Timestamp.now());
-
         // Disable send button
         btnSendComment.setEnabled(false);
 
-        // Add comment to posts document's comments array
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("comments", FieldValue.arrayUnion(commentData));
-        updates.put("commentsCount", FieldValue.increment(1));
+        // Fetch username from Firestore users collection
+        db.collection("users").document(currentUser.getUid())
+            .get()
+            .addOnSuccessListener(documentSnapshot -> {
+                String username;
+                if (documentSnapshot.exists() && documentSnapshot.getString("name") != null) {
+                    username = documentSnapshot.getString("name");
+                } else {
+                    username = currentUser.getEmail() != null ?
+                        currentUser.getEmail().split("@")[0] : "Anonymous";
+                }
 
-        db.collection("posts").document(postId)
-            .update(updates)
-            .addOnSuccessListener(aVoid -> {
-                // Clear input and reload comments
-                etCommentInput.setText("");
-                btnSendComment.setEnabled(true);
-                loadComments();
-                Toast.makeText(this, "Comment added", Toast.LENGTH_SHORT).show();
+                // Create comment data map
+                Map<String, Object> commentData = new HashMap<>();
+                commentData.put("userId", currentUser.getUid());
+                commentData.put("username", username);
+                commentData.put("content", content);
+                commentData.put("timestamp", Timestamp.now());
+
+                // Add comment to posts document's comments array
+                Map<String, Object> updates = new HashMap<>();
+                updates.put("comments", FieldValue.arrayUnion(commentData));
+                updates.put("commentsCount", FieldValue.increment(1));
+
+                db.collection("posts").document(postId)
+                    .update(updates)
+                    .addOnSuccessListener(aVoid -> {
+                        // Clear input and reload comments
+                        etCommentInput.setText("");
+                        btnSendComment.setEnabled(true);
+                        loadComments();
+                        Toast.makeText(this, "Comment added", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error adding comment", e);
+                        btnSendComment.setEnabled(true);
+                        Toast.makeText(this, "Failed to add comment: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
             })
             .addOnFailureListener(e -> {
-                Log.e(TAG, "Error adding comment", e);
+                Log.e(TAG, "Error fetching username", e);
                 btnSendComment.setEnabled(true);
-                Toast.makeText(this, "Failed to add comment: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed to fetch user info", Toast.LENGTH_SHORT).show();
             });
     }
 
