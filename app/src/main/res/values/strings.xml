@@ -288,4 +288,9 @@
     <string name="delete">Delete</string>
     <string name="post_deleted_successfully">Post deleted successfully</string>
     <string name="failed_to_delete_post">Failed to delete post</string>
+    <string name="address_placeholder">Address</string>
+    
+    <!-- Score breakdown strings -->
+    <string name="credibility_breakdown">How it\'s calculated:\n• Community votes on your reviews\n• Accuracy of your reviews\n• Consistency over time\n• Comment engagement\n\nTip: More community votes = higher credibility!</string>
+    <string name="experience_breakdown">How it\'s calculated:\n• Number of reviews written\n• Variety of restaurants visited\n• Different cuisines tried\n• Areas explored\n• Time active on platform\n\nTip: Try new places and cuisines!</string>
 </resources>
