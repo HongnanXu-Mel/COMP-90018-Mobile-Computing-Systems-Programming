@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Food" parent="Theme.Material3.DayNight.NoActionBar" />
-    
-    <!-- RatingBar Style -->
-    <style name="RatingBarStyle" parent="Theme.AppCompat">
-        <item name="colorControlNormal">#D0D0D0</item>
-        <item name="colorControlActivated">#FFB84D</item>
+    <style name="Theme.Food" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Status bar configuration -->
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+        
+        <!-- Navigation bar configuration -->
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLightNavigationBar">true</item>
     </style>
 </resources>
