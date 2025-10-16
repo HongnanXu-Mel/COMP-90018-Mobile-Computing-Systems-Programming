@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <application
         android:allowBackup="true"
@@ -14,7 +16,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Food">
+        android:theme="@style/Theme.Food"
+        android:usesCleartextTraffic="true">
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -38,6 +41,14 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
+            android:theme="@style/Theme.Food" />
+        <activity
+            android:name=".CreatePostActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Food" />
+        <activity
+            android:name=".PostDetailActivity"
+            android:exported="false"
             android:theme="@style/Theme.Food" />
         <!-- SuccessActivity已删除，不再需要 -->
     </application>
