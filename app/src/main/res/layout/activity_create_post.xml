@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Dialog Container -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <!-- Title -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Create New Post"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_marginBottom="24dp" />
+
+                <!-- Post Title Section -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Post Title"
+                    android:textSize="16sp"
+                    android:textColor="#666666"
+                    android:layout_marginBottom="8dp" />
+
+                <EditText
+                    android:id="@+id/et_post_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="e.g. Amazing Italian Restaurant!"
+                    android:padding="16dp"
+                    android:background="@drawable/edittext_rounded"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="20dp" />
+
+                <!-- Add Image Button -->
+                <LinearLayout
+                    android:id="@+id/btn_add_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:background="@drawable/dialog_rounded_background"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_marginBottom="24dp">
+
+                    <ImageView
+                        android:id="@+id/iv_preview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_add_image_placeholder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/ic_add"
+                            android:tint="#999999" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Add Image"
+                            android:textSize="16sp"
+                            android:textColor="#999999"
+                            android:layout_marginStart="8dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Select Restaurant Section -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select Restaurant"
+                    android:textSize="16sp"
+                    android:textColor="#666666"
+                    android:layout_marginBottom="8dp" />
+
+                <LinearLayout
+                    android:id="@+id/btn_select_restaurant"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:background="@drawable/edittext_rounded"
+                    android:gravity="center_vertical"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_marginBottom="24dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_search"
+                        android:tint="#666666" />
+
+                    <TextView
+                        android:id="@+id/tv_selected_restaurant"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Search and select a restaurant..."
+                        android:textSize="16sp"
+                        android:textColor="#999999"
+                        android:layout_marginStart="12dp" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_arrow_right"
+                        android:tint="#999999" />
+                </LinearLayout>
+
+                <!-- Restaurant Rating Section -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Restaurant Rating"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Restaurant Ambiance -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Restaurant Ambiance"
+                        android:textSize="15sp"
+                        android:textColor="@color/black" />
+
+                    <RatingBar
+                        android:id="@+id/rating_ambiance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:numStars="5"
+                        android:rating="0"
+                        android:stepSize="1"
+                        android:isIndicator="false"
+                        android:theme="@style/RatingBarStyle"
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        android:transformPivotX="0dp"
+                        android:transformPivotY="0dp" />
+                </LinearLayout>
+
+                <!-- Serving Speed -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Serving Speed"
+                        android:textSize="15sp"
+                        android:textColor="@color/black" />
+
+                    <RatingBar
+                        android:id="@+id/rating_serving_speed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:numStars="5"
+                        android:rating="0"
+                        android:stepSize="1"
+                        android:isIndicator="false"
+                        android:theme="@style/RatingBarStyle"
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        android:transformPivotX="0dp"
+                        android:transformPivotY="0dp" />
+                </LinearLayout>
+
+                <!-- Food Quality -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="20dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Food Quality"
+                        android:textSize="15sp"
+                        android:textColor="@color/black" />
+
+                    <RatingBar
+                        android:id="@+id/rating_food_quality"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:numStars="5"
+                        android:rating="0"
+                        android:stepSize="1"
+                        android:isIndicator="false"
+                        android:theme="@style/RatingBarStyle"
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        android:transformPivotX="0dp"
+                        android:transformPivotY="0dp" />
+                </LinearLayout>
+
+                <!-- Quick Comments Section -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Quick Comments"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Quick Comment Chips -->
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group_comments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    app:chipSpacingHorizontal="8dp"
+                    app:chipSpacingVertical="4dp"
+                    app:singleSelection="false">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_great_food"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Great food!"
+                        android:textColor="#666666"
+                        app:chipBackgroundColor="#F0F0F0" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_friendly_staff"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Friendly staff."
+                        android:textColor="#666666"
+                        app:chipBackgroundColor="#F0F0F0" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_cozy_atmosphere"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cozy atmosphere."
+                        android:textColor="#666666"
+                        app:chipBackgroundColor="#F0F0F0" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_would_come_again"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Would come again!"
+                        android:textColor="#666666"
+                        app:chipBackgroundColor="#F0F0F0" />
+                </com.google.android.material.chip.ChipGroup>
+
+                <!-- Buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_cancel"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_weight="1"
+                        android:text="Cancel"
+                        android:textSize="16sp"
+                        android:textColor="#E53935"
+                        android:background="@drawable/gradient_button_background"
+                        android:layout_marginEnd="8dp" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_post"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_weight="1"
+                        android:text="Post"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:background="@drawable/gradient_button_background"
+                        android:layout_marginStart="8dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+</ScrollView>
+
