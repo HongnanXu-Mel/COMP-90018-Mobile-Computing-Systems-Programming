@@ -11,19 +11,28 @@
     
     <!-- Modern Light Theme Colors -->
     <color name="background_light">#FFFFFF</color>
-    <color name="surface_light">#EBEBEB</color>
+    <color name="surface_light">#F8F9FA</color>
     <color name="text_primary_light">#1A1A1A</color>
-    <color name="text_secondary_light">#6B7280</color>
-    <color name="text_hint_light">#9CA3AF</color>
+    <color name="text_secondary_light">#8E8E93</color>
+    <color name="text_hint_light">#C7C7CC</color>
     
     <!-- Modern Gradient Colors - Orange Theme -->
     <color name="primary_gradient_start">#EF7722</color>
     <color name="primary_gradient_end">#FAA533</color>
     
+    <!-- Rating and Accuracy Colors -->
+    <color name="rating_text_color">#FAA533</color>
+    <color name="accuracy_text_color">#10B981</color>
+    <color name="rating_icon_color">#FAA533</color>
+    <color name="accuracy_icon_color">#10B981</color>
+    
     <!-- Input Field Colors - Orange Theme -->
     <color name="input_background_light">#FFFFFF</color>
-    <color name="input_border_light">#EBEBEB</color>
+    <color name="input_border_light">#E5E5EA</color>
     <color name="input_border_focused">#EF7722</color>
+    
+    <!-- Card Colors -->
+    <color name="card_border_light">#D0D0D0</color>
     <color name="input_shadow">#F3F4F6</color>
     
     <!-- Tab Colors - Orange Theme -->
@@ -49,12 +58,43 @@
     <!-- Navigation Colors -->
     <color name="nav_selected">#EF7722</color>
     <color name="nav_unselected">#757575</color>
-    <color name="nav_selected_bg">#20EF7722</color>
+    <color name="nav_selected_bg">@android:color/transparent</color>
     
     <!-- Action Colors -->
     <color name="logout_red">#DC2626</color>
     
-    <!-- Post Card Colors -->
-    <color name="gray">#9CA3AF</color>
-    <color name="light_gray">#F3F4F6</color>
+    <!-- Rating Colors -->
+    <color name="rating_excellent">#10B981</color>
+    <color name="rating_good">#F59E0B</color>
+    <color name="rating_average">#F97316</color>
+    <color name="rating_poor">#EF4444</color>
+    
+    <!-- Additional Colors for Review Dialog -->
+    <color name="profile_text_primary">#1A1A1A</color>
+    <color name="profile_text_secondary">#8E8E93</color>
+    <color name="profile_text_tertiary">#C7C7CC</color>
+    <color name="profile_bg_tertiary">#F8F9FA</color>
+    <color name="profile_warning">#FAA533</color>
+    <color name="profile_success">#10B981</color>
+    <color name="modern_success">#10B981</color>
+    <color name="bottom_sheet_background">#FFFFFF</color>
+    <color name="cardview_shadow_start_color">#F8F9FA</color>
+
+    <color name="primary_color">#EF7722</color>
+    <color name="profile_chip_text">#1A1A1A</color>
+    <color name="profile_metric_text_secondary">#8E8E93</color>
+    <color name="profile_metric_text_primary">#1A1A1A</color>
+    
+    
+    <!-- Profile Colors -->
+    <color name="profile_border">#E5E5EA</color>
+    <color name="profile_accent">#EF7722</color>
+    <color name="profile_border_light">#F3F4F6</color>
+    
+    <!-- Error Colors -->
+    <color name="modern_error">#EF4444</color>
+    
+    <!-- Review Dialog Colors -->
+    <color name="star_badge_color">#FAA533</color>
+    <color name="accuracy_badge_color">#10B981</color>
 </resources>

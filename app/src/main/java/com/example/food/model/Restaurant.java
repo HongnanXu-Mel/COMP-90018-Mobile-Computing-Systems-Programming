@@ -9,11 +9,11 @@ public class Restaurant {
     private String category;
     private String region;
 
-    // 无参构造函数（Firebase需要）
+    // No-args constructor (required by Firebase)
     public Restaurant() {
     }
 
-    // 完整构造函数
+    // Full constructor
     public Restaurant(String id, String name, String address, double latitude, double longitude, String category, String region) {
         this.id = id;
         this.name = name;
@@ -24,7 +24,7 @@ public class Restaurant {
         this.region = region;
     }
 
-    // 简化构造函数（向后兼容）
+    // Simplified constructor (for backward compatibility)
     public Restaurant(String name, String address, double latitude, double longitude) {
         this.name = name;
         this.address = address;

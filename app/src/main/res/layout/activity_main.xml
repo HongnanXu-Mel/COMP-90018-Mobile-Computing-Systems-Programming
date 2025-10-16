@@ -13,37 +13,28 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/logo_primary" />
+
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="16dp">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_nav"
             android:layout_width="match_parent"
-            android:layout_height="64dp"
+            android:layout_height="60dp"
             android:background="@color/white"
-            app:itemIconSize="24dp"
+            app:itemIconSize="32dp"
             app:itemIconTint="@color/nav_selector"
+            app:itemBackground="@drawable/nav_item_background"
+            app:itemRippleColor="@android:color/transparent"
+            app:itemActiveIndicatorStyle="@null"
             app:labelVisibilityMode="unlabeled"
             app:menu="@menu/bottom_nav_menu" />
 
-        <FrameLayout
-            android:id="@+id/add_button_overlay"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center"
-            android:background="@drawable/nav_add_background"
-            android:clickable="true"
-            android:focusable="true"
-            android:elevation="4dp">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_add" />
-        </FrameLayout>
 
     </FrameLayout>
 
