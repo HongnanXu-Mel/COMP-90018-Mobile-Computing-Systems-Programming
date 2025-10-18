@@ -2,158 +2,111 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/dialog_rounded_background"
-    android:padding="24dp"
-    android:gravity="center_vertical">
+    android:padding="32dp"
+    android:gravity="center">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/change_profile_picture_title"
-        android:textSize="20sp"
+        android:textSize="22sp"
         android:textStyle="bold"
         android:textColor="@color/text_primary_light"
         android:gravity="center"
-        android:layout_marginBottom="24dp" />
+        android:layout_marginBottom="8dp"
+        android:fontFamily="sans-serif-medium" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose how you'd like to update your profile picture"
+        android:textSize="14sp"
+        android:textColor="@color/text_secondary_light"
+        android:gravity="center"
+        android:layout_marginBottom="32dp"
+        android:fontFamily="sans-serif" />
 
     <!-- Current Profile Picture -->
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivCurrentProfilePicture"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="32dp"
         android:src="@drawable/ic_person"
-        app:civ_border_width="3dp"
-        app:civ_border_color="@color/primary_gradient_start" />
+        app:civ_border_width="0dp"
+        app:civ_border_color="@color/logo_primary" />
 
     <!-- Options -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center_vertical">
+        android:gravity="center">
 
         <!-- Take Photo -->
-        <LinearLayout
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnTakePhoto"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:background="@drawable/secondary_button_background"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:layout_marginBottom="12dp">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_camera"
-                android:tint="@color/primary_gradient_start" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="16dp"
-                android:text="@string/take_photo"
-                android:textColor="@color/text_primary_light"
-                android:textSize="16sp"
-                android:fontFamily="sans-serif-medium" />
-
-        </LinearLayout>
+            android:layout_marginBottom="12dp"
+            android:text="@string/take_photo"
+            android:textSize="16sp"
+            android:textColor="@color/logo_primary"
+            android:drawableStart="@drawable/ic_camera"
+            android:drawablePadding="12dp"
+            app:strokeColor="@color/logo_primary"
+            app:strokeWidth="1dp"
+            app:cornerRadius="28dp" />
 
         <!-- Choose from Gallery -->
-        <LinearLayout
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnChooseFromGallery"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:background="@drawable/secondary_button_background"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:layout_marginBottom="12dp">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_photo"
-                android:tint="@color/primary_gradient_start" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="16dp"
-                android:text="@string/choose_from_gallery"
-                android:textColor="@color/text_primary_light"
-                android:textSize="16sp"
-                android:fontFamily="sans-serif-medium" />
-
-        </LinearLayout>
+            android:layout_marginBottom="12dp"
+            android:text="@string/choose_from_gallery"
+            android:textSize="16sp"
+            android:textColor="@color/logo_primary"
+            android:drawableStart="@drawable/ic_photo"
+            android:drawablePadding="12dp"
+            app:strokeColor="@color/logo_primary"
+            app:strokeWidth="1dp"
+            app:cornerRadius="28dp" />
 
         <!-- Remove Photo -->
-        <LinearLayout
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRemovePhoto"
+            style="@style/Widget.Material3.Button"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:background="@drawable/remove_button_background"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_delete"
-                android:tint="@color/modern_error" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="16dp"
-                android:text="@string/remove_photo"
-                android:textColor="@color/modern_error"
-                android:textSize="16sp"
-                android:fontFamily="sans-serif-medium" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <!-- Buttons -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="20dp">
-
-        <Button
-            android:id="@+id/btnCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:text="@string/cancel"
-            android:textColor="@color/logo_accent"
+            android:layout_marginTop="8dp"
+            android:text="@string/remove_photo"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:paddingStart="32dp"
-            android:paddingEnd="32dp"
-            style="@style/Widget.Material3.Button.TextButton" />
+            android:textColor="@color/white"
+            android:backgroundTint="@color/logout_red"
+            android:drawableStart="@drawable/ic_delete"
+            android:drawablePadding="12dp"
+            app:cornerRadius="28dp" />
 
     </LinearLayout>
+
+    <!-- Cancel Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancel"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/cancel"
+        android:textColor="@color/logo_accent"
+        android:textSize="16sp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp" />
 
 </LinearLayout>

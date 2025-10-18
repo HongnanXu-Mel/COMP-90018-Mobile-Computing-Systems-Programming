@@ -34,14 +34,14 @@
                 android:layout_marginBottom="12dp">
 
                 <!-- Avatar -->
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/ivAvatar"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     android:src="@drawable/ic_person"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    app:tint="@color/logo_primary" />
+                    android:scaleType="centerCrop"
+                    app:civ_border_width="0dp"
+                    app:civ_border_color="@color/logo_primary" />
 
                 <!-- User Info -->
                 <LinearLayout

@@ -196,20 +196,27 @@ public class SettingsFragment extends Fragment {
     }
 
     private void loadProfilePicture() {
-        if (currentUser == null) return;
+        if (userProfile == null) {
+            ivProfilePicture.setBorderWidth(0);
+            ivProfilePicture.setImageResource(R.drawable.ic_person);
+            return;
+        }
 
-        storage.getReference().child("profile_pictures/" + currentUser.getUid() + ".jpg")
-                .getDownloadUrl()
-                .addOnSuccessListener(uri -> {
-                    Glide.with(requireContext())
-                            .load(uri)
-                            .placeholder(R.drawable.ic_person)
-                            .error(R.drawable.ic_person)
-                            .into(ivProfilePicture);
-                })
-                .addOnFailureListener(e -> {
-                    ivProfilePicture.setImageResource(R.drawable.ic_person);
-                });
+        String avatarUrl = userProfile.getAvatarUrl();
+        if (avatarUrl != null && !avatarUrl.trim().isEmpty()) {
+            // show border when image exists
+            ivProfilePicture.setBorderWidth(3);
+            Glide.with(requireContext())
+                    .load(avatarUrl)
+                    .diskCacheStrategy(com.bumptech.glide.load.engine.DiskCacheStrategy.ALL)
+                    .centerCrop()
+                    .override(96, 96)
+                    .into(ivProfilePicture);
+        } else {
+            // no border for placeholder
+            ivProfilePicture.setBorderWidth(0);
+            ivProfilePicture.setImageResource(R.drawable.ic_person);
+        }
     }
 
     private void createUserProfile() {
@@ -260,6 +267,7 @@ public class SettingsFragment extends Fragment {
         // Set bio
         etBio.setText(userProfile.getBio() != null ? userProfile.getBio() : "");
         
+        loadProfilePicture();
         clearErrors();
     }
 
@@ -384,8 +392,12 @@ public class SettingsFragment extends Fragment {
     }
     
     private void showChangeProfilePictureDialog() {
-        ChangeProfilePictureDialog dialog = new ChangeProfilePictureDialog(getContext());
-        dialog.show();
+        ChangeProfilePictureDialogFragment dialog = new ChangeProfilePictureDialogFragment();
+        dialog.setOnProfilePictureChangedListener(() -> {
+            // refresh the profile picture when dialog closes
+            loadProfilePicture();
+        });
+        dialog.show(getParentFragmentManager(), "ChangeProfilePictureDialog");
     }
     
     private void showPrivacyPolicyDialog() {
