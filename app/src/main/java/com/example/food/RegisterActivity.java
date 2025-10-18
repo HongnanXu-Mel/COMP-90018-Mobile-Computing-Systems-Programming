@@ -133,11 +133,15 @@ public class RegisterActivity extends AppCompatActivity {
         tvPasswordMismatchError.setVisibility(View.GONE);
         tvPasswordStrengthError.setVisibility(View.GONE);
 
+<<<<<<< HEAD
         // Show loading state
         setLoadingState(true);
 
         if (TextUtils.isEmpty(name)) {
             setLoadingState(false);
+=======
+        if (TextUtils.isEmpty(name)) {
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
             tvNameError.setText("Name is required");
             tvNameError.setVisibility(View.VISIBLE);
             etName.requestFocus();
@@ -145,7 +149,10 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         if (TextUtils.isEmpty(email)) {
+<<<<<<< HEAD
             setLoadingState(false);
+=======
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
             tvEmailError.setText("Email is required");
             tvEmailError.setVisibility(View.VISIBLE);
             etEmail.requestFocus();
@@ -154,7 +161,10 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Validate email format
         if (!isValidEmail(email)) {
+<<<<<<< HEAD
             setLoadingState(false);
+=======
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
             tvEmailError.setText("Please enter a valid email address");
             tvEmailError.setVisibility(View.VISIBLE);
             etEmail.requestFocus();
@@ -162,7 +172,10 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         if (TextUtils.isEmpty(password)) {
+<<<<<<< HEAD
             setLoadingState(false);
+=======
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
             tvPasswordStrengthError.setText("Password is required");
             tvPasswordStrengthError.setVisibility(View.VISIBLE);
             etPassword.requestFocus();
@@ -170,9 +183,21 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         if (!password.equals(confirmPassword)) {
+<<<<<<< HEAD
             setLoadingState(false);
             tvPasswordMismatchError.setText("Passwords don't match");
             tvPasswordMismatchError.setVisibility(View.VISIBLE);
+=======
+            tvPasswordMismatchError.setText("Passwords don't match");
+            tvPasswordMismatchError.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        String passwordError = validatePasswordStrength(password);
+        if (!passwordError.isEmpty()) {
+            tvPasswordStrengthError.setText(passwordError);
+            tvPasswordStrengthError.setVisibility(View.VISIBLE);
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
             return;
         }
 
@@ -269,6 +294,7 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean isValidEmail(String email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
+<<<<<<< HEAD
 
     private void setLoadingState(boolean isLoading) {
         if (isLoading) {
@@ -279,4 +305,6 @@ public class RegisterActivity extends AppCompatActivity {
             btnRegister.setText("Register");
         }
     }
+=======
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
 }
