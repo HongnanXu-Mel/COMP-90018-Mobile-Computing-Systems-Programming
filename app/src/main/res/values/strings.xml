@@ -42,8 +42,6 @@
     <string name="got_it">Got it</string>
     <string name="understood">Understood</string>
     
-    <!-- Bypass login strings -->
-    <string name="bypass_login">Skip Login (Demo Mode)</string>
     
     <!-- Settings Page Strings -->
     <string name="settings_title">Settings</string>

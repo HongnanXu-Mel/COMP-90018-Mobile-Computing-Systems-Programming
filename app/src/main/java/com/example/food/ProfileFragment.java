@@ -42,7 +42,7 @@ public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
     
     // Views
-    private ImageView ivProfilePicture;
+    private de.hdodenhof.circleimageview.CircleImageView ivProfilePicture;
     private TextView tvUsername, tvBio, tvCredibilityScore, tvExperienceScore, tvEngagementScore;
     private RecyclerView rvReviews;
     private LinearLayout emptyState;
@@ -353,6 +353,7 @@ public class ProfileFragment extends Fragment {
         }
         tvBio.setText(bio);
 
+        loadProfilePicture();
         updateScoreDisplays();
     }
 
@@ -409,10 +410,27 @@ public class ProfileFragment extends Fragment {
     }
 
     private void loadProfilePicture() {
-        if (auth.getCurrentUser() == null) return;
+        if (userProfile == null) {
+            ivProfilePicture.setBorderWidth(0);
+            ivProfilePicture.setImageResource(R.drawable.ic_person);
+            return;
+        }
 
-        ivProfilePicture.setImageResource(R.drawable.ic_person);
-        Log.d(TAG, "Profile picture set to default to avoid 404 errors");
+        String avatarUrl = userProfile.getAvatarUrl();
+        if (avatarUrl != null && !avatarUrl.trim().isEmpty()) {
+            // show border when image exists
+            ivProfilePicture.setBorderWidth(4);
+            Glide.with(requireContext())
+                    .load(avatarUrl)
+                    .diskCacheStrategy(com.bumptech.glide.load.engine.DiskCacheStrategy.ALL)
+                    .centerCrop()
+                    .override(140, 140)
+                    .into(ivProfilePicture);
+        } else {
+            // no border for placeholder
+            ivProfilePicture.setBorderWidth(0);
+            ivProfilePicture.setImageResource(R.drawable.ic_person);
+        }
     }
 
     private void setupReviews() {
