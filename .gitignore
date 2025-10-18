@@ -1,6 +1,9 @@
 # Firebase服务账户密钥（包含敏感信息）
 serviceAccountKey.json
 
+# Supabase configuration (contains sensitive API keys)
+app/src/main/assets/config.properties
+
 # Python缓存文件
 __pycache__/
 *.pyc

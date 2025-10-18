@@ -22,13 +22,8 @@
     <dimen name="text_size_header">28sp</dimen>
     
     <!-- Input Field Heights -->
-<<<<<<< HEAD
     <dimen name="input_field_height">52dp</dimen>
     <dimen name="button_height">52dp</dimen>
-=======
-    <dimen name="input_field_height">56dp</dimen>
-    <dimen name="button_height">60dp</dimen>
->>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
     
     <!-- Corner Radius -->
     <dimen name="corner_radius_small">4dp</dimen>
@@ -44,12 +39,9 @@
     <dimen name="elevation_low">2dp</dimen>
     <dimen name="elevation_medium">4dp</dimen>
     <dimen name="elevation_high">8dp</dimen>
-<<<<<<< HEAD
 
     <!-- Spacing -->
     <dimen name="spacing_s">8dp</dimen>
     <dimen name="spacing_m">16dp</dimen>
     <dimen name="spacing_l">24dp</dimen>
-=======
->>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
 </resources>

@@ -22,37 +22,19 @@
             android:layout_height="wrap_content"
             android:minHeight="0dp"
             android:paddingStart="@dimen/padding_xlarge"
-<<<<<<< HEAD
             android:paddingTop="32dp"
             android:paddingEnd="@dimen/padding_xlarge"
             android:paddingBottom="@dimen/padding_xlarge">
 
             <!-- Premium App Logo at Top -->
-=======
-            android:paddingTop="48dp"
-            android:paddingEnd="@dimen/padding_xlarge"
-            android:paddingBottom="@dimen/padding_xlarge">
-
-            <!-- Premium App Logo -->
->>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
             <FrameLayout
                 android:id="@+id/logoContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-<<<<<<< HEAD
                 android:layout_marginTop="@dimen/margin_large"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
-=======
-                android:layout_marginTop="@dimen/margin_xlarge"
-                app:layout_constraintBottom_toTopOf="@+id/tabLayout"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.5">
->>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
 
                 <!-- Main Logo Text -->
                 <TextView
@@ -65,13 +47,8 @@
                 <!-- Accent Dot -->
                 <ImageView
                     android:id="@+id/ivAccentDot"
-<<<<<<< HEAD
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-=======
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
->>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
                     android:layout_gravity="top|end"
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="4dp"
@@ -80,7 +57,6 @@
 
             </FrameLayout>
 
-<<<<<<< HEAD
             <!-- Content Container - Centered vertically -->
             <FrameLayout
                 android:id="@+id/contentContainer"
@@ -174,7 +150,7 @@
                         android:gravity="center_vertical"
                         android:hint="@string/full_name_hint"
                         android:inputType="textPersonName"
-                        android:drawableStart="@drawable/ic_person"
+                        android:drawableStart="@drawable/ic_user"
                         android:drawablePadding="@dimen/padding_medium"
                         android:nextFocusDown="@+id/etEmail"
                         android:nextFocusForward="@+id/etEmail"
@@ -211,133 +187,6 @@
                     app:boxStrokeColor="@color/input_border_light"
                     app:hintEnabled="false">
 
-=======
-            <!-- Tab Layout at Top -->
-            <LinearLayout
-                android:id="@+id/tabLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_large"
-                android:layout_marginBottom="@dimen/margin_xlarge"
-                android:background="@drawable/tab_container_background"
-                android:orientation="horizontal"
-                android:padding="4dp"
-                app:layout_constraintBottom_toTopOf="@+id/tvHeader"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/logoContainer">
-
-                <TextView
-                    android:id="@+id/tabLogin"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="3dp"
-                    android:background="@drawable/tab_background_unselected"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="@drawable/tab_focus_selector"
-                    android:gravity="center"
-                    android:text="@string/login"
-                    android:textColor="@color/tab_unselected_text"
-                    android:textSize="@dimen/text_size_large"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tabRegister"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="3dp"
-                    android:background="@drawable/tab_background_selected"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="@drawable/tab_focus_selector"
-                    android:gravity="center"
-                    android:text="@string/tab_register"
-                    android:textColor="@color/primary_gradient_start"
-                    android:textSize="@dimen/text_size_large"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <!-- Header Text -->
-            <TextView
-                android:id="@+id/tvHeader"
-                style="@style/WelcomeHeaderStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:gravity="center"
-                android:text="@string/create_account_header"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tabLayout" />
-
-            <!-- Register Form -->
-            <LinearLayout
-                android:id="@+id/registerForm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_xlarge"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvHeader">
-
-                <!-- Name Input -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_medium"
-                    android:textColorHint="@color/text_hint_light"
-                    app:boxBackgroundMode="none"
-                    app:hintEnabled="false">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etName"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/input_field_height"
-                        android:background="@drawable/input_field_background"
-                        android:gravity="center_vertical"
-                        android:hint="@string/full_name_hint"
-                        android:inputType="textPersonName"
-                        android:drawableStart="@drawable/ic_person"
-                        android:drawablePadding="@dimen/padding_medium"
-                        android:nextFocusDown="@+id/etEmail"
-                        android:nextFocusForward="@+id/etEmail"
-                        android:textColor="@color/text_primary_light"
-                        android:textColorHint="@color/text_hint_light"
-                        android:textStyle="bold"
-                        android:typeface="sans" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <!-- Name Error Text -->
-                <TextView
-                    android:id="@+id/tvNameError"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/logout_red"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:layout_marginBottom="@dimen/margin_medium"
-                    android:visibility="gone" />
-
-                <!-- Email Input -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_medium"
-                    android:textColorHint="@color/text_hint_light"
-                    app:boxBackgroundMode="none"
-                    app:boxStrokeColor="@color/input_border_light"
-                    app:hintEnabled="false">
-
->>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etEmail"
                         android:layout_width="match_parent"
@@ -350,13 +199,10 @@
                         android:drawablePadding="@dimen/padding_medium"
                         android:nextFocusDown="@+id/etPassword"
                         android:nextFocusForward="@+id/etPassword"
-<<<<<<< HEAD
                         android:paddingStart="20dp"
                         android:paddingTop="16dp"
                         android:paddingEnd="20dp"
                         android:paddingBottom="16dp"
-=======
->>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
                         android:textColor="@color/text_primary_light"
                         android:textColorHint="@color/text_hint_light"
                         android:textStyle="bold"
@@ -406,13 +252,10 @@
                             android:inputType="textPassword"
                             android:nextFocusDown="@+id/etConfirmPassword"
                             android:nextFocusForward="@+id/etConfirmPassword"
-<<<<<<< HEAD
                             android:paddingStart="20dp"
                             android:paddingTop="16dp"
                             android:paddingEnd="52dp"
                             android:paddingBottom="16dp"
-=======
->>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
                             android:textColor="@color/text_primary_light"
                             android:textColorHint="@color/text_hint_light"
                             android:textStyle="bold"
@@ -467,13 +310,10 @@
                             android:inputType="textPassword"
                             android:nextFocusDown="@+id/btnRegister"
                             android:nextFocusForward="@+id/btnRegister"
-<<<<<<< HEAD
                             android:paddingStart="20dp"
                             android:paddingTop="16dp"
                             android:paddingEnd="52dp"
                             android:paddingBottom="16dp"
-=======
->>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
                             android:textColor="@color/text_primary_light"
                             android:textColorHint="@color/text_hint_light"
                             android:textStyle="bold"
@@ -526,13 +366,9 @@
                     android:id="@+id/btnRegister"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/button_height"
-<<<<<<< HEAD
                     android:background="@drawable/button_primary_background"
                     android:elevation="0dp"
                     android:stateListAnimator="@null"
-=======
-                    android:background="@drawable/gradient_button_background"
->>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
                     android:text="@string/register_button"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
@@ -540,26 +376,12 @@
                     android:textStyle="bold"
                     android:layout_marginTop="@dimen/margin_medium"/>
 
-<<<<<<< HEAD
                 </LinearLayout>
 
             </FrameLayout>
-=======
-
-            </LinearLayout>
->>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
 
-<<<<<<< HEAD
-=======
-    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
->>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
 </androidx.constraintlayout.widget.ConstraintLayout>
