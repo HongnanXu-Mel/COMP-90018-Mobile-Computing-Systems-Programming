@@ -11,23 +11,15 @@
     
     <!-- Modern Light Theme Colors -->
     <color name="background_light">#FFFFFF</color>
-<<<<<<< HEAD
     <color name="surface_light">#F8F9FA</color>
     <color name="text_primary_light">#1A1A1A</color>
     <color name="text_secondary_light">#8E8E93</color>
     <color name="text_hint_light">#C7C7CC</color>
-=======
-    <color name="surface_light">#EBEBEB</color>
-    <color name="text_primary_light">#1A1A1A</color>
-    <color name="text_secondary_light">#6B7280</color>
-    <color name="text_hint_light">#9CA3AF</color>
->>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
     
     <!-- Modern Gradient Colors - Orange Theme -->
     <color name="primary_gradient_start">#EF7722</color>
     <color name="primary_gradient_end">#FAA533</color>
     
-<<<<<<< HEAD
     <!-- Rating and Accuracy Colors -->
     <color name="rating_text_color">#FAA533</color>
     <color name="accuracy_text_color">#10B981</color>
@@ -41,12 +33,6 @@
     
     <!-- Card Colors -->
     <color name="card_border_light">#D0D0D0</color>
-=======
-    <!-- Input Field Colors - Orange Theme -->
-    <color name="input_background_light">#FFFFFF</color>
-    <color name="input_border_light">#EBEBEB</color>
-    <color name="input_border_focused">#EF7722</color>
->>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
     <color name="input_shadow">#F3F4F6</color>
     
     <!-- Tab Colors - Orange Theme -->
@@ -72,7 +58,6 @@
     <!-- Navigation Colors -->
     <color name="nav_selected">#EF7722</color>
     <color name="nav_unselected">#757575</color>
-<<<<<<< HEAD
     <color name="nav_selected_bg">@android:color/transparent</color>
     
     <!-- Action Colors -->
@@ -112,10 +97,4 @@
     <!-- Review Dialog Colors -->
     <color name="star_badge_color">#FAA533</color>
     <color name="accuracy_badge_color">#10B981</color>
-=======
-    <color name="nav_selected_bg">#20EF7722</color>
-    
-    <!-- Action Colors -->
-    <color name="logout_red">#DC2626</color>
->>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
 </resources>

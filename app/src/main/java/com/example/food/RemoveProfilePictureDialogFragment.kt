@@ -22,6 +22,27 @@ class RemoveProfilePictureDialogFragment : DialogFragment() {
         val dialog = Dialog(requireContext())
         dialog.setContentView(R.layout.dialog_remove_profile_picture)
         
+        setupDialog(dialog)
+        initializeViews(dialog)
+        setupClickListeners(dialog)
+        
+        return dialog
+    }
+    
+    private fun setupDialog(dialog: Dialog) {
+        dialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.9).toInt(),
+            android.view.WindowManager.LayoutParams.WRAP_CONTENT
+        )
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+    }
+    
+    private fun initializeViews(dialog: Dialog) {
+        val btnCancel = dialog.findViewById<Button>(R.id.btnCancelRemove)
+        val btnConfirm = dialog.findViewById<AppCompatButton>(R.id.btnConfirmRemove)
+    }
+    
+    private fun setupClickListeners(dialog: Dialog) {
         val btnCancel = dialog.findViewById<Button>(R.id.btnCancelRemove)
         val btnConfirm = dialog.findViewById<AppCompatButton>(R.id.btnConfirmRemove)
         
@@ -33,7 +54,5 @@ class RemoveProfilePictureDialogFragment : DialogFragment() {
             listener?.onRemoveConfirmed()
             dismiss()
         }
-        
-        return dialog
     }
 }

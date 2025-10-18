@@ -26,7 +26,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText etEmail, etPassword;
-    private Button btnLogin, btnBypassLogin;
+    private Button btnLogin;
     private TextView tvForgotPassword, tvSignUp, tvLoginError;
     private ImageView ivPasswordToggle;
     private CheckBox cbRememberMe;
@@ -74,19 +74,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        btnBypassLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bypassLogin();
-            }
-        });
     }
 
     private void initViews() {
         etEmail = findViewById(R.id.etLoginEmail); 
         etPassword = findViewById(R.id.etLoginPassword); 
         btnLogin = findViewById(R.id.btnLogin);
-        btnBypassLogin = findViewById(R.id.btnBypassLogin);
         tvForgotPassword = findViewById(R.id.tvForgotPassword);
         tvSignUp = findViewById(R.id.tabRegister);
         ivPasswordToggle = findViewById(R.id.ivPasswordToggle);
@@ -166,13 +159,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void bypassLogin() {
-        // Create an intent to go to MainActivity with a bypass flag
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        intent.putExtra("bypass_login", true);
-        startActivity(intent);
-        finish();
-    }
 
     private void loadRememberMeState() {
         boolean rememberMe = sharedPreferences.getBoolean(KEY_REMEMBER_ME, false);
