@@ -22,21 +22,39 @@
             android:layout_height="wrap_content"
             android:minHeight="0dp"
             android:paddingStart="@dimen/padding_xlarge"
+<<<<<<< HEAD
             android:paddingTop="32dp"
+=======
+            android:paddingTop="48dp"
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
             android:paddingEnd="@dimen/padding_xlarge"
             android:paddingBottom="@dimen/padding_xlarge"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="50dp">
 
+<<<<<<< HEAD
             <!-- Premium App Logo at Top -->
+=======
+            <!-- Premium App Logo -->
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
             <FrameLayout
                 android:id="@+id/logoContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+<<<<<<< HEAD
                 android:layout_marginTop="@dimen/margin_large"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
+=======
+                android:layout_marginTop="@dimen/margin_xlarge"
+                app:layout_constraintBottom_toTopOf="@+id/tabLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5">
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
 
                 <!-- Main Logo Text -->
                 <TextView
@@ -59,6 +77,7 @@
 
             </FrameLayout>
 
+<<<<<<< HEAD
             <!-- Content Container - Centered vertically -->
             <FrameLayout
                 android:id="@+id/contentContainer"
@@ -136,12 +155,100 @@
                     </LinearLayout>
 
                     
+=======
+            <!-- Tab Layout at Top -->
+            <LinearLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_xlarge"
+                android:background="@drawable/tab_container_background"
+                android:orientation="horizontal"
+                android:padding="4dp"
+                app:layout_constraintBottom_toTopOf="@+id/tvHeader"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/logoContainer">
+
+                <TextView
+                    android:id="@+id/tabLogin"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="3dp"
+                    android:background="@drawable/tab_background_selected"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="@drawable/tab_focus_selector"
+                    android:gravity="center"
+                    android:text="@string/login"
+                    android:textColor="@color/primary_gradient_start"
+                    android:textSize="@dimen/text_size_large"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tabRegister"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="3dp"
+                    android:background="@drawable/tab_background_unselected"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="@drawable/tab_focus_selector"
+                    android:gravity="center"
+                    android:text="@string/tab_register"
+                    android:textColor="@color/tab_unselected_text"
+                    android:textSize="@dimen/text_size_large"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- Dynamic Header Text -->
+            <TextView
+                android:id="@+id/tvHeader"
+                style="@style/WelcomeHeaderStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:gravity="center"
+                android:text="@string/welcome_back_header"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tabLayout" />
+
+            <!-- Content Container for ViewPager or Fragment switching -->
+            <FrameLayout
+                android:id="@+id/contentContainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_xlarge"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvHeader">
+
+                <!-- Login Form (Default visible) -->
+                <LinearLayout
+                    android:id="@+id/loginForm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
                     <!-- Email Input -->
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+<<<<<<< HEAD
                         android:layout_marginBottom="@dimen/margin_small"
+=======
+                        android:layout_marginBottom="@dimen/margin_medium"
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
                         android:textColorHint="@color/text_hint_light"
                         app:boxBackgroundMode="none"
                         app:boxStrokeColor="@color/input_border_light"
@@ -161,10 +268,13 @@
                             android:inputType="textEmailAddress"
                             android:nextFocusDown="@+id/etLoginPassword"
                             android:nextFocusForward="@+id/etLoginPassword"
+<<<<<<< HEAD
                             android:paddingStart="20dp"
                             android:paddingTop="16dp"
                             android:paddingEnd="20dp"
                             android:paddingBottom="16dp"
+=======
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
                             android:textColor="@color/text_primary_light"
                             android:textColorHint="@color/text_hint_light"
                             android:textStyle="bold"
@@ -182,7 +292,11 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+<<<<<<< HEAD
                         android:layout_marginBottom="@dimen/margin_small">
+=======
+                        android:layout_marginBottom="@dimen/margin_medium">
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/passwordInputLayout"
@@ -203,15 +317,22 @@
                                 android:background="@drawable/input_field_background"
                                 android:drawableStart="@drawable/ic_lock"
                                 android:drawablePadding="@dimen/padding_medium"
+<<<<<<< HEAD
+=======
+
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
                                 android:gravity="center_vertical"
                                 android:hint="@string/password_hint"
                                 android:inputType="textPassword"
                                 android:nextFocusDown="@+id/btnLogin"
                                 android:nextFocusForward="@+id/btnLogin"
+<<<<<<< HEAD
                                 android:paddingStart="20dp"
                                 android:paddingTop="16dp"
                                 android:paddingEnd="52dp"
                                 android:paddingBottom="16dp"
+=======
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
                                 android:textColor="@color/text_primary_light"
                                 android:textColorHint="@color/text_hint_light"
                                 android:textStyle="bold"
@@ -259,7 +380,13 @@
                         android:layout_marginTop="@dimen/margin_medium"
                         android:layout_marginBottom="@dimen/margin_medium"
                         android:gravity="center_vertical"
+<<<<<<< HEAD
                         android:orientation="horizontal">
+=======
+                        android:orientation="horizontal"
+                        tools:layout_editor_absoluteX="32dp"
+                        tools:layout_editor_absoluteY="468dp">
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
 
                         <CheckBox
                             android:id="@+id/cbRememberMe"
@@ -268,9 +395,16 @@
                             android:buttonTint="@color/primary_gradient_start"
                             android:text="@string/remember_me"
                             android:textColor="@color/text_secondary_light"
+<<<<<<< HEAD
                             android:textSize="@dimen/text_size_medium"
                             android:textStyle="normal"
                             android:paddingStart="4dp" />
+=======
+                            android:textSize="@dimen/text_size_large"
+                            android:textStyle="bold"
+                            tools:layout_editor_absoluteX="32dp"
+                            tools:layout_editor_absoluteY="468dp" />
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
 
                         <View
                             android:layout_width="0dp"
@@ -285,8 +419,15 @@
                             android:focusable="true"
                             android:text="@string/forgot_password"
                             android:textColor="@color/accent_blue"
+<<<<<<< HEAD
                             android:textSize="@dimen/text_size_medium"
                             android:textStyle="bold" />
+=======
+                            android:textSize="@dimen/text_size_large"
+                            android:textStyle="bold"
+                            tools:layout_editor_absoluteX="250dp"
+                            tools:layout_editor_absoluteY="480dp" />
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
 
                     </LinearLayout>
 
@@ -295,9 +436,13 @@
                         android:id="@+id/btnLogin"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/button_height"
+<<<<<<< HEAD
                         android:background="@drawable/button_primary_background"
                         android:elevation="0dp"
                         android:stateListAnimator="@null"
+=======
+                        android:background="@drawable/gradient_button_background"
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
                         android:text="@string/login_button"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
@@ -306,6 +451,7 @@
                         tools:layout_editor_absoluteX="32dp"
                         tools:layout_editor_absoluteY="540dp" />
 
+<<<<<<< HEAD
                     <!-- Bypass Login Button -->
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btnBypassLogin"
@@ -323,6 +469,8 @@
                         tools:layout_editor_absoluteX="32dp"
                         tools:layout_editor_absoluteY="600dp" />
 
+=======
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
                 </LinearLayout>
 
 

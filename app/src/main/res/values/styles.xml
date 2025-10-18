@@ -8,7 +8,11 @@
     </style>
     
     <style name="AppLogoStyle">
+<<<<<<< HEAD
         <item name="android:textSize">32sp</item>
+=======
+        <item name="android:textSize">36sp</item>
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textColor">@color/logo_primary</item>
@@ -21,10 +25,17 @@
     </style>
     
     <style name="WelcomeHeaderStyle">
+<<<<<<< HEAD
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textColor">@color/text_primary_light</item>
+=======
+        <item name="android:textSize">36sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@color/text_secondary_light</item>
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
         <item name="android:letterSpacing">-0.01</item>
     </style>
     
@@ -41,6 +52,7 @@
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textColor">@color/primary_gradient_start</item>
     </style>
+<<<<<<< HEAD
     
     <style name="FullScreenDialog" parent="Theme.AppCompat.Dialog">
         <item name="android:windowNoTitle">true</item>
@@ -57,3 +69,8 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 </resources>
+=======
+</resources>
+
+
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e

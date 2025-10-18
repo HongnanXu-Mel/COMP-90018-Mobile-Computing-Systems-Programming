@@ -1,6 +1,7 @@
 package com.example.food;
 
 import android.os.Bundle;
+<<<<<<< HEAD
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+=======
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
+<<<<<<< HEAD
 
 import com.bumptech.glide.Glide;
 import com.example.food.adapters.ReviewWidgetAdapter;
@@ -60,10 +67,15 @@ public class ProfileFragment extends Fragment {
     private ListenerRegistration profileListener;
     private ProfileCacheManager cacheManager;
 
+=======
+public class ProfileFragment extends Fragment {
+
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_profile, container, false);
+<<<<<<< HEAD
     }
 
     @Override
@@ -557,6 +569,8 @@ public class ProfileFragment extends Fragment {
         if (profileListener != null) {
             profileListener.remove();
         }
+=======
+>>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
     }
 }
 
