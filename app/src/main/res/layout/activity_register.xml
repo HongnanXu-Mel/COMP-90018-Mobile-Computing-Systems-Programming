@@ -150,7 +150,7 @@
                         android:gravity="center_vertical"
                         android:hint="@string/full_name_hint"
                         android:inputType="textPersonName"
-                        android:drawableStart="@drawable/ic_person"
+                        android:drawableStart="@drawable/ic_user"
                         android:drawablePadding="@dimen/padding_medium"
                         android:nextFocusDown="@+id/etEmail"
                         android:nextFocusForward="@+id/etEmail"

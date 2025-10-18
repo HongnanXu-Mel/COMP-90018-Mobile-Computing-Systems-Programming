@@ -306,22 +306,6 @@
                         tools:layout_editor_absoluteX="32dp"
                         tools:layout_editor_absoluteY="540dp" />
 
-                    <!-- Bypass Login Button -->
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/btnBypassLogin"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/button_height"
-                        android:layout_marginTop="@dimen/margin_small"
-                        android:background="@drawable/button_secondary_background"
-                        android:elevation="0dp"
-                        android:stateListAnimator="@null"
-                        android:text="@string/bypass_login"
-                        android:textAllCaps="false"
-                        android:textColor="@color/accent_blue"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        tools:layout_editor_absoluteX="32dp"
-                        tools:layout_editor_absoluteY="600dp" />
 
                 </LinearLayout>
 

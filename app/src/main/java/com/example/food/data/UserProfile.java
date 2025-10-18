@@ -8,6 +8,7 @@ public class UserProfile {
     private String displayName;
     private String email;
     private String bio;
+    private String avatarUrl;
     private long createdAt;
     private long updatedAt;
     private double credibilityScore;
@@ -70,6 +71,14 @@ public class UserProfile {
         this.bio = bio;
     }
 
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
     public long getCreatedAt() {
         return createdAt;
     }
@@ -118,6 +127,7 @@ public class UserProfile {
                 ", displayName='" + displayName + '\'' +
                 ", email='" + email + '\'' +
                 ", bio='" + bio + '\'' +
+                ", avatarUrl='" + avatarUrl + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 ", credibilityScore=" + credibilityScore +

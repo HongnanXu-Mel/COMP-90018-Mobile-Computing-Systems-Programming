@@ -83,8 +83,8 @@
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:src="@drawable/ic_person"
-                            app:civ_border_width="2dp"
-                            app:civ_border_color="@color/primary_gradient_start" />
+                            app:civ_border_width="0dp"
+                            app:civ_border_color="@color/logo_primary" />
 
                         <LinearLayout
                             android:layout_width="0dp"
