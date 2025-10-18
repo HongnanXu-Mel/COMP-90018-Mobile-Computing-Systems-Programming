@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -47,6 +48,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private FusedLocationProviderClient fusedLocationClient;
     private PlacesClient placesClient;
     private FirebaseFirestore db;
+    
+    // 放大缩小按钮
+    private ImageButton btnZoomIn;
+    private ImageButton btnZoomOut;
 
     // 高分餐厅数据
     private List<Restaurant> highRatedRestaurants;
@@ -71,6 +76,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // 初始化放大缩小按钮
+        btnZoomIn = view.findViewById(R.id.btn_zoom_in);
+        btnZoomOut = view.findViewById(R.id.btn_zoom_out);
+        
+        // 设置按钮点击监听器
+        btnZoomIn.setOnClickListener(v -> zoomIn());
+        btnZoomOut.setOnClickListener(v -> zoomOut());
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
@@ -191,6 +204,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     Log.e(TAG, "Firebase加载失败", e);
                     Toast.makeText(requireContext(), "Firebase连接失败: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
+    }
+    
+    // 放大功能
+    private void zoomIn() {
+        if (googleMap != null) {
+            googleMap.animateCamera(CameraUpdateFactory.zoomIn());
+        }
+    }
+    
+    // 缩小功能
+    private void zoomOut() {
+        if (googleMap != null) {
+            googleMap.animateCamera(CameraUpdateFactory.zoomOut());
+        }
     }
     
     // 上传功能已删除，现在只从Firebase加载数据
