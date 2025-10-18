@@ -68,3 +68,4 @@ Thumbs.db
 .cursorrules
 *.log
 .idea/deploymentTargetSelector.xml
+local.properties
