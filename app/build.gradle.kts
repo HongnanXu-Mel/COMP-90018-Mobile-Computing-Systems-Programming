@@ -74,6 +74,10 @@ dependencies {
     // CircleImageView for profile pictures
     implementation("de.hdodenhof:circleimageview:3.1.0")
     
+    // Supabase
+    implementation("io.github.jan-tennert.supabase:storage-kt:2.3.0")
+    implementation("io.github.jan-tennert.supabase:gotrue-kt:2.3.0")
+    implementation("io.ktor:ktor-client-android:2.3.7")
     
     // Coil for image loading
     implementation("io.coil-kt:coil-compose:2.5.0")
