@@ -8,11 +8,7 @@
     </style>
     
     <style name="AppLogoStyle">
-<<<<<<< HEAD
         <item name="android:textSize">32sp</item>
-=======
-        <item name="android:textSize">36sp</item>
->>>>>>> a5c8d92ccd60cd10072fbbfac66ea2b91863aa3e
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textColor">@color/logo_primary</item>
