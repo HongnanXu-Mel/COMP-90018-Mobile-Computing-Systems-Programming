@@ -23,6 +23,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.food.data.UserProfile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -206,15 +207,18 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void saveUserInfo(String name, String email) {
-        // Create user info mapping
-        Map<String, Object> user = new HashMap<>();
-        user.put("name", name);
-        user.put("email", email);
+        // Create object for user profile
+        UserProfile userProfile = new UserProfile(
+                mAuth.getCurrentUser().getUid(),
+                name,
+                email,
+                "" // Empty bio by default
+        );
 
-        // Save user info to Firestore
+        // Save user profile to Firestore
         db.collection("users")
                 .document(mAuth.getCurrentUser().getUid())
-                .set(user)
+                .set(userProfile)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {

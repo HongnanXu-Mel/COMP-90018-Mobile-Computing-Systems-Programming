@@ -230,7 +230,6 @@ public class SettingsFragment extends Fragment {
         userProfile = new UserProfile(
                 currentUser.getUid(),
                 name,
-                name, // Use same name for displayName field for compatibility
                 currentUser.getEmail(),
                 "" // Empty bio by default
         );
