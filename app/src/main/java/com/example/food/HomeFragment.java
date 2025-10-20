@@ -19,24 +19,31 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.food.adapter.PostAdapter;
-import com.example.food.model.Post;
-import com.example.food.service.PostService;
+import com.example.food.adapters.ReviewWidgetAdapter;
+import com.example.food.data.Review;
+import com.example.food.dialogs.ReviewDetailsDialog;
+import com.example.food.model.Restaurant;
+import com.example.food.service.ReviewService;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HomeFragment extends Fragment {
     private static final String TAG = "HomeFragment";
     
-    private RecyclerView rvPosts;
-    private PostAdapter postAdapter;
+    private RecyclerView rvReviews;
+    private ReviewWidgetAdapter reviewAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private EditText etSearch;
     private LinearLayout layoutEmptyState;
     
-    private PostService postService;
-    private List<Post> allPosts;
+    private ReviewService reviewService;
+    private List<Review> allReviews;
+    private Map<String, Restaurant> restaurantMap;
+    private FirebaseFirestore db;
 
     @Nullable
     @Override
@@ -48,40 +55,42 @@ public class HomeFragment extends Fragment {
         setupSwipeRefresh();
         setupSearch();
         
-        postService = new PostService();
-        allPosts = new ArrayList<>();
+        reviewService = new ReviewService();
+        allReviews = new ArrayList<>();
+        restaurantMap = new HashMap<>();
+        db = FirebaseFirestore.getInstance();
         
-        loadPosts();
+        loadReviews();
         
         return view;
     }
 
     private void initViews(View view) {
-        rvPosts = view.findViewById(R.id.rv_posts);
+        rvReviews = view.findViewById(R.id.rv_posts);
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         etSearch = view.findViewById(R.id.et_search);
         layoutEmptyState = view.findViewById(R.id.layout_empty_state);
     }
 
     private void setupRecyclerView() {
-        postAdapter = new PostAdapter(getContext());
+        reviewAdapter = new ReviewWidgetAdapter(allReviews, (review, restaurant) -> {
+            // Open review details dialog
+            ReviewDetailsDialog dialog = new ReviewDetailsDialog(getContext(), review, restaurant);
+            dialog.show();
+        });
         
         // Set up staggered grid layout for Xiaohongshu-like appearance
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        rvPosts.setLayoutManager(layoutManager);
-        rvPosts.setAdapter(postAdapter);
+        rvReviews.setLayoutManager(layoutManager);
+        rvReviews.setAdapter(reviewAdapter);
         
-        // Set post click listener
-        postAdapter.setOnPostClickListener(post -> {
-            Intent intent = new Intent(getContext(), PostDetailActivity.class);
-            intent.putExtra(PostDetailActivity.EXTRA_POST_ID, post.getPostId());
-            startActivity(intent);
-        });
+        // Set restaurant map to adapter
+        reviewAdapter.setRestaurantMap(restaurantMap);
     }
 
     private void setupSwipeRefresh() {
         swipeRefreshLayout.setColorSchemeResources(R.color.primary_gradient_start);
-        swipeRefreshLayout.setOnRefreshListener(this::refreshPosts);
+        swipeRefreshLayout.setOnRefreshListener(this::refreshReviews);
     }
 
     private void setupSearch() {
@@ -95,24 +104,24 @@ public class HomeFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 String query = s.toString().trim();
-                filterPosts(query);
+                filterReviews(query);
             }
         });
     }
 
 
-    private void loadPosts() {
+    private void loadReviews() {
         showLoading(true);
         
-        postService.loadPosts(new PostService.PostsLoadCallback() {
+        reviewService.loadReviews(new ReviewService.ReviewsLoadCallback() {
             @Override
-            public void onSuccess(List<Post> posts) {
+            public void onSuccess(List<Review> reviews) {
                 if (getActivity() == null) return;
                 
                 getActivity().runOnUiThread(() -> {
-                    allPosts.clear();
-                    allPosts.addAll(posts);
-                    updateUI();
+                    allReviews.clear();
+                    allReviews.addAll(reviews);
+                    loadRestaurants();
                     showLoading(false);
                 });
             }
@@ -123,23 +132,23 @@ public class HomeFragment extends Fragment {
                 
                 getActivity().runOnUiThread(() -> {
                     showLoading(false);
-                    showError("Failed to load posts: " + e.getMessage());
-                    Log.e(TAG, "Error loading posts", e);
+                    showError("Failed to load reviews: " + e.getMessage());
+                    Log.e(TAG, "Error loading reviews", e);
                 });
             }
         });
     }
 
-    private void refreshPosts() {
-        postService.loadPosts(new PostService.PostsLoadCallback() {
+    private void refreshReviews() {
+        reviewService.loadReviews(new ReviewService.ReviewsLoadCallback() {
             @Override
-            public void onSuccess(List<Post> posts) {
+            public void onSuccess(List<Review> reviews) {
                 if (getActivity() == null) return;
                 
                 getActivity().runOnUiThread(() -> {
-                    allPosts.clear();
-                    allPosts.addAll(posts);
-                    updateUI();
+                    allReviews.clear();
+                    allReviews.addAll(reviews);
+                    loadRestaurants();
                     swipeRefreshLayout.setRefreshing(false);
                 });
             }
@@ -150,35 +159,93 @@ public class HomeFragment extends Fragment {
                 
                 getActivity().runOnUiThread(() -> {
                     swipeRefreshLayout.setRefreshing(false);
-                    showError("Failed to refresh posts");
-                    Log.e(TAG, "Error refreshing posts", e);
+                    showError("Failed to refresh reviews");
+                    Log.e(TAG, "Error refreshing reviews", e);
                 });
             }
         });
     }
 
-    private void filterPosts(String query) {
-        if (postAdapter != null) {
-            postAdapter.filterPosts(allPosts, query);
+    private void loadRestaurants() {
+        if (allReviews.isEmpty()) {
+            updateUI();
+            return;
+        }
+
+        List<String> restaurantIds = new ArrayList<>();
+        for (Review review : allReviews) {
+            if (review.getRestaurantId() != null && !restaurantIds.contains(review.getRestaurantId())) {
+                restaurantIds.add(review.getRestaurantId());
+            }
+        }
+
+        if (restaurantIds.isEmpty()) {
+            updateUI();
+            return;
+        }
+
+        for (String restaurantId : restaurantIds) {
+            db.collection("restaurants")
+                .document(restaurantId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        try {
+                            Restaurant restaurant = documentSnapshot.toObject(Restaurant.class);
+                            if (restaurant != null) {
+                                restaurant.setId(documentSnapshot.getId());
+                                restaurantMap.put(restaurantId, restaurant);
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error parsing restaurant document", e);
+                        }
+                    }
+                    updateUI();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error loading restaurant: " + restaurantId, e);
+                    updateUI();
+                });
+        }
+    }
+
+    private void filterReviews(String query) {
+        if (reviewAdapter != null) {
+            // Simple filtering based on review content
+            List<Review> filteredReviews = new ArrayList<>();
+            if (query == null || query.trim().isEmpty()) {
+                filteredReviews.addAll(allReviews);
+            } else {
+                String lowerCaseQuery = query.toLowerCase().trim();
+                for (Review review : allReviews) {
+                    if ((review.getDescription() != null && review.getDescription().toLowerCase().contains(lowerCaseQuery)) ||
+                        (review.getCaption() != null && review.getCaption().toLowerCase().contains(lowerCaseQuery)) ||
+                        (review.getRestaurantName() != null && review.getRestaurantName().toLowerCase().contains(lowerCaseQuery))) {
+                        filteredReviews.add(review);
+                    }
+                }
+            }
+            reviewAdapter.setReviews(filteredReviews);
             updateEmptyState();
         }
     }
 
     private void updateUI() {
-        if (postAdapter != null) {
-            postAdapter.updatePosts(allPosts);
+        if (reviewAdapter != null) {
+            reviewAdapter.setReviews(allReviews);
+            reviewAdapter.setRestaurantMap(restaurantMap);
             updateEmptyState();
         }
     }
 
     private void updateEmptyState() {
-        if (postAdapter != null && layoutEmptyState != null && rvPosts != null) {
-            if (postAdapter.getItemCount() == 0) {
+        if (reviewAdapter != null && layoutEmptyState != null && rvReviews != null) {
+            if (reviewAdapter.getItemCount() == 0) {
                 layoutEmptyState.setVisibility(View.VISIBLE);
-                rvPosts.setVisibility(View.GONE);
+                rvReviews.setVisibility(View.GONE);
             } else {
                 layoutEmptyState.setVisibility(View.GONE);
-                rvPosts.setVisibility(View.VISIBLE);
+                rvReviews.setVisibility(View.VISIBLE);
             }
         }
     }
