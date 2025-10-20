@@ -891,19 +891,23 @@ public class ReviewDetailsDialog extends Dialog {
             return;
         }
 
-        com.example.food.dialogs.DeletePostConfirmationDialog dialog = 
-            new com.example.food.dialogs.DeletePostConfirmationDialog(getContext(), this::deletePost);
-        dialog.show();
+        // Show confirmation dialog using AlertDialog
+        new androidx.appcompat.app.AlertDialog.Builder(getContext())
+            .setTitle("Delete Review")
+            .setMessage("Are you sure you want to delete this review? This action cannot be undone.")
+            .setPositiveButton("Delete", (dialog, which) -> deleteReview())
+            .setNegativeButton("Cancel", null)
+            .show();
     }
 
-    private void deletePost() {
+    private void deleteReview() {
         if (review.getId() == null || review.getId().trim().isEmpty()) {
-            Toast.makeText(getContext(), getContext().getString(R.string.failed_to_delete_post), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Failed to delete review", Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Show loading state
-        Toast.makeText(getContext(), "Deleting post...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Deleting review...", Toast.LENGTH_SHORT).show();
 
         // Delete from Firestore
         db.collection("reviews")
@@ -911,14 +915,14 @@ public class ReviewDetailsDialog extends Dialog {
             .delete()
             .addOnSuccessListener(aVoid -> {
                 Log.d(TAG, "Review deleted successfully");
-                Toast.makeText(getContext(), getContext().getString(R.string.post_deleted_successfully), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Review deleted successfully", Toast.LENGTH_SHORT).show();
                 
                 // Close the dialog
                 dismiss();
             })
             .addOnFailureListener(e -> {
                 Log.e(TAG, "Error deleting review", e);
-                Toast.makeText(getContext(), getContext().getString(R.string.failed_to_delete_post), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Failed to delete review: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             });
     }
 }
