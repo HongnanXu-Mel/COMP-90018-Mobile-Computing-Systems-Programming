@@ -22,8 +22,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.food.adapter.SimplePostAdapter;
-import com.example.food.model.Post;
+import com.example.food.adapters.ReviewWidgetAdapter;
+import com.example.food.data.Review;
+import com.example.food.dialogs.ReviewDetailsDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 // FragmentManager和FragmentTransaction不再需要，已简化地图初始化
 
@@ -229,51 +230,49 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         tvRestaurantAddress.setText(restaurant.getAddress());
 
         // Setup RecyclerView
-        SimplePostAdapter adapter = new SimplePostAdapter(requireContext());
+        List<Review> reviews = new ArrayList<>();
+        ReviewWidgetAdapter adapter = new ReviewWidgetAdapter(reviews, (review, restaurantData) -> {
+            // Open review details dialog
+            ReviewDetailsDialog dialog = new ReviewDetailsDialog(requireContext(), review, restaurantData);
+            dialog.show();
+            bottomSheet.dismiss();
+        });
         rvPosts.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvPosts.setAdapter(adapter);
 
-        // Load posts for this restaurant
-        loadRestaurantPosts(restaurant.getId(), adapter, rvPosts, tvNoPosts, tvPostsCount);
-
-        // Handle post click
-        adapter.setOnPostClickListener(post -> {
-            Intent intent = new Intent(requireContext(), PostDetailActivity.class);
-            intent.putExtra(PostDetailActivity.EXTRA_POST_ID, post.getPostId());
-            startActivity(intent);
-            bottomSheet.dismiss();
-        });
+        // Load reviews for this restaurant
+        loadRestaurantReviews(restaurant.getId(), adapter, rvPosts, tvNoPosts, tvPostsCount);
 
         bottomSheet.show();
     }
 
     /**
-     * Load posts for a specific restaurant
+     * Load reviews for a specific restaurant
      */
-    private void loadRestaurantPosts(String restaurantId, SimplePostAdapter adapter, 
+    private void loadRestaurantReviews(String restaurantId, ReviewWidgetAdapter adapter, 
                                      RecyclerView rvPosts, TextView tvNoPosts, TextView tvPostsCount) {
-        db.collection("posts")
+        db.collection("reviews")
             .whereEqualTo("restaurantId", restaurantId)
             .get()
             .addOnSuccessListener(queryDocumentSnapshots -> {
-                List<Post> posts = new ArrayList<>();
+                List<Review> reviews = new ArrayList<>();
                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                    Post post = document.toObject(Post.class);
-                    post.setPostId(document.getId());
-                    posts.add(post);
+                    Review review = document.toObject(Review.class);
+                    review.setId(document.getId());
+                    reviews.add(review);
                 }
 
                 // Sort by timestamp (newest first)
-                posts.sort((p1, p2) -> {
-                    if (p1.getTimestamp() == null) return 1;
-                    if (p2.getTimestamp() == null) return -1;
-                    return p2.getTimestamp().compareTo(p1.getTimestamp());
+                reviews.sort((r1, r2) -> {
+                    if (r1.getCreatedAt() == null) return 1;
+                    if (r2.getCreatedAt() == null) return -1;
+                    return r2.getCreatedAt().compareTo(r1.getCreatedAt());
                 });
 
-                adapter.updatePosts(posts);
-                tvPostsCount.setText(String.valueOf(posts.size()));
+                adapter.setReviews(reviews);
+                tvPostsCount.setText(String.valueOf(reviews.size()));
 
-                if (posts.isEmpty()) {
+                if (reviews.isEmpty()) {
                     tvNoPosts.setVisibility(View.VISIBLE);
                     rvPosts.setVisibility(View.GONE);
                 } else {
@@ -282,8 +281,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 }
             })
             .addOnFailureListener(e -> {
-                Log.e(TAG, "Error loading restaurant posts", e);
-                Toast.makeText(requireContext(), "Failed to load posts", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Error loading restaurant reviews", e);
+                Toast.makeText(requireContext(), "Failed to load reviews", Toast.LENGTH_SHORT).show();
             });
     }
     

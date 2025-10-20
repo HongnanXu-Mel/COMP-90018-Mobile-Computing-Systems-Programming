@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.food.R;
-import com.example.food.model.Comment;
+import com.example.food.data.Comment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,12 +63,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         }
 
         public void bind(Comment comment) {
-            tvUsername.setText(comment.getUsername());
-            tvContent.setText(comment.getContent());
+            tvUsername.setText(comment.getUserName());
+            tvContent.setText(comment.getText());
 
             // Format timestamp
-            if (comment.getTimestamp() != null) {
-                tvTime.setText(getTimeAgo(comment.getTimestamp().toDate()));
+            if (comment.getCreatedAt() != null) {
+                tvTime.setText(getTimeAgo(comment.getCreatedAt()));
             }
         }
 
