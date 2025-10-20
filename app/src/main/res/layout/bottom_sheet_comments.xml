@@ -18,7 +18,8 @@
         android:id="@+id/rvComments"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:nestedScrollingEnabled="false" />
+        android:nestedScrollingEnabled="false"
+        android:layout_marginBottom="16dp" />
 
     <TextView
         android:id="@+id/tvNoComments"
@@ -29,7 +30,42 @@
         android:textColor="@color/profile_text_tertiary"
         android:gravity="center"
         android:padding="24dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Comment Input Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/edittext_rounded"
+        android:padding="12dp">
+
+        <EditText
+            android:id="@+id/etCommentInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:hint="Add a comment..."
+            android:textSize="14sp"
+            android:textColorHint="@color/text_hint_light"
+            android:textColor="@color/text_primary_light"
+            android:inputType="textMultiLine"
+            android:maxLines="3"
+            android:layout_marginEnd="8dp" />
+
+        <ImageView
+            android:id="@+id/btnSendComment"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_arrow_right"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="4dp"
+            android:tint="@color/primary_color" />
+
+    </LinearLayout>
 
 </LinearLayout>
 
