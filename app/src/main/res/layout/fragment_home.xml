@@ -55,7 +55,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:hint="Search posts..."
+                    android:hint="Search reviews..."
                     android:textSize="16sp"
                     android:textColorHint="@color/text_hint_light"
                     android:textColor="@color/text_primary_light"
@@ -69,7 +69,7 @@
 
     </LinearLayout>
 
-    <!-- Posts RecyclerView -->
+    <!-- Reviews RecyclerView -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
@@ -99,7 +99,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No Posts Yet"
+            android:text="No Reviews Yet"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/text_secondary_light"
