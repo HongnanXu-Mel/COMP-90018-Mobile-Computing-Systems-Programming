@@ -97,4 +97,8 @@
     <!-- Review Dialog Colors -->
     <color name="star_badge_color">#FAA533</color>
     <color name="accuracy_badge_color">#10B981</color>
+
+    <!-- Missing Colors -->
+    <color name="gray">#808080</color>
+    <color name="light_gray">#E0E0E0</color>
 </resources>
