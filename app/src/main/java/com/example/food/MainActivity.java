@@ -64,8 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 switchFragment(new MapFragment());
                 return true;
             } else if (id == R.id.nav_add) {
-                // TODO: Implement add review functionality
-                Toast.makeText(this, "Add Review - Coming Soon!", Toast.LENGTH_SHORT).show();
+                switchFragment(new AddFragment());
                 return true;
             } else if (id == R.id.nav_profile) {
                 switchFragment(new ProfileFragment());
