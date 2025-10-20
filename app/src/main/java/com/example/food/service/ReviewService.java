@@ -9,7 +9,9 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Service for loading review data from Firebase Firestore
@@ -29,6 +31,11 @@ public class ReviewService {
 
     public interface ReviewsLoadCallback {
         void onSuccess(List<Review> reviews);
+        void onError(Exception e);
+    }
+    
+    public interface ReviewSaveCallback {
+        void onSuccess();
         void onError(Exception e);
     }
 
@@ -115,5 +122,36 @@ public class ReviewService {
                 callback.onError(e);
             }
         });
+    }
+    
+    /**
+     * Save a new review to Firebase Firestore
+     */
+    public void saveReview(Review review, ReviewSaveCallback callback) {
+        // Manually create a map to ensure userName and restaurantName are not stored
+        Map<String, Object> reviewData = new HashMap<>();
+        reviewData.put("userId", review.getUserId());
+        reviewData.put("restaurantId", review.getRestaurantId());
+        reviewData.put("caption", review.getCaption());
+        reviewData.put("description", review.getDescription());
+        reviewData.put("rating", review.getRating());
+        reviewData.put("accuracyPercent", review.getAccuracyPercent());
+        reviewData.put("imageUrls", review.getImageUrls());
+        reviewData.put("firstImageType", review.getFirstImageType());
+        reviewData.put("createdAt", review.getCreatedAt());
+        reviewData.put("votes", review.getVotes());
+        reviewData.put("comments", review.getComments());
+        
+        // Use auto-generated document ID. Do not store an explicit id/helpfulCount field
+        reviewsRef
+                .add(reviewData)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Review saved successfully");
+                    callback.onSuccess();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error saving review", e);
+                    callback.onError(e);
+                });
     }
 }
