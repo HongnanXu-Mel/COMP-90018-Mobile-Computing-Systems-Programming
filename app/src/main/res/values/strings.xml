@@ -235,7 +235,7 @@
     <!-- Review Dialog Strings -->
     <string name="rating_label">RATING</string>
     <string name="accuracy_label">ACCURACY</string>
-    <string name="rating_placeholder">5.0</string>
+    <string name="rating_placeholder">0</string>
     <string name="accuracy_placeholder">100%</string>
     <string name="restaurant_placeholder">Restaurant Name</string>
     <string name="description_placeholder">No description provided</string>
@@ -261,13 +261,14 @@
     <string name="score_out_of_100">/100</string>
     <string name="engagement_placeholder_value">0</string>
     <string name="reviews_tab">Reviews</string>
+    <string name="activity_tab">Activity</string>
     <string name="analytics_tab">Analytics</string>
     <string name="no_reviews_yet">No Reviews Yet</string>
     <string name="start_exploring_message">Start exploring restaurants and share your experiences</string>
     <string name="total_reviews_label">TOTAL REVIEWS</string>
     <string name="reviews_written">reviews written</string>
-    <string name="average_rating_label">AVERAGE RATING</string>
-    <string name="stars_average">stars average</string>
+    <string name="average_rating_label">AVERAGE ACCURACY</string>
+    <string name="stars_average">accuracy</string>
     <string name="restaurants_label">RESTAURANTS</string>
     <string name="unique_places">unique places</string>
     <string name="community_votes_label">COMMUNITY VOTES</string>
@@ -291,4 +292,28 @@
     <!-- Score breakdown strings -->
     <string name="credibility_breakdown">How it\'s calculated:\n• Community votes on your reviews\n• Accuracy of your reviews\n• Consistency over time\n• Comment engagement\n\nTip: More community votes = higher credibility!</string>
     <string name="experience_breakdown">How it\'s calculated:\n• Number of reviews written\n• Variety of restaurants visited\n• Different cuisines tried\n• Areas explored\n• Time active on platform\n\nTip: Try new places and cuisines!</string>
+    
+    <!-- Activity strings -->
+    <string name="no_activity_yet">No Activity Yet</string>
+    <string name="activity_empty_message">When people vote on your reviews or comment, you\'ll see it here</string>
+    <string name="voted_accurate">voted accurate on your review</string>
+    <string name="voted_inaccurate">voted inaccurate on your review</string>
+    <string name="commented_on">commented on your review</string>
+    <string name="of_restaurant">of %s</string>
+    <string name="on_your_review">on your review</string>
+    
+    <!-- Add Review strings -->
+    <string name="create_review">Create Review</string>
+    <string name="caption">Caption</string>
+    <string name="description">Description</string>
+    <string name="rating">Rating</string>
+    <string name="restaurant">Restaurant</string>
+    <string name="photos">Photos</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="caption_hint">Enter a short caption for your review</string>
+    <string name="description_hint">Write a detailed description of your experience</string>
+    <string name="restaurant_search_hint">Search for a restaurant...</string>
+    <string name="submit_review">Submit Review</string>
+    <string name="post_review">Post Review</string>
 </resources>

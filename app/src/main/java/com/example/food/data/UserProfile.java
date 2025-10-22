@@ -5,7 +5,6 @@ import java.util.Map;
 public class UserProfile {
     private String uid;
     private String name;
-    private String displayName;
     private String email;
     private String bio;
     private String avatarUrl;
@@ -20,10 +19,9 @@ public class UserProfile {
     }
 
     // Constructor with all fields
-    public UserProfile(String uid, String name, String displayName, String email, String bio) {
+    public UserProfile(String uid, String name, String email, String bio) {
         this.uid = uid;
         this.name = name;
-        this.displayName = displayName;
         this.email = email;
         this.bio = bio;
         this.createdAt = System.currentTimeMillis();
@@ -47,13 +45,6 @@ public class UserProfile {
         this.name = name;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
 
     public String getEmail() {
         return email;
@@ -124,7 +115,6 @@ public class UserProfile {
         return "UserProfile{" +
                 "uid='" + uid + '\'' +
                 ", name='" + name + '\'' +
-                ", displayName='" + displayName + '\'' +
                 ", email='" + email + '\'' +
                 ", bio='" + bio + '\'' +
                 ", avatarUrl='" + avatarUrl + '\'' +
