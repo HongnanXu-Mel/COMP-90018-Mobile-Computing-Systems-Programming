@@ -1,203 +1,657 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_light"
     android:fillViewport="true">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_marginBottom="24dp">
 
         <!-- Header -->
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/tvAddHeader"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Create Review"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="48dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/create_review"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="@color/primary_gradient_start"
-            android:layout_marginBottom="24dp" />
+            android:textColor="@color/text_primary_light"
+            android:fontFamily="sans-serif-black"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Photos Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/photosCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/white"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/card_border_light"
+            app:layout_constraintTop_toBottomOf="@+id/tvAddHeader"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="16dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/photos"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_primary_light"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <TextView
+                        android:id="@+id/tv_photo_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0/5"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_secondary_light"
+                        android:fontFamily="sans-serif-medium" />
+
+                </LinearLayout>
+
+                <!-- Image Selection Buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:id="@+id/btn_take_photo"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/gradient_button_background"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:stateListAnimator="@null">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_camera"
+                            android:tint="@color/white" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/camera"
+                            android:textSize="14sp"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:fontFamily="sans-serif-medium"
+                            android:layout_marginStart="8dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btn_select_images"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/gradient_button_background"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:stateListAnimator="@null">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_photo"
+                            android:tint="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+                            android:text="@string/gallery"
+                            android:textSize="14sp"
+                            android:textColor="@color/white"
+            android:textStyle="bold"
+                            android:fontFamily="sans-serif-medium"
+                            android:layout_marginStart="8dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Image Previews Container -->
+                <LinearLayout
+                    android:id="@+id/imagePreviewsContainer"
+            android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:id="@+id/imageRow1"
+                        android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="100dp"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="4dp">
+
+                            <ImageView
+                                android:id="@+id/iv_preview_1"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:background="@drawable/image_preview_background" />
+
+                            <ImageView
+                                android:id="@+id/btn_delete_1"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="top|end"
+                                android:layout_margin="4dp"
+                                android:src="@drawable/ic_close"
+                                android:background="@drawable/circle_background"
+                                android:padding="4dp"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:visibility="gone" />
+
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="100dp"
+                            android:layout_weight="1"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp">
+
+                            <ImageView
+                                android:id="@+id/iv_preview_2"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:background="@drawable/image_preview_background" />
+
+                            <ImageView
+                                android:id="@+id/btn_delete_2"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="top|end"
+                                android:layout_margin="4dp"
+                                android:src="@drawable/ic_close"
+                                android:background="@drawable/circle_background"
+                                android:padding="4dp"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:visibility="gone" />
+
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="100dp"
+                            android:layout_weight="1"
+                            android:layout_marginStart="4dp">
+
+                            <ImageView
+                                android:id="@+id/iv_preview_3"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:background="@drawable/image_preview_background" />
+
+                            <ImageView
+                                android:id="@+id/btn_delete_3"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="top|end"
+                                android:layout_margin="4dp"
+                                android:src="@drawable/ic_close"
+                                android:background="@drawable/circle_background"
+                                android:padding="4dp"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:visibility="gone" />
+
+                        </FrameLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/imageRow2"
+                        android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="100dp"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="4dp">
+
+                            <ImageView
+                                android:id="@+id/iv_preview_4"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:background="@drawable/image_preview_background" />
+
+                            <ImageView
+                                android:id="@+id/btn_delete_4"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="top|end"
+                                android:layout_margin="4dp"
+                                android:src="@drawable/ic_close"
+                                android:background="@drawable/circle_background"
+                                android:padding="4dp"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:visibility="gone" />
+
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="100dp"
+                            android:layout_weight="1"
+                            android:layout_marginStart="4dp">
+
+                            <ImageView
+                                android:id="@+id/iv_preview_5"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:background="@drawable/image_preview_background" />
+
+                            <ImageView
+                                android:id="@+id/btn_delete_5"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="top|end"
+                                android:layout_margin="4dp"
+                                android:src="@drawable/ic_close"
+                                android:background="@drawable/circle_background"
+                                android:padding="4dp"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:visibility="gone" />
+
+                        </FrameLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Review Details Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/reviewDetailsCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/white"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/card_border_light"
+            app:layout_constraintTop_toBottomOf="@+id/photosCard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
 
         <!-- Caption Field -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Caption *"
-            android:textSize="16sp"
-            android:textStyle="bold"
+                android:text="@string/caption"
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary_light"
+                android:fontFamily="sans-serif-medium"
             android:layout_marginBottom="8dp" />
 
-        <EditText
-            android:id="@+id/et_caption"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter a short caption for your review"
-            android:background="@drawable/edit_text_background"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/captionInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/text_hint_light"
+                    app:boxBackgroundMode="none"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_caption"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@drawable/fully_rounded_input_field_background"
+                        android:gravity="center_vertical|start"
+                        android:hint="@string/caption_hint"
+                        android:inputType="textCapSentences"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp"
+                        android:textColor="@color/text_primary_light"
+                        android:textColorHint="@color/text_hint_light"
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif"
+                        android:singleLine="true"
+                        android:ellipsize="end" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
 
         <!-- Description Field -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Description *"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <EditText
-            android:id="@+id/et_description"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:hint="Write a detailed description of your experience"
-            android:background="@drawable/edit_text_background"
-            android:padding="12dp"
-            android:gravity="top"
-            android:inputType="textMultiLine"
-            android:layout_marginBottom="16dp" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/description"
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary_light"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginBottom="8dp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/descriptionInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/text_hint_light"
+                    app:boxBackgroundMode="none"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="80dp"
+                        android:maxHeight="160dp"
+                        android:background="@drawable/standard_input_field_background"
+                        android:gravity="top|start"
+                        android:hint="@string/description_hint"
+                        android:inputType="textMultiLine|textCapSentences"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp"
+                        android:textColor="@color/text_primary_light"
+                        android:textColorHint="@color/text_hint_light"
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif"
+                        android:maxLines="5"
+                        android:minLines="2"
+                        android:scrollbars="vertical"
+                        android:lineSpacingExtra="2dp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
 
         <!-- Rating Field -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Rating *"
+                    android:text="@string/rating"
             android:textSize="16sp"
             android:textStyle="bold"
+                    android:textColor="@color/text_primary_light"
+                    android:fontFamily="sans-serif-medium"
             android:layout_marginBottom="8dp" />
 
-        <RatingBar
-            android:id="@+id/rating_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:numStars="5"
-            android:stepSize="0.5"
-            android:rating="0"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Restaurant Selection -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Restaurant *"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <Spinner
-            android:id="@+id/spinner_restaurant"
+                <!-- Rating Input with Stars -->
+                <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/edit_text_background"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="20dp">
 
-        <!-- Date Selection -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Date"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
+                    <!-- Clickable Star Rating -->
+                    <LinearLayout
+                        android:id="@+id/rating_stars_container"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
 
+                        <ImageView
+                            android:id="@+id/star_1"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="4dp"
+                            android:src="@drawable/star_rating"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless" />
+
+                        <ImageView
+                            android:id="@+id/star_2"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="4dp"
+                            android:src="@drawable/star_rating"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless" />
+
+                        <ImageView
+                            android:id="@+id/star_3"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="4dp"
+                            android:src="@drawable/star_rating"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless" />
+
+                        <ImageView
+                            android:id="@+id/star_4"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="4dp"
+                            android:src="@drawable/star_rating"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless" />
+
+                        <ImageView
+                            android:id="@+id/star_5"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/star_rating"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless" />
+
+                    </LinearLayout>
+
+                    <!-- Rating Input Field -->
+                    <LinearLayout
+                        android:layout_width="120dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/fully_rounded_input_field_background"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp">
+
+                        <EditText
+                            android:id="@+id/et_rating_input"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:hint="0.0"
+                            android:inputType="numberDecimal"
+                            android:textSize="14sp"
+                            android:textColor="@color/text_primary_light"
+                            android:textColorHint="@color/text_hint_light"
+                            android:fontFamily="sans-serif"
+                            android:gravity="center"
+                            android:maxLength="3"
+                            android:singleLine="true" />
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_star_filled"
+                            android:tint="@color/rating_icon_color" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Restaurant Selection -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_selected_date"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Today"
-                android:textSize="16sp"
-                android:padding="12dp"
-                android:background="@drawable/edit_text_background"
-                android:gravity="center_vertical" />
-
-            <Button
-                android:id="@+id/btn_select_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select Date"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/button_background"
-                android:textColor="@android:color/white" />
+                android:text="@string/restaurant"
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary_light"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginBottom="8dp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/restaurantInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/text_hint_light"
+                    app:boxBackgroundMode="none"
+                    app:hintEnabled="false">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/et_restaurant_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@drawable/fully_rounded_input_field_background"
+                        android:gravity="center_vertical|start"
+                        android:hint="@string/restaurant_search_hint"
+                        android:inputType="text"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp"
+                        android:textColor="@color/text_primary_light"
+                        android:textColorHint="@color/text_hint_light"
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif"
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        android:drawableEnd="@drawable/ic_search"
+                        android:drawablePadding="12dp"
+                        android:completionThreshold="1" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
 
-        <!-- Image Selection -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Images (Optional)"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <Button
-            android:id="@+id/btn_select_images"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Select Images (Max 3)"
-            android:background="@drawable/button_background"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Image Previews -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="24dp">
-
-            <ImageView
-                android:id="@+id/iv_preview_1"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="4dp"
-                android:scaleType="centerCrop"
-                android:background="@drawable/image_preview_background" />
-
-            <ImageView
-                android:id="@+id/iv_preview_2"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:scaleType="centerCrop"
-                android:background="@drawable/image_preview_background" />
-
-            <ImageView
-                android:id="@+id/iv_preview_3"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:scaleType="centerCrop"
-                android:background="@drawable/image_preview_background" />
-
         </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- Submit Button -->
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_submit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Submit Review"
-            android:textSize="18sp"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="48dp"
+            android:background="@drawable/gradient_button_background"
+            android:text="@string/post_review"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp"
             android:textStyle="bold"
-            android:background="@drawable/button_background"
-            android:textColor="@android:color/white"
-            android:layout_marginTop="16dp" />
+            android:fontFamily="sans-serif-medium"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:stateListAnimator="@null"
+            app:layout_constraintTop_toBottomOf="@+id/reviewDetailsCard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</ScrollView>
+</androidx.core.widget.NestedScrollView>
