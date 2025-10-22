@@ -72,4 +72,64 @@ class SupabaseStorageService(private val context: Context) {
             false
         }
     }
+    
+    suspend fun uploadReviewImage(fileName: String, imageUri: Uri): String? = withContext(Dispatchers.IO) {
+        try {
+            Log.d("SupabaseStorage", "Starting review image upload: $fileName")
+            
+            val inputStream: InputStream = context.contentResolver.openInputStream(imageUri) ?: run {
+                Log.e("SupabaseStorage", "Failed to open input stream")
+                return@withContext null
+            }
+            
+            val bytes = inputStream.readBytes()
+            inputStream.close()
+            Log.d("SupabaseStorage", "Read ${bytes.size} bytes from review image")
+            
+            Log.d("SupabaseStorage", "Uploading to storage")
+            supabase.storage.from("palate").upload(fileName, bytes, upsert = true)
+            Log.d("SupabaseStorage", "Upload successful, creating signed URL")
+
+            val signedUrlPath = supabase.storage.from("palate").createSignedUrl(fileName, kotlin.time.Duration.parse("P365D"))
+            val fullSignedUrl = "${Config.getSupabaseUrl()}/storage/v1/$signedUrlPath"
+            Log.d("SupabaseStorage", "Signed URL created successfully")
+
+            fullSignedUrl
+        } catch (e: Exception) {
+            Log.e("SupabaseStorage", "Error uploading review image", e)
+            e.printStackTrace()
+            null
+        }
+    }
+    
+    fun uploadReviewImageSync(fileName: String, imageUri: Uri): String? {
+        return kotlinx.coroutines.runBlocking {
+            try {
+                Log.d("SupabaseStorage", "Starting sync review image upload: $fileName")
+                
+                val inputStream: InputStream = context.contentResolver.openInputStream(imageUri) ?: run {
+                    Log.e("SupabaseStorage", "Failed to open input stream")
+                    return@runBlocking null
+                }
+                
+                val bytes = inputStream.readBytes()
+                inputStream.close()
+                Log.d("SupabaseStorage", "Read ${bytes.size} bytes from review image")
+                
+                Log.d("SupabaseStorage", "Uploading to storage")
+                supabase.storage.from("palate").upload(fileName, bytes, upsert = true)
+                Log.d("SupabaseStorage", "Upload successful, creating signed URL")
+
+                val signedUrlPath = supabase.storage.from("palate").createSignedUrl(fileName, kotlin.time.Duration.parse("P365D"))
+                val fullSignedUrl = "${Config.getSupabaseUrl()}/storage/v1/$signedUrlPath"
+                Log.d("SupabaseStorage", "Signed URL created successfully")
+
+                fullSignedUrl
+            } catch (e: Exception) {
+                Log.e("SupabaseStorage", "Error uploading review image", e)
+                e.printStackTrace()
+                null
+            }
+        }
+    }
 }
