@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -398,6 +399,8 @@ public class ReviewDetailsDialog extends Dialog {
 
         RecyclerView commentsList = view.findViewById(R.id.rvComments);
         TextView empty = view.findViewById(R.id.tvNoComments);
+        EditText etCommentInput = view.findViewById(R.id.etCommentInput);
+        ImageView btnSendComment = view.findViewById(R.id.btnSendComment);
 
         CommentsAdapter adapter = new CommentsAdapter(review.getComments() != null ? review.getComments() : new ArrayList<>());
         commentsList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -412,8 +415,167 @@ public class ReviewDetailsDialog extends Dialog {
             empty.setVisibility(View.VISIBLE);
         }
 
+        // Set up comment input functionality
+        btnSendComment.setOnClickListener(v -> {
+            String commentText = etCommentInput.getText().toString().trim();
+            if (commentText.isEmpty()) {
+                Toast.makeText(getContext(), "Please enter a comment", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (currentUserId == null) {
+                Toast.makeText(getContext(), "Please log in to comment", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Validate review ID
+            if (review.getId() == null || review.getId().trim().isEmpty()) {
+                Toast.makeText(getContext(), "Invalid review ID", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Disable send button
+            btnSendComment.setEnabled(false);
+
+            // Fetch username from Firestore users collection
+            db.collection("users").document(currentUserId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    String username;
+                    if (documentSnapshot.exists() && documentSnapshot.getString("name") != null) {
+                        username = documentSnapshot.getString("name");
+                    } else {
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        username = user != null && user.getEmail() != null ?
+                            user.getEmail().split("@")[0] : "Anonymous";
+                    }
+
+                    // Create comment data map
+                    Map<String, Object> commentData = new HashMap<>();
+                    commentData.put("userId", currentUserId);
+                    commentData.put("userName", username);
+                    commentData.put("text", commentText);
+                    commentData.put("createdAt", com.google.firebase.Timestamp.now());
+
+                    // Add comment to reviews document's comments array
+                    Map<String, Object> updates = new HashMap<>();
+                    updates.put("comments", com.google.firebase.firestore.FieldValue.arrayUnion(commentData));
+
+                    db.collection("reviews").document(review.getId())
+                        .update(updates)
+                        .addOnSuccessListener(aVoid -> {
+                            // Clear input
+                            etCommentInput.setText("");
+                            btnSendComment.setEnabled(true);
+                            
+                            // Immediately add the new comment to the current review object
+                            addCommentToCurrentReview(commentData);
+                            
+                            // Refresh the comments in the bottom sheet
+                            refreshCommentsInBottomSheet(adapter, commentsList, empty);
+                            
+                            Toast.makeText(getContext(), "Comment added", Toast.LENGTH_SHORT).show();
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e(TAG, "Error adding comment", e);
+                            btnSendComment.setEnabled(true);
+                            Toast.makeText(getContext(), "Failed to add comment: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error fetching username", e);
+                    btnSendComment.setEnabled(true);
+                    Toast.makeText(getContext(), "Failed to fetch user info", Toast.LENGTH_SHORT).show();
+                });
+        });
+
         sheet.setContentView(view);
         sheet.show();
+    }
+
+    private void addCommentToCurrentReview(Map<String, Object> commentData) {
+        // Convert the comment data to Comment object
+        com.example.food.data.Comment newComment = new com.example.food.data.Comment();
+        newComment.setUserId((String) commentData.get("userId"));
+        newComment.setUserName((String) commentData.get("userName"));
+        newComment.setText((String) commentData.get("text"));
+        com.google.firebase.Timestamp timestamp = (com.google.firebase.Timestamp) commentData.get("createdAt");
+        newComment.setCreatedAt(timestamp != null ? timestamp.toDate() : null);
+        
+        // Add to current review's comments list
+        if (review.getComments() == null) {
+            review.setComments(new ArrayList<>());
+        }
+        review.getComments().add(newComment);
+        
+        // Sort comments by timestamp (newest first)
+        review.getComments().sort((c1, c2) -> {
+            if (c1.getCreatedAt() == null) return 1;
+            if (c2.getCreatedAt() == null) return -1;
+            return c2.getCreatedAt().compareTo(c1.getCreatedAt());
+        });
+    }
+
+    private void refreshCommentsInBottomSheet(CommentsAdapter adapter, RecyclerView commentsList, TextView empty) {
+        // First try to use comments from current review object (for immediate updates)
+        if (review.getComments() != null && !review.getComments().isEmpty()) {
+            adapter.setComments(review.getComments());
+            
+            if (review.getComments().isEmpty()) {
+                commentsList.setVisibility(View.GONE);
+                empty.setVisibility(View.VISIBLE);
+            } else {
+                commentsList.setVisibility(View.VISIBLE);
+                empty.setVisibility(View.GONE);
+            }
+            return;
+        }
+        
+        // If no comments in current review object, load from Firestore
+        db.collection("reviews").document(review.getId())
+            .get()
+            .addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    List<Map<String, Object>> commentsData = 
+                        (List<Map<String, Object>>) documentSnapshot.get("comments");
+                    
+                    List<com.example.food.data.Comment> comments = new ArrayList<>();
+                    if (commentsData != null) {
+                        for (Map<String, Object> commentMap : commentsData) {
+                            com.example.food.data.Comment comment = new com.example.food.data.Comment();
+                            comment.setUserId((String) commentMap.get("userId"));
+                            comment.setUserName((String) commentMap.get("userName"));
+                            comment.setText((String) commentMap.get("text"));
+                            com.google.firebase.Timestamp timestamp = (com.google.firebase.Timestamp) commentMap.get("createdAt");
+                            comment.setCreatedAt(timestamp != null ? timestamp.toDate() : null);
+                            comments.add(comment);
+                        }
+                    }
+
+                    // Sort comments by timestamp (newest first)
+                    comments.sort((c1, c2) -> {
+                        if (c1.getCreatedAt() == null) return 1;
+                        if (c2.getCreatedAt() == null) return -1;
+                        return c2.getCreatedAt().compareTo(c1.getCreatedAt());
+                    });
+
+                    // Update the current review object with loaded comments
+                    review.setComments(comments);
+                    
+                    adapter.setComments(comments);
+                    
+                    if (comments.isEmpty()) {
+                        commentsList.setVisibility(View.GONE);
+                        empty.setVisibility(View.VISIBLE);
+                    } else {
+                        commentsList.setVisibility(View.VISIBLE);
+                        empty.setVisibility(View.GONE);
+                    }
+                }
+            })
+            .addOnFailureListener(e -> {
+                Log.e(TAG, "Error refreshing comments", e);
+            });
     }
 
     private void vote(boolean accurate) {
@@ -528,6 +690,11 @@ public class ReviewDetailsDialog extends Dialog {
         PopupMenu popup = new PopupMenu(getContext(), btnMoreOptions);
         popup.getMenuInflater().inflate(R.menu.review_more_options, popup.getMenu());
         
+        // Hide delete option if current user is not the author of the review
+        if (currentUserId == null || !currentUserId.equals(review.getUserId())) {
+            popup.getMenu().findItem(R.id.action_delete_post).setVisible(false);
+        }
+        
         popup.setOnMenuItemClickListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.action_directions) {
@@ -538,7 +705,12 @@ public class ReviewDetailsDialog extends Dialog {
                 Toast.makeText(getContext(), "Search restaurant feature coming soon", Toast.LENGTH_SHORT).show();
                 return true;
             } else if (itemId == R.id.action_delete_post) {
-                showDeleteConfirmation();
+                // Double check: only allow deletion if user is the author
+                if (currentUserId != null && currentUserId.equals(review.getUserId())) {
+                    showDeleteConfirmation();
+                } else {
+                    Toast.makeText(getContext(), "You can only delete your own posts", Toast.LENGTH_SHORT).show();
+                }
                 return true;
             }
             return false;
@@ -719,19 +891,23 @@ public class ReviewDetailsDialog extends Dialog {
             return;
         }
 
-        com.example.food.dialogs.DeletePostConfirmationDialog dialog = 
-            new com.example.food.dialogs.DeletePostConfirmationDialog(getContext(), this::deletePost);
-        dialog.show();
+        // Show confirmation dialog using AlertDialog
+        new androidx.appcompat.app.AlertDialog.Builder(getContext())
+            .setTitle("Delete Review")
+            .setMessage("Are you sure you want to delete this review? This action cannot be undone.")
+            .setPositiveButton("Delete", (dialog, which) -> deleteReview())
+            .setNegativeButton("Cancel", null)
+            .show();
     }
 
-    private void deletePost() {
+    private void deleteReview() {
         if (review.getId() == null || review.getId().trim().isEmpty()) {
-            Toast.makeText(getContext(), getContext().getString(R.string.failed_to_delete_post), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Failed to delete review", Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Show loading state
-        Toast.makeText(getContext(), "Deleting post...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Deleting review...", Toast.LENGTH_SHORT).show();
 
         // Delete from Firestore
         db.collection("reviews")
@@ -739,14 +915,14 @@ public class ReviewDetailsDialog extends Dialog {
             .delete()
             .addOnSuccessListener(aVoid -> {
                 Log.d(TAG, "Review deleted successfully");
-                Toast.makeText(getContext(), getContext().getString(R.string.post_deleted_successfully), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Review deleted successfully", Toast.LENGTH_SHORT).show();
                 
                 // Close the dialog
                 dismiss();
             })
             .addOnFailureListener(e -> {
                 Log.e(TAG, "Error deleting review", e);
-                Toast.makeText(getContext(), getContext().getString(R.string.failed_to_delete_post), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Failed to delete review: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             });
     }
 }

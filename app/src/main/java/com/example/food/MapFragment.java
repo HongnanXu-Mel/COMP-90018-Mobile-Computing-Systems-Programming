@@ -1,6 +1,7 @@
 package com.example.food;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -17,6 +19,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.food.adapters.ReviewWidgetAdapter;
+import com.example.food.data.Review;
+import com.example.food.dialogs.ReviewDetailsDialog;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 // FragmentManager和FragmentTransaction不再需要，已简化地图初始化
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -111,17 +120,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         
         // 设置标记点击监听器
-        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(@NonNull Marker marker) {
-                // 显示餐厅名称和地址
-                Restaurant restaurant = (Restaurant) marker.getTag();
-                if (restaurant != null) {
-                    String info = restaurant.getName() + "\n地址: " + restaurant.getAddress();
-                    Toast.makeText(requireContext(), info, Toast.LENGTH_LONG).show();
-                }
-                return false;
+        googleMap.setOnMarkerClickListener(marker -> {
+            Restaurant restaurant = (Restaurant) marker.getTag();
+            if (restaurant != null) {
+                showRestaurantPostsBottomSheet(restaurant);
             }
+            return true;
         });
         
         enableMyLocationAndLoad();
@@ -204,6 +208,82 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     Log.e(TAG, "Firebase加载失败", e);
                     Toast.makeText(requireContext(), "Firebase连接失败: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
+    }
+
+    /**
+     * Show bottom sheet with posts related to the restaurant
+     */
+    private void showRestaurantPostsBottomSheet(Restaurant restaurant) {
+        BottomSheetDialog bottomSheet = new BottomSheetDialog(requireContext());
+        View view = getLayoutInflater().inflate(R.layout.bottom_sheet_restaurant_posts, null);
+        bottomSheet.setContentView(view);
+
+        // Initialize views
+        TextView tvRestaurantName = view.findViewById(R.id.tv_restaurant_name);
+        TextView tvRestaurantAddress = view.findViewById(R.id.tv_restaurant_address);
+        TextView tvPostsCount = view.findViewById(R.id.tv_posts_count);
+        RecyclerView rvPosts = view.findViewById(R.id.rv_posts);
+        TextView tvNoPosts = view.findViewById(R.id.tv_no_posts);
+
+        // Set restaurant info
+        tvRestaurantName.setText(restaurant.getName());
+        tvRestaurantAddress.setText(restaurant.getAddress());
+
+        // Setup RecyclerView
+        List<Review> reviews = new ArrayList<>();
+        ReviewWidgetAdapter adapter = new ReviewWidgetAdapter(reviews, (review, restaurantData) -> {
+            // Open review details dialog
+            ReviewDetailsDialog dialog = new ReviewDetailsDialog(requireContext(), review, restaurantData);
+            dialog.show();
+            bottomSheet.dismiss();
+        });
+        rvPosts.setLayoutManager(new LinearLayoutManager(requireContext()));
+        rvPosts.setAdapter(adapter);
+
+        // Load reviews for this restaurant
+        loadRestaurantReviews(restaurant.getId(), adapter, rvPosts, tvNoPosts, tvPostsCount);
+
+        bottomSheet.show();
+    }
+
+    /**
+     * Load reviews for a specific restaurant
+     */
+    private void loadRestaurantReviews(String restaurantId, ReviewWidgetAdapter adapter, 
+                                     RecyclerView rvPosts, TextView tvNoPosts, TextView tvPostsCount) {
+        db.collection("reviews")
+            .whereEqualTo("restaurantId", restaurantId)
+            .get()
+            .addOnSuccessListener(queryDocumentSnapshots -> {
+                List<Review> reviews = new ArrayList<>();
+                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                    Review review = document.toObject(Review.class);
+                    review.setId(document.getId());
+                    reviews.add(review);
+                }
+
+                // Sort by timestamp (newest first)
+                reviews.sort((r1, r2) -> {
+                    if (r1.getCreatedAt() == null) return 1;
+                    if (r2.getCreatedAt() == null) return -1;
+                    return r2.getCreatedAt().compareTo(r1.getCreatedAt());
+                });
+
+                adapter.setReviews(reviews);
+                tvPostsCount.setText(String.valueOf(reviews.size()));
+
+                if (reviews.isEmpty()) {
+                    tvNoPosts.setVisibility(View.VISIBLE);
+                    rvPosts.setVisibility(View.GONE);
+                } else {
+                    tvNoPosts.setVisibility(View.GONE);
+                    rvPosts.setVisibility(View.VISIBLE);
+                }
+            })
+            .addOnFailureListener(e -> {
+                Log.e(TAG, "Error loading restaurant reviews", e);
+                Toast.makeText(requireContext(), "Failed to load reviews", Toast.LENGTH_SHORT).show();
+            });
     }
     
     // 放大功能

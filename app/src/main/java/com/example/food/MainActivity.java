@@ -18,6 +18,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.widget.FrameLayout;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private TextView tvWelcome;
     private Button btnLogout;
+    private FrameLayout addButtonOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 switchFragment(new MapFragment());
                 return true;
             } else if (id == R.id.nav_add) {
-                // TODO: Implement add review functionality
-                Toast.makeText(this, "Add Review - Coming Soon!", Toast.LENGTH_SHORT).show();
+                switchFragment(new AddFragment());
                 return true;
             } else if (id == R.id.nav_profile) {
                 switchFragment(new ProfileFragment());
