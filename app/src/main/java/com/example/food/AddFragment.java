@@ -1,10 +1,12 @@
 package com.example.food;
 
-import android.app.DatePickerDialog;
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -12,18 +14,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import androidx.appcompat.widget.AppCompatButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.Spinner;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.example.food.data.Review;
@@ -35,34 +40,39 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
 public class AddFragment extends Fragment {
     private static final String TAG = "AddFragment";
     private static final int PICK_IMAGE_REQUEST = 1;
+    private static final int TAKE_PHOTO_REQUEST = 2;
+    private static final int MAX_IMAGES = 5;
     
-    private EditText etCaption, etDescription;
-    private RatingBar ratingBar;
-    private Spinner spinnerRestaurant;
-    private TextView tvSelectedDate;
-    private Button btnSelectDate, btnSelectImages, btnSubmit;
-    private ImageView ivPreview1, ivPreview2, ivPreview3;
+    private EditText etCaption, etDescription, etRatingInput;
+    private AutoCompleteTextView etRestaurantSearch;
+    private LinearLayout btnTakePhoto, btnSelectImages;
+    private AppCompatButton btnSubmit;
+    private TextView tvPhotoCount;
+    private ImageView ivPreview1, ivPreview2, ivPreview3, ivPreview4, ivPreview5;
+    private ImageView btnDelete1, btnDelete2, btnDelete3, btnDelete4, btnDelete5;
+    private ImageView star1, star2, star3, star4, star5;
     
     private List<Restaurant> restaurants;
     private Restaurant selectedRestaurant;
-    private Date selectedDate;
     private List<Uri> selectedImageUris;
     private List<String> uploadedImageUrls;
+    private float selectedRating = 0.0f;
+    private Uri cameraImageUri;
     
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -85,43 +95,78 @@ public class AddFragment extends Fragment {
     private void initViews(View view) {
         etCaption = view.findViewById(R.id.et_caption);
         etDescription = view.findViewById(R.id.et_description);
-        ratingBar = view.findViewById(R.id.rating_bar);
-        spinnerRestaurant = view.findViewById(R.id.spinner_restaurant);
-        tvSelectedDate = view.findViewById(R.id.tv_selected_date);
-        btnSelectDate = view.findViewById(R.id.btn_select_date);
+        etRatingInput = view.findViewById(R.id.et_rating_input);
+        etRestaurantSearch = view.findViewById(R.id.et_restaurant_search);
+        tvPhotoCount = view.findViewById(R.id.tv_photo_count);
+        btnTakePhoto = view.findViewById(R.id.btn_take_photo);
         btnSelectImages = view.findViewById(R.id.btn_select_images);
         btnSubmit = view.findViewById(R.id.btn_submit);
+        
+        // image previews
         ivPreview1 = view.findViewById(R.id.iv_preview_1);
         ivPreview2 = view.findViewById(R.id.iv_preview_2);
         ivPreview3 = view.findViewById(R.id.iv_preview_3);
+        ivPreview4 = view.findViewById(R.id.iv_preview_4);
+        ivPreview5 = view.findViewById(R.id.iv_preview_5);
+        
+        // delete buttons
+        btnDelete1 = view.findViewById(R.id.btn_delete_1);
+        btnDelete2 = view.findViewById(R.id.btn_delete_2);
+        btnDelete3 = view.findViewById(R.id.btn_delete_3);
+        btnDelete4 = view.findViewById(R.id.btn_delete_4);
+        btnDelete5 = view.findViewById(R.id.btn_delete_5);
+        
+        // star rating
+        star1 = view.findViewById(R.id.star_1);
+        star2 = view.findViewById(R.id.star_2);
+        star3 = view.findViewById(R.id.star_3);
+        star4 = view.findViewById(R.id.star_4);
+        star5 = view.findViewById(R.id.star_5);
         
         restaurants = new ArrayList<>();
         selectedImageUris = new ArrayList<>();
         uploadedImageUrls = new ArrayList<>();
         
-        // Set default date to current date
-        selectedDate = new Date();
-        updateDateDisplay();
+        setupStarClickListeners();
     }
     
     private void setupListeners() {
-        btnSelectDate.setOnClickListener(v -> showDatePicker());
+        btnTakePhoto.setOnClickListener(v -> checkCameraPermissionAndOpenCamera());
         btnSelectImages.setOnClickListener(v -> selectImages());
         btnSubmit.setOnClickListener(v -> submitReview());
         
-        spinnerRestaurant.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        // delete button listeners
+        btnDelete1.setOnClickListener(v -> deleteImage(0));
+        btnDelete2.setOnClickListener(v -> deleteImage(1));
+        btnDelete3.setOnClickListener(v -> deleteImage(2));
+        btnDelete4.setOnClickListener(v -> deleteImage(3));
+        btnDelete5.setOnClickListener(v -> deleteImage(4));
+        
+        // restaurant search
+        etRestaurantSearch.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedName = (String) parent.getItemAtPosition(position);
+            selectedRestaurant = findRestaurantByName(selectedName);
+        });
+        
+        // rating input listener
+        etRatingInput.addTextChangedListener(new android.text.TextWatcher() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position > 0) { // Skip the first "Select Restaurant" item
-                    selectedRestaurant = restaurants.get(position - 1);
-                } else {
-                    selectedRestaurant = null;
-                }
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                selectedRestaurant = null;
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            
+            @Override
+            public void afterTextChanged(android.text.Editable s) {
+                try {
+                    float rating = Float.parseFloat(s.toString());
+                    if (rating >= 0.0f && rating <= 5.0f) {
+                        selectedRating = rating;
+                        updateStarDisplay();
+                    }
+                } catch (NumberFormatException e) {
+                    // invalid input, ignore
+                }
             }
         });
     }
@@ -131,6 +176,44 @@ public class AddFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         reviewService = new ReviewService();
+    }
+    
+    
+    private void setupStarClickListeners() {
+        ImageView[] stars = {star1, star2, star3, star4, star5};
+        
+        for (int i = 0; i < stars.length; i++) {
+            final int starIndex = i;
+            stars[i].setOnTouchListener((v, event) -> {
+                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
+                    // calculate precise rating based on touch position within the star
+                    float x = event.getX();
+                    float starWidth = v.getWidth();
+                    float clickRatio = x / starWidth;
+                    
+                    float baseRating = starIndex + 1;
+                    float preciseRating;
+                    
+                    if (clickRatio < 0.2f) {
+                        preciseRating = starIndex + 0.1f;
+                    } else if (clickRatio < 0.4f) {
+                        preciseRating = starIndex + 0.3f;
+                    } else if (clickRatio < 0.6f) {
+                        preciseRating = starIndex + 0.5f;
+                    } else if (clickRatio < 0.8f) {
+                        preciseRating = starIndex + 0.7f;
+                    } else {
+                        preciseRating = starIndex + 0.9f;
+                    }
+                    
+                    selectedRating = preciseRating;
+                    updateStarDisplay();
+                    etRatingInput.setText(String.format("%.1f", preciseRating));
+                    return true;
+                }
+                return false;
+            });
+        }
     }
     
     private void loadRestaurants() {
@@ -145,7 +228,7 @@ public class AddFragment extends Fragment {
                         restaurants.add(restaurant);
                     }
                 }
-                setupRestaurantSpinner();
+                setupRestaurantSearch();
             })
             .addOnFailureListener(e -> {
                 Log.e(TAG, "Error loading restaurants", e);
@@ -153,42 +236,104 @@ public class AddFragment extends Fragment {
             });
     }
     
-    private void setupRestaurantSpinner() {
+    private void setupRestaurantSearch() {
         List<String> restaurantNames = new ArrayList<>();
-        restaurantNames.add("Select Restaurant");
-        
         for (Restaurant restaurant : restaurants) {
             restaurantNames.add(restaurant.getName());
         }
         
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), 
-            android.R.layout.simple_spinner_item, restaurantNames);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerRestaurant.setAdapter(adapter);
+            android.R.layout.simple_dropdown_item_1line, restaurantNames);
+        etRestaurantSearch.setAdapter(adapter);
     }
     
-    private void showDatePicker() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(selectedDate);
+    private Restaurant findRestaurantByName(String name) {
+        for (Restaurant restaurant : restaurants) {
+            if (restaurant.getName().equals(name)) {
+                return restaurant;
+            }
+        }
+        return null;
+    }
+    
+    private void updateStarDisplay() {
+        ImageView[] stars = {star1, star2, star3, star4, star5};
         
-        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
-            (view, year, month, dayOfMonth) -> {
-                Calendar selectedCalendar = Calendar.getInstance();
-                selectedCalendar.set(year, month, dayOfMonth);
-                selectedDate = selectedCalendar.getTime();
-                updateDateDisplay();
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
+        for (int i = 0; i < 5; i++) {
+            // Calculate fill amount for this star: (rating - i), clamped between 0 and 1
+            double fillAmount = Math.max(0.0, Math.min(1.0, selectedRating - i));
+            
+            // Get the drawable and check if it's a LayerDrawable
+            android.graphics.drawable.Drawable drawable = stars[i].getDrawable();
+            if (drawable instanceof android.graphics.drawable.LayerDrawable) {
+                // Use LayerDrawable with ClipDrawable for precise fills
+                android.graphics.drawable.LayerDrawable layerDrawable = (android.graphics.drawable.LayerDrawable) drawable;
+                int level = (int) (fillAmount * 10000);
+                android.graphics.drawable.ClipDrawable clipDrawable = (android.graphics.drawable.ClipDrawable) layerDrawable.findDrawableByLayerId(android.R.id.progress);
+                if (clipDrawable != null) {
+                    clipDrawable.setLevel(level);
+                }
+            } else {
+                // Fallback: use alpha-based method
+                if (fillAmount >= 1.0) {
+                    stars[i].setImageResource(R.drawable.ic_star_filled);
+                    stars[i].setColorFilter(null);
+                    stars[i].setAlpha(1.0f);
+                } else if (fillAmount > 0.0) {
+                    stars[i].setImageResource(R.drawable.ic_star_filled);
+                    stars[i].setColorFilter(null);
+                    stars[i].setAlpha((float) fillAmount);
+                } else {
+                    stars[i].setImageResource(R.drawable.ic_star_empty);
+                    stars[i].setColorFilter(null);
+                    stars[i].setAlpha(1.0f);
+                }
+            }
+        }
+    }
+    
+    private void checkCameraPermissionAndOpenCamera() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            openCamera();
+        } else {
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA}, 100);
+        }
+    }
+    
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 100) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openCamera();
+            } else {
+                Toast.makeText(getContext(), "Camera permission is required", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    
+    private void openCamera() {
+        File photoFile = new File(requireContext().getExternalFilesDir(null), "review_photo_" + System.currentTimeMillis() + ".jpg");
+        
+        try {
+            photoFile.createNewFile();
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to create photo file", e);
+        }
+        
+        cameraImageUri = FileProvider.getUriForFile(
+            requireContext(),
+            requireContext().getPackageName() + ".provider",
+            photoFile
         );
         
-        datePickerDialog.show();
-    }
-    
-    private void updateDateDisplay() {
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
-        tvSelectedDate.setText(sdf.format(selectedDate));
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
+        intent.putExtra("android.intent.extra.videoQuality", 1);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        
+        startActivityForResult(intent, TAKE_PHOTO_REQUEST);
     }
     
     private void selectImages() {
@@ -202,41 +347,80 @@ public class AddFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == getActivity().RESULT_OK && data != null) {
-            selectedImageUris.clear();
-            
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == PICK_IMAGE_REQUEST && data != null) {
+                // gallery selection
             if (data.getClipData() != null) {
-                // Multiple images selected
+                    // multiple images selected
                 int count = data.getClipData().getItemCount();
-                for (int i = 0; i < Math.min(count, 3); i++) {
+                    for (int i = 0; i < Math.min(count, MAX_IMAGES); i++) {
                     Uri imageUri = data.getClipData().getItemAt(i).getUri();
                     selectedImageUris.add(imageUri);
                 }
             } else if (data.getData() != null) {
-                // Single image selected
+                    // single image selected
                 selectedImageUris.add(data.getData());
+                }
+            } else if (requestCode == TAKE_PHOTO_REQUEST && cameraImageUri != null) {
+                // camera capture
+                selectedImageUris.add(cameraImageUri);
             }
             
             updateImagePreviews();
         }
     }
     
+    
+    private void deleteImage(int index) {
+        if (index >= 0 && index < selectedImageUris.size()) {
+            selectedImageUris.remove(index);
+            updateImagePreviews();
+        }
+    }
+    
     private void updateImagePreviews() {
-        // Clear all previews first
-        ivPreview1.setImageDrawable(null);
-        ivPreview2.setImageDrawable(null);
-        ivPreview3.setImageDrawable(null);
+        LinearLayout imagePreviewsContainer = getView().findViewById(R.id.imagePreviewsContainer);
+        LinearLayout imageRow1 = getView().findViewById(R.id.imageRow1);
+        LinearLayout imageRow2 = getView().findViewById(R.id.imageRow2);
         
-        // Set previews for selected images
-        ImageView[] previews = {ivPreview1, ivPreview2, ivPreview3};
-        for (int i = 0; i < Math.min(selectedImageUris.size(), 3); i++) {
+        if (selectedImageUris.isEmpty()) {
+            imagePreviewsContainer.setVisibility(View.GONE);
+            return;
+        }
+        
+        imagePreviewsContainer.setVisibility(View.VISIBLE);
+        
+        // clear all previews and delete buttons first
+        ImageView[] previews = {ivPreview1, ivPreview2, ivPreview3, ivPreview4, ivPreview5};
+        ImageView[] deleteButtons = {btnDelete1, btnDelete2, btnDelete3, btnDelete4, btnDelete5};
+        
+        for (int i = 0; i < previews.length; i++) {
+            previews[i].setImageDrawable(null);
+            previews[i].setVisibility(View.GONE);
+            deleteButtons[i].setVisibility(View.GONE);
+        }
+        
+        // show only the rows we need
+        if (selectedImageUris.size() <= 3) {
+            imageRow2.setVisibility(View.GONE);
+        } else {
+            imageRow2.setVisibility(View.VISIBLE);
+        }
+        
+        // set previews for selected images and show delete buttons
+        for (int i = 0; i < Math.min(selectedImageUris.size(), MAX_IMAGES); i++) {
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUris.get(i));
                 previews[i].setImageBitmap(bitmap);
+                previews[i].setVisibility(View.VISIBLE);
+                deleteButtons[i].setVisibility(View.VISIBLE);
             } catch (IOException e) {
-                Log.e(TAG, "Error loading image preview", e);
+                Log.e(TAG, "error loading image preview", e);
             }
         }
+        
+        // update photo count
+        updatePhotoCount();
     }
     
     private void submitReview() {
@@ -267,7 +451,7 @@ public class AddFragment extends Fragment {
             return false;
         }
         
-        if (ratingBar.getRating() == 0) {
+        if (selectedRating == 0.0f) {
             Toast.makeText(getContext(), "Please provide a rating", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -282,41 +466,46 @@ public class AddFragment extends Fragment {
         }
         
         uploadedImageUrls.clear();
-        uploadNextImage(0);
+        uploadImagesWithSupabase();
     }
     
-    private void uploadNextImage(int index) {
-        if (index >= selectedImageUris.size()) {
-            createReview(uploadedImageUrls);
-            return;
-        }
+    private void uploadImagesWithSupabase() {
+        String reviewId = UUID.randomUUID().toString();
+        SupabaseStorageService supabaseService = new SupabaseStorageService(requireContext());
         
-        Uri imageUri = selectedImageUris.get(index);
-        String fileName = UUID.randomUUID().toString() + ".jpg";
-        StorageReference imageRef = storage.getReference().child("review_images").child(fileName);
-        
-        try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
-            byte[] data = baos.toByteArray();
-            
-            UploadTask uploadTask = imageRef.putBytes(data);
-            uploadTask.addOnSuccessListener(taskSnapshot -> {
-                imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    uploadedImageUrls.add(uri.toString());
-                    uploadNextImage(index + 1);
-                });
-            }).addOnFailureListener(e -> {
-                Log.e(TAG, "Error uploading image", e);
-                Toast.makeText(getContext(), "Error uploading image", Toast.LENGTH_SHORT).show();
+        // use a simple thread for upload
+        new Thread(() -> {
+            try {
+                for (int i = 0; i < selectedImageUris.size(); i++) {
+                    Uri imageUri = selectedImageUris.get(i);
+                    String fileName = "reviews/" + reviewId + "/image_" + (i + 1) + ".jpg";
+                    
+                    // upload to supabase - this handled in Kotlin
+                    String signedUrl = supabaseService.uploadReviewImageSync(fileName, imageUri);
+                    if (signedUrl != null) {
+                        uploadedImageUrls.add(signedUrl);
+                    } else {
+                        throw new Exception("Failed to upload image " + (i + 1));
+                    }
+                }
+                
+                // all images uploaded successfully - run on main thread
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        createReview(uploadedImageUrls);
+                    });
+                }
+                
+            } catch (Exception e) {
+                Log.e(TAG, "Error uploading images to Supabase", e);
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "Error uploading images: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 resetSubmitButton();
             });
-        } catch (IOException e) {
-            Log.e(TAG, "Error processing image", e);
-            Toast.makeText(getContext(), "Error processing image", Toast.LENGTH_SHORT).show();
-            resetSubmitButton();
+                }
         }
+        }).start();
     }
     
     private void createReview(List<String> imageUrls) {
@@ -328,17 +517,17 @@ public class AddFragment extends Fragment {
         
         String caption = etCaption.getText().toString().trim();
         String description = etDescription.getText().toString().trim();
-        float rating = ratingBar.getRating();
+        float rating = selectedRating;
         
-        // Calculate accuracy percent (you can modify this logic as needed)
-        double accuracyPercent = 100.0; // Default to 100%
+      
+        double accuracyPercent = 0.0; // default 0%
         
         // Determine first image type
         String firstImageType = "SQUARE"; // Default
-        if (!imageUrls.isEmpty()) {
-            // You can implement logic to determine image orientation
-            // For now, defaulting to SQUARE
-            firstImageType = "SQUARE";
+        if (!imageUrls.isEmpty() && !selectedImageUris.isEmpty()) {
+            // Get the first image to determine orientation
+            Uri firstImageUri = selectedImageUris.get(0);
+            firstImageType = getImageOrientation(firstImageUri);
         }
         
         // Create votes map (empty initially)
@@ -357,7 +546,7 @@ public class AddFragment extends Fragment {
         review.setAccuracyPercent(accuracyPercent);
         review.setImageUrls(imageUrls);
         review.setFirstImageType(firstImageType);
-        review.setCreatedAt(selectedDate);
+        review.setCreatedAt(new Date()); // Use current date
         review.setVotes(votes);
         review.setComments(comments);
         
@@ -390,17 +579,49 @@ public class AddFragment extends Fragment {
     private void clearForm() {
         etCaption.setText("");
         etDescription.setText("");
-        ratingBar.setRating(0);
-        spinnerRestaurant.setSelection(0);
-        selectedDate = new Date();
-        updateDateDisplay();
+        selectedRating = 0.0f;
+        updateStarDisplay();
+        etRatingInput.setText("");
+        etRestaurantSearch.setText("");
+        selectedRestaurant = null;
         selectedImageUris.clear();
         uploadedImageUrls.clear();
         updateImagePreviews();
+        updatePhotoCount();
+    }
+    
+    private void updatePhotoCount() {
+        if (tvPhotoCount != null) {
+            tvPhotoCount.setText(selectedImageUris.size() + "/5");
+        }
+    }
+    
+    
+    private String getImageOrientation(Uri imageUri) {
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+            
+            // Calculate aspect ratio
+            float aspectRatio = (float) width / height;
+            
+            // Determine orientation based on aspect ratio
+            if (aspectRatio > 1.2f) {
+                return "HORIZONTAL"; // Width is significantly larger than height
+            } else if (aspectRatio < 0.8f) {
+                return "PORTRAIT"; // Height is significantly larger than width
+            } else {
+                return "SQUARE"; // Width and height are roughly equal
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Error reading image for orientation detection", e);
+            return "SQUARE"; // Default fallback
+        }
     }
     
     private void resetSubmitButton() {
         btnSubmit.setEnabled(true);
-        btnSubmit.setText("Submit Review");
+        btnSubmit.setText("Post Review");
     }
 }

@@ -301,4 +301,19 @@
     <string name="commented_on">commented on your review</string>
     <string name="of_restaurant">of %s</string>
     <string name="on_your_review">on your review</string>
+    
+    <!-- Add Review strings -->
+    <string name="create_review">Create Review</string>
+    <string name="caption">Caption</string>
+    <string name="description">Description</string>
+    <string name="rating">Rating</string>
+    <string name="restaurant">Restaurant</string>
+    <string name="photos">Photos</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="caption_hint">Enter a short caption for your review</string>
+    <string name="description_hint">Write a detailed description of your experience</string>
+    <string name="restaurant_search_hint">Search for a restaurant...</string>
+    <string name="submit_review">Submit Review</string>
+    <string name="post_review">Post Review</string>
 </resources>
