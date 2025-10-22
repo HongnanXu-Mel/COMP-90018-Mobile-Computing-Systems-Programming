@@ -1,14 +1,17 @@
 package com.example.food.data;
 
+import com.google.firebase.firestore.Exclude;
 import java.util.Date;
 import java.util.List;
 
 public class Review {
     private String id;
     private String userId;
-    private String userName;
+    @Exclude
+    private String userName; // Not stored in database - fetched dynamically
     private String restaurantId;
-    private String restaurantName;
+    @Exclude
+    private String restaurantName; // Not stored in database - fetched dynamically
     private String description;
     private String caption;
     private float rating;
@@ -41,6 +44,10 @@ public class Review {
         this.imageUrls = imageUrls;
         this.createdAt = createdAt;
         this.helpfulCount = 0;
+        this.accuracyPercent = 100.0; // Default accuracy percent
+        this.firstImageType = "SQUARE"; // Default image type
+        this.votes = new java.util.HashMap<>();
+        this.comments = new java.util.ArrayList<>();
     }
 
     // Getters and Setters
