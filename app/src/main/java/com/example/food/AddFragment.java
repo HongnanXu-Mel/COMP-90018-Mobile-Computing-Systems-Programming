@@ -342,7 +342,7 @@ public class AddFragment extends Fragment {
         }
         
         // Create votes map (empty initially)
-        Map<String, Boolean> votes = new HashMap<>();
+        Map<String, Map<String, Object>> votes = new HashMap<>();
         
         // Create comments list (empty initially)
         List<com.example.food.data.Comment> comments = new ArrayList<>();

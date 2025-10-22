@@ -20,13 +20,17 @@ import android.view.View;
 
 
 import com.bumptech.glide.Glide;
+import com.example.food.adapters.ActivityAdapter;
+import com.example.food.adapters.GroupedActivityAdapter;
 import com.example.food.adapters.ReviewWidgetAdapter;
 import com.example.food.cache.ProfileCacheManager;
+import com.example.food.data.ActivityItem;
 import com.example.food.data.Review;
 import com.example.food.data.UserProfile;
 import com.example.food.dialogs.ReviewDetailsDialog;
 import com.example.food.model.Restaurant;
 import com.example.food.services.UserStatsService;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -48,16 +52,28 @@ public class ProfileFragment extends Fragment {
     private LinearLayout emptyState;
     private LinearLayout credibilityCard, experienceCard, engagementCard;
     
+    // Tab views
+    private TabLayout tabLayout;
+    private androidx.constraintlayout.widget.ConstraintLayout reviewsContainer;
+    private androidx.constraintlayout.widget.ConstraintLayout activityContainer;
+    private androidx.constraintlayout.widget.ConstraintLayout statsContentContainer;
+    private RecyclerView rvActivity;
+    private LinearLayout emptyActivityLayout;
+    
     // Adapters and data
     private ReviewWidgetAdapter reviewAdapter;
+    private GroupedActivityAdapter activityAdapter;
     private List<Review> reviews;
+    private List<ActivityItem> activities;
     private Map<String, Restaurant> restaurantMap;
+    private Map<String, Review> reviewMap;
     private UserProfile userProfile;
     
     // Firebase
     private FirebaseAuth auth;
     private FirebaseFirestore db;
     private ListenerRegistration profileListener;
+    private ListenerRegistration activityListener;
     private ProfileCacheManager cacheManager;
 
     @Nullable
@@ -73,7 +89,10 @@ public class ProfileFragment extends Fragment {
         initViews(view);
         initFirebase();
         setupRecyclerView();
+        setupActivityRecyclerView();
+        setupTabLayout();
         setupCardClickListeners();
+        setupAnalyticsClickListeners();
         loadUserData();
         setupReviews();
     }
@@ -87,6 +106,14 @@ public class ProfileFragment extends Fragment {
         tvEngagementScore = view.findViewById(R.id.tvEngagementScore);
         rvReviews = view.findViewById(R.id.rvReviews);
         emptyState = view.findViewById(R.id.emptyReviewsLayout);
+        
+        // Tab views
+        tabLayout = view.findViewById(R.id.tabLayout);
+        reviewsContainer = view.findViewById(R.id.reviewsContainer);
+        activityContainer = view.findViewById(R.id.activityContainer);
+        statsContentContainer = view.findViewById(R.id.statsContentContainer);
+        rvActivity = view.findViewById(R.id.rvActivity);
+        emptyActivityLayout = view.findViewById(R.id.emptyActivityLayout);
         
         // Metric cards - engagement one removed for now in ui seems unnecessary
         credibilityCard = view.findViewById(R.id.credibilityCard);
@@ -129,6 +156,101 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    private void setupAnalyticsClickListeners() {
+        View view = getView();
+        if (view == null) return;
+
+        // Total Reviews Card
+        LinearLayout totalReviewsCard = view.findViewById(R.id.totalReviewsCard);
+        if (totalReviewsCard != null) {
+            totalReviewsCard.setOnClickListener(v -> showAnalyticsBottomSheet(
+                "Total Reviews",
+                "This shows the total number of reviews you've written. Keep writing reviews to help others discover great places to eat!",
+                "reviews"
+            ));
+        }
+
+        // Average Rating Card
+        LinearLayout averageRatingCard = view.findViewById(R.id.averageRatingCard);
+        if (averageRatingCard != null) {
+            averageRatingCard.setOnClickListener(v -> showAnalyticsBottomSheet(
+                "Average Accuracy",
+                "This shows your average accuracy percentage based on community votes. Higher accuracy means more people found your reviews helpful and accurate.",
+                "accuracy"
+            ));
+        }
+
+        // Total Restaurants Card
+        LinearLayout totalRestaurantsCard = view.findViewById(R.id.totalRestaurantsCard);
+        if (totalRestaurantsCard != null) {
+            totalRestaurantsCard.setOnClickListener(v -> showAnalyticsBottomSheet(
+                "Unique Restaurants",
+                "This shows the number of different restaurants you've reviewed. Explore more places to increase your restaurant diversity!",
+                "restaurants"
+            ));
+        }
+
+        // Total Votes Card
+        LinearLayout totalVotesCard = view.findViewById(R.id.totalVotesCard);
+        if (totalVotesCard != null) {
+            totalVotesCard.setOnClickListener(v -> showAnalyticsBottomSheet(
+                "Community Votes",
+                "This shows the total number of votes (accurate/inaccurate) your reviews have received from the community.",
+                "votes"
+            ));
+        }
+    }
+
+    private void showAnalyticsBottomSheet(String title, String message, String metricType) {
+        BottomSheetDialog sheet = new BottomSheetDialog(requireContext());
+        View view = View.inflate(requireContext(), R.layout.bottom_sheet_analytics_detail, null);
+
+        TextView tvTitle = view.findViewById(R.id.tvAnalyticsTitle);
+        TextView tvMessage = view.findViewById(R.id.tvAnalyticsMessage);
+        TextView tvValue = view.findViewById(R.id.tvAnalyticsValue);
+        ImageView btnClose = view.findViewById(R.id.btnClose);
+
+        tvTitle.setText(title);
+        tvMessage.setText(message);
+
+        // Set the current value based on metric type
+        if (userProfile != null && userProfile.getStats() != null) {
+            Map<String, Object> stats = userProfile.getStats();
+            switch (metricType) {
+                case "reviews":
+                    Object totalReviews = stats.get("totalReviews");
+                    tvValue.setText(totalReviews != null ? totalReviews.toString() : "0");
+                    break;
+                case "accuracy":
+                    Object avgAccuracy = stats.get("avgAccuracyPercent");
+                    if (avgAccuracy != null) {
+                        tvValue.setText(String.format("%.0f%%", ((Number) avgAccuracy).doubleValue()));
+                    } else {
+                        tvValue.setText("0%");
+                    }
+                    break;
+                case "restaurants":
+                    Object uniqueRestaurants = stats.get("uniqueRestaurants");
+                    tvValue.setText(uniqueRestaurants != null ? uniqueRestaurants.toString() : "0");
+                    break;
+                case "votes":
+                    Object totalVotes = stats.get("totalVotes");
+                    tvValue.setText(totalVotes != null ? totalVotes.toString() : "0");
+                    break;
+                default:
+                    tvValue.setText("0");
+                    break;
+            }
+        } else {
+            tvValue.setText("0");
+        }
+
+        btnClose.setOnClickListener(v -> sheet.dismiss());
+
+        sheet.setContentView(view);
+        sheet.show();
+    }
+
     private void showMetricInfoBottomSheet(String title, String message, String interpretation, String metricType) {
         BottomSheetDialog sheet = new BottomSheetDialog(requireContext());
         View view = View.inflate(requireContext(), R.layout.bottom_sheet_score_detail, null);
@@ -144,7 +266,7 @@ public class ProfileFragment extends Fragment {
         tvTitle.setText(title);
         tvMessage.setText(message);
 
-        // Set icon, label, and colors based on metric type
+        // Set icon, color and label based on metric types (currently only credibility and experience)
         int scoreColor = 0;
         switch (metricType) {
             case "credibility":
@@ -170,7 +292,7 @@ public class ProfileFragment extends Fragment {
                 break;
         }
         
-        // Set the score value color to match the card
+        // Set the score value color to match the card - ui stuff
         tvScoreValue.setTextColor(scoreColor);
 
         loadMetricScoreWithBreakdown(metricType, tvScoreValue, tvScoreBreakdown, interpretation);
@@ -291,6 +413,82 @@ public class ProfileFragment extends Fragment {
         rvReviews.setAdapter(reviewAdapter);
     }
 
+    private void setupActivityRecyclerView() {
+        activities = new ArrayList<>();
+        reviewMap = new HashMap<>();
+        
+        activityAdapter = new GroupedActivityAdapter(new ArrayList<>(), new GroupedActivityAdapter.OnActivityClickListener() {
+            @Override
+            public void onActivityClick(ActivityItem activity, Review review, Restaurant restaurant) {
+                if (review != null) {
+                    if (activity.getType() == ActivityItem.ActivityType.COMMENT) {
+                        // For comment activities show review details and open comments
+                        showReviewDetailsWithComments(review, restaurant);
+                    } else {
+                        // for vote activities just show review details normally
+                        showReviewDetails(review, restaurant);
+                    }
+                }
+            }
+        });
+        
+        rvActivity.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(requireContext()));
+        rvActivity.setAdapter(activityAdapter);
+    }
+
+    private void setupTabLayout() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                switch (position) {
+                    case 0: // Reviews
+                        showReviewsTab();
+                        break;
+                    case 1: // Activity
+                        showActivityTab();
+                        break;
+                    case 2: // Analytics
+                        showAnalyticsTab();
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
+        
+        // Show reviews tab by default
+        showReviewsTab();
+    }
+
+    private void showReviewsTab() {
+        reviewsContainer.setVisibility(View.VISIBLE);
+        activityContainer.setVisibility(View.GONE);
+        statsContentContainer.setVisibility(View.GONE);
+    }
+
+    private void showActivityTab() {
+        reviewsContainer.setVisibility(View.GONE);
+        activityContainer.setVisibility(View.VISIBLE);
+        statsContentContainer.setVisibility(View.GONE);
+        
+        // Load real activity data from Firestore
+        setupActivityFeed();
+    }
+
+    private void showAnalyticsTab() {
+        reviewsContainer.setVisibility(View.GONE);
+        activityContainer.setVisibility(View.GONE);
+        statsContentContainer.setVisibility(View.VISIBLE);
+        
+        // Load analytics data when tab is shown
+        loadAnalyticsData();
+    }
+
     private void loadUserData() {
         if (auth.getCurrentUser() == null) {
             Log.w(TAG, "User not authenticated");
@@ -395,7 +593,6 @@ public class ProfileFragment extends Fragment {
 
         userProfile = new UserProfile(
             auth.getCurrentUser().getUid(),
-            name,
             name,
             auth.getCurrentUser().getEmail(),
             getString(R.string.bio_placeholder)
@@ -532,6 +729,18 @@ public class ProfileFragment extends Fragment {
         ReviewDetailsDialog dialog = new ReviewDetailsDialog(getContext(), review, restaurant);
         dialog.show();
     }
+    
+    private void showReviewDetailsWithComments(Review review, Restaurant restaurant) {
+        if (getContext() == null) return;
+        
+        ReviewDetailsDialog dialog = new ReviewDetailsDialog(getContext(), review, restaurant);
+        dialog.show();
+        
+        // Open comments section after a short delay so that dialog is fully loaded
+        dialog.getWindow().getDecorView().postDelayed(() -> {
+            dialog.openCommentsSection();
+        }, 300);
+    }
 
     private void showEmptyState() {
         if (emptyState != null) {
@@ -551,11 +760,697 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    private void setupActivityFeed() {
+        if (auth.getCurrentUser() == null) {
+            showEmptyActivityState();
+            return;
+        }
+
+        String userId = auth.getCurrentUser().getUid();
+        activities.clear();
+
+        // Load initial activities
+        loadInitialActivities(userId);
+        
+        // Set up real-time listener for activities
+        setupActivityListener(userId);
+    }
+    
+    private void loadInitialActivities(String userId) {
+        // Query all reviews by current user
+        db.collection("reviews")
+            .whereEqualTo("userId", userId)
+            .get()
+            .addOnSuccessListener(queryDocumentSnapshots -> {
+                List<ActivityItem> allActivities = new ArrayList<>();
+                
+                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                    try {
+                        Review review = document.toObject(Review.class);
+                        review.setId(document.getId());
+                        reviewMap.put(review.getId(), review);
+                        
+                        // Process votes - only show accurate votes
+                        if (review.getVotes() != null) {
+                            for (Map.Entry<String, Map<String, Object>> voteEntry : review.getVotes().entrySet()) {
+                                String voterId = voteEntry.getKey();
+                                Map<String, Object> voteData = voteEntry.getValue();
+                                Boolean voteType = (Boolean) voteData.get("accurate");
+                                java.util.Date voteTimestamp = null;
+                                Object timestampObj = voteData.get("timestamp");
+                                if (timestampObj instanceof com.google.firebase.Timestamp) {
+                                    voteTimestamp = ((com.google.firebase.Timestamp) timestampObj).toDate();
+                                } else if (timestampObj instanceof java.util.Date) {
+                                    voteTimestamp = (java.util.Date) timestampObj;
+                                }
+                                
+                                // Skip if it's the review author voting on their own review
+                                // Only show accurate votes
+                                if (!voterId.equals(userId) && voteType != null && voteType) {
+                                    ActivityItem activity = new ActivityItem(
+                                        ActivityItem.ActivityType.VOTE,
+                                        voterId,
+                                        null, // Will be filled later
+                                        null, // Will be filled later
+                                        review.getId(),
+                                        review.getCaption(),
+                                        review.getRestaurantName(),
+                                        voteTimestamp != null ? voteTimestamp : (review.getUpdatedAt() != null ? review.getUpdatedAt() : review.getCreatedAt())
+                                    );
+                                    activity.setVoteType(voteType);
+                                    // Set the first image URL from the review
+                                    if (review.getImageUrls() != null && !review.getImageUrls().isEmpty()) {
+                                        activity.setReviewFirstImageUrl(review.getImageUrls().get(0));
+                                    }
+                                    allActivities.add(activity);
+                                }
+                            }
+                        }
+                        
+                        // Process comments (if they exist)
+                        if (review.getComments() != null) {
+                            for (com.example.food.data.Comment comment : review.getComments()) {
+                                // Skip if it's the review author commenting on their own review
+                                if (!comment.getUserId().equals(userId)) {
+                                    ActivityItem activity = new ActivityItem(
+                                        ActivityItem.ActivityType.COMMENT,
+                                        comment.getUserId(),
+                                        null, // Will be filled later
+                                        null, // Will be filled later
+                                        review.getId(),
+                                        review.getCaption(),
+                                        review.getRestaurantName(),
+                                        comment.getCreatedAt()
+                                    );
+                                    activity.setCommentText(comment.getText());
+                                    // Set the first image URL from the review
+                                    if (review.getImageUrls() != null && !review.getImageUrls().isEmpty()) {
+                                        activity.setReviewFirstImageUrl(review.getImageUrls().get(0));
+                                    }
+                                    allActivities.add(activity);
+                                }
+                            }
+                        }
+                        
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error parsing review document", e);
+                    }
+                }
+                
+                // Filter to only show last 30 days no more than that
+                long thirtyDaysAgo = System.currentTimeMillis() - (30L * 24 * 60 * 60 * 1000);
+                List<ActivityItem> recentActivities = new ArrayList<>();
+                for (ActivityItem activity : allActivities) {
+                    if (activity.getTimestamp() != null && activity.getTimestamp().getTime() >= thirtyDaysAgo) {
+                        recentActivities.add(activity);
+                    }
+                }
+
+                // Sort by timestamp descending (most recent first)
+                recentActivities.sort((a, b) -> b.getTimestamp().compareTo(a.getTimestamp()));
+                
+                // Load restaurant data for activities
+                loadRestaurantsForActivities(recentActivities);
+                
+            })
+            .addOnFailureListener(e -> {
+                Log.e(TAG, "Error loading activity feed", e);
+                showEmptyActivityState();
+            });
+    }
+    
+    private void setupActivityListener(String userId) {
+        // Remove existing listener if any
+        if (activityListener != null) {
+            activityListener.remove();
+        }
+        
+        // Set up real-time listener for reviews by current user so that we can update the activity feed in real time
+        activityListener = db.collection("reviews")
+            .whereEqualTo("userId", userId)
+            .addSnapshotListener((queryDocumentSnapshots, error) -> {
+                if (error != null) {
+                    Log.e(TAG, "Error in activity listener", error);
+                    return;
+                }
+                
+                if (queryDocumentSnapshots != null) {
+                    Log.d(TAG, "Activity listener triggered with " + queryDocumentSnapshots.getDocumentChanges().size() + " changes");
+                    // Process changes and append new activities
+                    processActivityChanges(queryDocumentSnapshots, userId);
+                }
+            });
+    }
+    
+    private void processActivityChanges(com.google.firebase.firestore.QuerySnapshot queryDocumentSnapshots, String userId) {
+        for (com.google.firebase.firestore.DocumentChange change : queryDocumentSnapshots.getDocumentChanges()) {
+            if (change.getType() == com.google.firebase.firestore.DocumentChange.Type.MODIFIED) {
+                try {
+                    Review review = change.getDocument().toObject(Review.class);
+                    review.setId(change.getDocument().getId());
+                    
+                    Log.d(TAG, "Processing modified review: " + review.getId() + " with " + (review.getVotes() != null ? review.getVotes().size() : 0) + " votes");
+                    
+                    // update review in map
+                    reviewMap.put(review.getId(), review);
+                    
+                    // Check for any new votes
+                    if (review.getVotes() != null) {
+                        for (Map.Entry<String, Map<String, Object>> voteEntry : review.getVotes().entrySet()) {
+                            String voterId = voteEntry.getKey();
+                            Map<String, Object> voteData = voteEntry.getValue();
+                            Boolean voteType = (Boolean) voteData.get("accurate");
+                            java.util.Date voteTimestamp = null;
+                            Object timestampObj = voteData.get("timestamp");
+                            if (timestampObj instanceof com.google.firebase.Timestamp) {
+                                voteTimestamp = ((com.google.firebase.Timestamp) timestampObj).toDate();
+                            } else if (timestampObj instanceof java.util.Date) {
+                                voteTimestamp = (java.util.Date) timestampObj;
+                            }
+                            
+                            // Skip if the review author is voting on their own review
+                            // Only show accurate votes
+                            if (!voterId.equals(userId) && voteType != null && voteType) {
+                                // Check if this vote activity already exists
+                                boolean voteExists = false;
+                                for (ActivityItem existingActivity : activities) {
+                                    if (existingActivity.getType() == ActivityItem.ActivityType.VOTE &&
+                                        existingActivity.getReviewId().equals(review.getId()) &&
+                                        existingActivity.getUserId().equals(voterId)) {
+                                        voteExists = true;
+                                        break;
+                                    }
+                                }
+                                
+                                if (!voteExists) {
+                                    Log.d(TAG, "Creating new vote activity for user: " + voterId + " on review: " + review.getId());
+                                    // Create new vote activity
+                                    ActivityItem newActivity = new ActivityItem(
+                                        ActivityItem.ActivityType.VOTE,
+                                        voterId,
+                                        null, // Will be filled later
+                                        null, // Will be filled later
+                                        review.getId(),
+                                        review.getCaption(),
+                                        review.getRestaurantName(),
+                                        voteTimestamp != null ? voteTimestamp : new java.util.Date()
+                                    );
+                                    newActivity.setVoteType(voteType);
+                                    if (review.getImageUrls() != null && !review.getImageUrls().isEmpty()) {
+                                        newActivity.setReviewFirstImageUrl(review.getImageUrls().get(0));
+                                    }
+                                    
+                                    // Append to activities list
+                                    appendNewActivity(newActivity);
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Check for new comments
+                    if (review.getComments() != null) {
+                        for (com.example.food.data.Comment comment : review.getComments()) {
+                            // Skip if the review author is commenting on their own review
+                            if (!comment.getUserId().equals(userId)) {
+                                // Check if this comment activity already exists
+                                boolean commentExists = false;
+                                for (ActivityItem existingActivity : activities) {
+                                    if (existingActivity.getType() == ActivityItem.ActivityType.COMMENT &&
+                                        existingActivity.getReviewId().equals(review.getId()) &&
+                                        existingActivity.getUserId().equals(comment.getUserId()) &&
+                                        existingActivity.getCommentText() != null &&
+                                        existingActivity.getCommentText().equals(comment.getText())) {
+                                        commentExists = true;
+                                        break;
+                                    }
+                                }
+                                
+                                if (!commentExists) {
+                                    // Create new comment activity
+                                    ActivityItem newActivity = new ActivityItem(
+                                        ActivityItem.ActivityType.COMMENT,
+                                        comment.getUserId(),
+                                        null, // Will be filled later name
+                                        null, // Will be filled later avatar url
+                                        review.getId(),
+                                        review.getCaption(),
+                                        review.getRestaurantName(),
+                                        comment.getCreatedAt()
+                                    );
+                                    newActivity.setCommentText(comment.getText());
+                                    if (review.getImageUrls() != null && !review.getImageUrls().isEmpty()) {
+                                        newActivity.setReviewFirstImageUrl(review.getImageUrls().get(0));
+                                    }
+                                    
+                                    // Append to activities list
+                                    appendNewActivity(newActivity);
+                                }
+                            }
+                        }
+                    }
+                    
+                } catch (Exception e) {
+                    Log.e(TAG, "Error processing activity change", e);
+                }
+            }
+        }
+    }
+    
+    private void appendNewActivity(ActivityItem newActivity) {
+        // Add to activities list
+        activities.add(0, newActivity); // Add to beginning for newest first
+        
+        // Sort activities by timestamp
+        activities.sort((a, b) -> b.getTimestamp().compareTo(a.getTimestamp()));
+        
+        // Update adapter
+        activityAdapter.setActivities(activities);
+        activityAdapter.setReviewMap(reviewMap);
+        activityAdapter.setRestaurantMap(restaurantMap);
+        
+        // Load user details for the new activity
+        loadUserDetailsForNewActivity(newActivity);
+        
+        // Load restaurant details for the new activity
+        loadRestaurantDetailsForNewActivity(newActivity);
+        
+        // Hide empty state if it was showing
+        hideEmptyActivityState();
+    }
+    
+    private void loadUserDetailsForNewActivity(ActivityItem activity) {
+        db.collection("users").document(activity.getUserId())
+            .get()
+            .addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    String userName = documentSnapshot.getString("name");
+                    String userAvatarUrl = documentSnapshot.getString("profilePictureUrl");
+                    
+                    if (userName != null) {
+                        activity.setUserName(userName);
+                    }
+                    if (userAvatarUrl != null) {
+                        activity.setUserAvatarUrl(userAvatarUrl);
+                    }
+                    
+                    // Update the adapter to reflect the new user details
+                    activityAdapter.notifyDataSetChanged();
+                }
+            })
+            .addOnFailureListener(e -> {
+                Log.e(TAG, "Error fetching user details for new activity", e);
+            });
+    }
+    
+    private void loadRestaurantDetailsForNewActivity(ActivityItem activity) {
+        Review review = reviewMap.get(activity.getReviewId());
+        if (review == null || review.getRestaurantId() == null) {
+            return;
+        }
+        
+        String restaurantId = review.getRestaurantId();
+        
+        // Check if restaurant is already loaded
+        if (restaurantMap.containsKey(restaurantId)) {
+            Restaurant restaurant = restaurantMap.get(restaurantId);
+            if (restaurant != null) {
+                activity.setRestaurantName(restaurant.getName());
+                activityAdapter.notifyDataSetChanged();
+            }
+            return;
+        }
+        
+        // Load restaurant data
+        db.collection("restaurants")
+            .document(restaurantId)
+            .get()
+            .addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    try {
+                        Restaurant restaurant = documentSnapshot.toObject(Restaurant.class);
+                        if (restaurant != null) {
+                            restaurant.setId(documentSnapshot.getId());
+                            restaurantMap.put(restaurantId, restaurant);
+                            
+                            // Update the activity with restaurant name
+                            activity.setRestaurantName(restaurant.getName());
+                            
+                            // Update the adapter to reflect the new restaurant details
+                            activityAdapter.notifyDataSetChanged();
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error parsing restaurant document for new activity", e);
+                    }
+                }
+            })
+            .addOnFailureListener(e -> {
+                Log.e(TAG, "Error fetching restaurant details for new activity", e);
+            });
+    }
+
+    private void loadRestaurantsForActivities(List<ActivityItem> recentActivities) {
+        if (recentActivities.isEmpty()) {
+            showEmptyActivityState();
+            return;
+        }
+        
+        // Get unique restaurant IDs from reviews
+        java.util.Set<String> restaurantIds = new java.util.HashSet<>();
+        for (ActivityItem activity : recentActivities) {
+            Review review = reviewMap.get(activity.getReviewId());
+            if (review != null && review.getRestaurantId() != null) {
+                restaurantIds.add(review.getRestaurantId());
+            }
+        }
+        
+        if (restaurantIds.isEmpty()) {
+            fetchUserDetailsForActivities(recentActivities);
+            return;
+        }
+        
+        // Load restaurant data
+        for (String restaurantId : restaurantIds) {
+            db.collection("restaurants")
+                .document(restaurantId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        try {
+                            Restaurant restaurant = documentSnapshot.toObject(Restaurant.class);
+                            if (restaurant != null) {
+                                restaurant.setId(documentSnapshot.getId());
+                                restaurantMap.put(restaurantId, restaurant);
+                                
+                                // Update activities with restaurant names
+                                for (ActivityItem activity : recentActivities) {
+                                    Review review = reviewMap.get(activity.getReviewId());
+                                    if (review != null && restaurantId.equals(review.getRestaurantId())) {
+                                        activity.setRestaurantName(restaurant.getName());
+                                    }
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error parsing restaurant document", e);
+                        }
+                    }
+                    
+                    // Check if all restaurants are loaded
+                    boolean allRestaurantsLoaded = true;
+                    for (String id : restaurantIds) {
+                        if (!restaurantMap.containsKey(id)) {
+                            allRestaurantsLoaded = false;
+                            break;
+                        }
+                    }
+                    
+                    if (allRestaurantsLoaded) {
+                        fetchUserDetailsForActivities(recentActivities);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error loading restaurant: " + restaurantId, e);
+                    fetchUserDetailsForActivities(recentActivities);
+                });
+        }
+    }
+
+    private void fetchUserDetailsForActivities(List<ActivityItem> recentActivities) {
+        if (recentActivities.isEmpty()) {
+            showEmptyActivityState();
+            return;
+        }
+        
+        // Get unique user IDs
+        java.util.Set<String> userIds = new java.util.HashSet<>();
+        for (ActivityItem activity : recentActivities) {
+            userIds.add(activity.getUserId());
+        }
+        
+        // Fetch user details for each unique user
+        for (String userId : userIds) {
+            db.collection("users")
+                .document(userId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String userName = documentSnapshot.getString("name");
+                        String userAvatarUrl = documentSnapshot.getString("avatarUrl");
+                        
+                        // Update all activities for this user
+                        for (ActivityItem activity : recentActivities) {
+                            if (activity.getUserId().equals(userId)) {
+                                activity.setUserName(userName);
+                                activity.setUserAvatarUrl(userAvatarUrl);
+                            }
+                        }
+                        
+                        // Check if all user details are loaded
+                        boolean allLoaded = true;
+                        for (ActivityItem activity : recentActivities) {
+                            if (activity.getUserName() == null) {
+                                allLoaded = false;
+                                break;
+                            }
+                        }
+                        
+                        if (allLoaded) {
+                            activities.clear();
+                            activities.addAll(recentActivities);
+                            activityAdapter.setActivities(activities);
+                            activityAdapter.setReviewMap(reviewMap);
+                            activityAdapter.setRestaurantMap(restaurantMap);
+                            
+                            if (activities.isEmpty()) {
+                                showEmptyActivityState();
+                            } else {
+                                hideEmptyActivityState();
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error fetching user details for activity", e);
+                });
+        }
+    }
+
+    private void showEmptyActivityState() {
+        if (emptyActivityLayout != null) {
+            emptyActivityLayout.setVisibility(View.VISIBLE);
+        }
+        if (rvActivity != null) {
+            rvActivity.setVisibility(View.GONE);
+        }
+    }
+
+    private void hideEmptyActivityState() {
+        if (emptyActivityLayout != null) {
+            emptyActivityLayout.setVisibility(View.GONE);
+        }
+        if (rvActivity != null) {
+            rvActivity.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void loadAnalyticsData() {
+        if (userProfile == null || userProfile.getStats() == null) {
+            return;
+        }
+        
+        Map<String, Object> stats = userProfile.getStats();
+        View view = getView();
+        if (view == null) return;
+        
+        // Update main stats
+        TextView tvTotalReviews = view.findViewById(R.id.tvTotalReviews);
+        TextView tvAverageRating = view.findViewById(R.id.tvAverageRating);
+        TextView tvTotalRestaurants = view.findViewById(R.id.tvTotalRestaurants);
+        TextView tvTotalVotes = view.findViewById(R.id.tvTotalVotes);
+        TextView tvMemberSinceStat = view.findViewById(R.id.tvMemberSinceStat);
+        
+        if (tvTotalReviews != null) {
+            Object totalReviews = stats.get("totalReviews");
+            tvTotalReviews.setText(totalReviews != null ? totalReviews.toString() : "0");
+        }
+        
+        if (tvTotalRestaurants != null) {
+            Object uniqueRestaurants = stats.get("uniqueRestaurants");
+            tvTotalRestaurants.setText(uniqueRestaurants != null ? uniqueRestaurants.toString() : "0");
+        }
+        
+        if (tvTotalVotes != null) {
+            Object totalVotes = stats.get("totalVotes");
+            tvTotalVotes.setText(totalVotes != null ? totalVotes.toString() : "0");
+        }
+        
+        if (tvAverageRating != null) {
+            Object avgAccuracy = stats.get("avgAccuracyPercent");
+            if (avgAccuracy != null) {
+                tvAverageRating.setText(String.format("%.0f%%", ((Number) avgAccuracy).doubleValue()));
+            } else {
+                tvAverageRating.setText("0%");
+            }
+        }
+        
+        if (tvMemberSinceStat != null) {
+            long createdAt = userProfile.getCreatedAt();
+            if (createdAt > 0) {
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("MMM yyyy", java.util.Locale.getDefault());
+                String memberSince = sdf.format(new java.util.Date(createdAt));
+                tvMemberSinceStat.setText(memberSince);
+            } else {
+                tvMemberSinceStat.setText("Unknown");
+            }
+        }
+        
+        // Update member duration
+        TextView tvMemberDuration = view.findViewById(R.id.tvMemberDuration);
+        if (tvMemberDuration != null) {
+            long createdAt = userProfile.getCreatedAt();
+            if (createdAt > 0) {
+                long now = System.currentTimeMillis();
+                long diffInMillis = now - createdAt;
+                
+                long days = diffInMillis / (24 * 60 * 60 * 1000);
+                long months = days / 30;
+                long years = days / 365;
+                
+                String duration;
+                if (years > 0) {
+                    duration = years == 1 ? "1 year" : years + " years";
+                } else if (months > 0) {
+                    duration = months == 1 ? "1 month" : months + " months";
+                } else {
+                    duration = days == 1 ? "1 day" : days + " days";
+                }
+                
+                tvMemberDuration.setText("Member for " + duration);
+            } else {
+                tvMemberDuration.setText("Member for unknown duration");
+            }
+        }
+        
+        
+        
+        // Update cuisine diversity if we have review data
+        updateCuisineDiversity();
+    }
+    
+    private void updateCuisineDiversity() {
+        View view = getView();
+        if (view == null) return;
+        
+        LinearLayout cuisineDiversityContainer = view.findViewById(R.id.cuisineDiversityContainer);
+        TextView tvCategoriesCount = view.findViewById(R.id.tvCategoriesCount);
+        TextView tvRegionsCount = view.findViewById(R.id.tvRegionsCount);
+        LinearLayout categoriesSection = view.findViewById(R.id.categoriesDropdown);
+        LinearLayout regionsSection = view.findViewById(R.id.regionsDropdown);
+        ImageView ivCategoriesArrow = view.findViewById(R.id.ivCategoriesArrow);
+        ImageView ivRegionsArrow = view.findViewById(R.id.ivRegionsArrow);
+        RecyclerView rvCategories = view.findViewById(R.id.rvCategories);
+        RecyclerView rvRegions = view.findViewById(R.id.rvRegions);
+        
+        if (cuisineDiversityContainer == null || tvCategoriesCount == null || tvRegionsCount == null ||
+            categoriesSection == null || regionsSection == null || ivCategoriesArrow == null ||
+            ivRegionsArrow == null || rvCategories == null || rvRegions == null) return;
+        
+        if (reviews != null && !reviews.isEmpty()) {
+            // Collect unique categories and regions
+            java.util.Set<String> categories = new java.util.HashSet<>();
+            java.util.Set<String> regions = new java.util.HashSet<>();
+            
+            for (Review review : reviews) {
+                if (review.getRestaurantId() != null && restaurantMap.containsKey(review.getRestaurantId())) {
+                    Restaurant restaurant = restaurantMap.get(review.getRestaurantId());
+                    if (restaurant != null) {
+                        if (restaurant.getCategory() != null && !restaurant.getCategory().trim().isEmpty()) {
+                            categories.add(restaurant.getCategory());
+                        }
+                        if (restaurant.getRegion() != null && !restaurant.getRegion().trim().isEmpty()) {
+                            regions.add(restaurant.getRegion());
+                        }
+                    }
+                }
+            }
+            
+            if (!categories.isEmpty() || !regions.isEmpty()) {
+                // Set counts
+                tvCategoriesCount.setText(String.valueOf(categories.size()));
+                tvRegionsCount.setText(String.valueOf(regions.size()));
+                
+        // Setup dropdowns
+        setupDropdown(rvCategories, new ArrayList<>(categories), ivCategoriesArrow, categoriesSection);
+        setupDropdown(rvRegions, new ArrayList<>(regions), ivRegionsArrow, regionsSection);
+        
+        // Setup click listeners for dropdown sections
+        LinearLayout categoriesClickSection = view.findViewById(R.id.categoriesSection);
+        LinearLayout regionsClickSection = view.findViewById(R.id.regionsSection);
+        
+        if (categoriesClickSection != null) {
+            categoriesClickSection.setOnClickListener(v -> toggleDropdown(categoriesSection, ivCategoriesArrow));
+        }
+        
+        if (regionsClickSection != null) {
+            regionsClickSection.setOnClickListener(v -> toggleDropdown(regionsSection, ivRegionsArrow));
+        }
+                
+                cuisineDiversityContainer.setVisibility(View.VISIBLE);
+            } else {
+                cuisineDiversityContainer.setVisibility(View.GONE);
+            }
+        } else {
+            cuisineDiversityContainer.setVisibility(View.GONE);
+        }
+    }
+    
+    private void setupDropdown(RecyclerView recyclerView, List<String> items, ImageView arrow, LinearLayout dropdown) {
+        // Setup RecyclerView
+        recyclerView.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(getContext()));
+        
+        // Create adapter
+        androidx.recyclerview.widget.RecyclerView.Adapter adapter = new androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
+            @NonNull
+            @Override
+            public androidx.recyclerview.widget.RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dropdown_item, parent, false);
+                return new androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {};
+            }
+            
+            @Override
+            public void onBindViewHolder(@NonNull androidx.recyclerview.widget.RecyclerView.ViewHolder holder, int position) {
+                TextView textView = (TextView) holder.itemView;
+                textView.setText(items.get(position));
+            }
+            
+            @Override
+            public int getItemCount() {
+                return items.size();
+            }
+        };
+        
+        recyclerView.setAdapter(adapter);
+        
+        
+    }
+    
+    private void toggleDropdown(LinearLayout dropdown, ImageView arrow) {
+        if (dropdown.getVisibility() == View.VISIBLE) {
+            dropdown.setVisibility(View.GONE);
+            arrow.setRotation(0);
+        } else {
+            dropdown.setVisibility(View.VISIBLE);
+            arrow.setRotation(180);
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         if (profileListener != null) {
             profileListener.remove();
+        }
+        if (activityListener != null) {
+            activityListener.remove();
         }
     }
 }

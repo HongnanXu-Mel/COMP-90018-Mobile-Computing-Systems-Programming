@@ -282,7 +282,8 @@ public class ScoreCalculator {
                 totalVotes += reviewVotes;
 
                 int reviewAccurate = 0;
-                for (Boolean vote : review.getVotes().values()) {
+                for (Map<String, Object> voteData : review.getVotes().values()) {
+                    Boolean vote = (Boolean) voteData.get("accurate");
                     if (vote != null && vote) {
                         reviewAccurate++;
                     }

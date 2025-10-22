@@ -8,10 +8,10 @@ public class Review {
     private String id;
     private String userId;
     @Exclude
-    private String userName; // Not stored in database - fetched dynamically
+    private String userName; // Not stored in database. dynamically fetched
     private String restaurantId;
     @Exclude
-    private String restaurantName; // Not stored in database - fetched dynamically
+    private String restaurantName; // Not stored in database. dynamically fetched
     private String description;
     private String caption;
     private float rating;
@@ -22,7 +22,7 @@ public class Review {
     private Date createdAt;
     private Date updatedAt;
     private int helpfulCount;
-    private java.util.Map<String, Boolean> votes;
+    private java.util.Map<String, java.util.Map<String, Object>> votes;
     private List<Comment> comments;
 
     public Review() {
@@ -44,8 +44,8 @@ public class Review {
         this.imageUrls = imageUrls;
         this.createdAt = createdAt;
         this.helpfulCount = 0;
-        this.accuracyPercent = 100.0; // Default accuracy percent
-        this.firstImageType = "SQUARE"; // Default image type
+        this.accuracyPercent = 100.0;
+        this.firstImageType = "SQUARE";
         this.votes = new java.util.HashMap<>();
         this.comments = new java.util.ArrayList<>();
     }
@@ -96,8 +96,8 @@ public class Review {
     public double getAccuracyPercent() { return accuracyPercent; }
     public void setAccuracyPercent(double accuracyPercent) { this.accuracyPercent = accuracyPercent; }
 
-    public java.util.Map<String, Boolean> getVotes() { return votes; }
-    public void setVotes(java.util.Map<String, Boolean> votes) { this.votes = votes; }
+    public java.util.Map<String, java.util.Map<String, Object>> getVotes() { return votes; }
+    public void setVotes(java.util.Map<String, java.util.Map<String, Object>> votes) { this.votes = votes; }
 
     public List<Comment> getComments() { return comments; }
     public void setComments(List<Comment> comments) { this.comments = comments; }
