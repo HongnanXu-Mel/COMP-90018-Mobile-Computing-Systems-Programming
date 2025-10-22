@@ -250,7 +250,7 @@ public class ReviewDetailsDialog extends Dialog {
     }
 
     private void setupComments() {
-        // Immersive layout: comments are shown in a bottom sheet on demand
+       
     }
 
     private void updateAccuracyDisplay() {
@@ -270,7 +270,8 @@ public class ReviewDetailsDialog extends Dialog {
         int accurateVotes = 0;
         int totalVotes = review.getVotes().size();
 
-        for (Boolean vote : review.getVotes().values()) {
+        for (Map<String, Object> voteData : review.getVotes().values()) {
+            Boolean vote = (Boolean) voteData.get("accurate");
             if (vote != null && vote) {
                 accurateVotes++;
             }
@@ -336,7 +337,8 @@ public class ReviewDetailsDialog extends Dialog {
 
         // Check current user's vote
         if (review.getVotes() != null && review.getVotes().containsKey(currentUserId)) {
-            currentUserVote = review.getVotes().get(currentUserId);
+            Map<String, Object> voteData = review.getVotes().get(currentUserId);
+            currentUserVote = (Boolean) voteData.get("accurate");
             if (currentUserVote != null && currentUserVote) {
                 btnAccurateIcon.setSelected(true);
                 btnInaccurateIcon.setSelected(false);
@@ -492,6 +494,11 @@ public class ReviewDetailsDialog extends Dialog {
         sheet.setContentView(view);
         sheet.show();
     }
+    
+    public void openCommentsSection() {
+        // trigger the comments bottom sheet to open
+        openCommentsBottomSheet();
+    }
 
     private void addCommentToCurrentReview(Map<String, Object> commentData) {
         // Convert the comment data to Comment object
@@ -590,13 +597,21 @@ public class ReviewDetailsDialog extends Dialog {
         }
 
         boolean wasPreviouslyVoted = review.getVotes().containsKey(currentUserId);
-        Boolean previousVote = review.getVotes().get(currentUserId);
+        final Boolean previousVote;
+        if (wasPreviouslyVoted && review.getVotes().get(currentUserId) != null) {
+            previousVote = (Boolean) review.getVotes().get(currentUserId).get("accurate");
+        } else {
+            previousVote = null;
+        }
 
         // If clicking the same button, remove vote
         if (wasPreviouslyVoted && ((previousVote != null && previousVote == accurate))) {
             review.getVotes().remove(currentUserId);
         } else {
-            review.getVotes().put(currentUserId, accurate);
+            Map<String, Object> voteData = new HashMap<>();
+            voteData.put("accurate", accurate);
+            voteData.put("timestamp", new java.util.Date());
+            review.getVotes().put(currentUserId, voteData);
         }
 
             // Update UI immediately
@@ -622,7 +637,10 @@ public class ReviewDetailsDialog extends Dialog {
 
                     // Revert local changes on error
                     if (wasPreviouslyVoted) {
-                        review.getVotes().put(currentUserId, previousVote);
+                        Map<String, Object> voteData = new HashMap<>();
+                        voteData.put("accurate", previousVote);
+                        voteData.put("timestamp", new java.util.Date());
+                        review.getVotes().put(currentUserId, voteData);
                     } else {
                         review.getVotes().remove(currentUserId);
                     }
