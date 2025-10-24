@@ -29,7 +29,22 @@
             android:layout_height="wrap_content"
             android:text="Address"
             android:textSize="14sp"
-            android:textColor="#666666" />
+            android:textColor="#666666"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Navigation Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_navigate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Get direction"
+            android:textColor="@color/white"
+            android:background="@drawable/button_navigation_background"
+            android:drawableStart="@drawable/ic_navigation"
+            android:drawablePadding="8dp"
+            android:padding="12dp"
+            android:textSize="14sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <!-- Posts Count Header -->

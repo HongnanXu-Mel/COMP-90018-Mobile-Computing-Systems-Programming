@@ -224,10 +224,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         TextView tvPostsCount = view.findViewById(R.id.tv_posts_count);
         RecyclerView rvPosts = view.findViewById(R.id.rv_posts);
         TextView tvNoPosts = view.findViewById(R.id.tv_no_posts);
+        androidx.appcompat.widget.AppCompatButton btnNavigate = view.findViewById(R.id.btn_navigate);
 
         // Set restaurant info
         tvRestaurantName.setText(restaurant.getName());
         tvRestaurantAddress.setText(restaurant.getAddress());
+
+        // Set up navigation button click listener
+        btnNavigate.setOnClickListener(v -> {
+            navigateToRestaurant(restaurant);
+            bottomSheet.dismiss();
+        });
 
         // Setup RecyclerView
         List<Review> reviews = new ArrayList<>();
@@ -308,6 +315,34 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private void zoomOut() {
         if (googleMap != null) {
             googleMap.animateCamera(CameraUpdateFactory.zoomOut());
+        }
+    }
+    
+    /**
+     * Navigate to restaurant using Google Maps
+     */
+    private void navigateToRestaurant(Restaurant restaurant) {
+        try {
+            // Create URI for Google Maps navigation
+            String uri = String.format("google.navigation:q=%f,%f&mode=d", 
+                restaurant.getLatitude(), restaurant.getLongitude());
+            
+            Intent intent = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(uri));
+            intent.setPackage("com.google.android.apps.maps");
+            
+            // Check if Google Maps is installed
+            if (intent.resolveActivity(requireContext().getPackageManager()) != null) {
+                startActivity(intent);
+            } else {
+                // Fallback to web browser if Google Maps app is not installed
+                String webUri = String.format("https://www.google.com/maps/dir/?api=1&destination=%f,%f&travelmode=driving",
+                    restaurant.getLatitude(), restaurant.getLongitude());
+                Intent webIntent = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(webUri));
+                startActivity(webIntent);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error opening navigation", e);
+            Toast.makeText(requireContext(), "无法打开导航，请检查是否安装了Google Maps", Toast.LENGTH_SHORT).show();
         }
     }
     
