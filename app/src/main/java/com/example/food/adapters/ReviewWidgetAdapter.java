@@ -32,6 +32,7 @@ public class ReviewWidgetAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public interface OnReviewClickListener {
         void onReviewClick(Review review, Restaurant restaurant);
+        void onUserClick(String userId);
     }
 
     public ReviewWidgetAdapter(List<Review> reviews, OnReviewClickListener listener) {
@@ -102,6 +103,9 @@ public class ReviewWidgetAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private TextView tvCaption;
         private TextView tvRating;
         private TextView tvAccuracy;
+        private ImageView ivUserAvatar;
+        private TextView tvUserName;
+        private View userInfoButton;
 
         public ReviewViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -109,6 +113,23 @@ public class ReviewWidgetAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             tvCaption = itemView.findViewById(R.id.tvCaption);
             tvRating = itemView.findViewById(R.id.tvRating);
             tvAccuracy = itemView.findViewById(R.id.tvAccuracy);
+            ivUserAvatar = itemView.findViewById(R.id.ivUserAvatar);
+            tvUserName = itemView.findViewById(R.id.tvUserName);
+            userInfoButton = itemView.findViewById(R.id.userInfoButton);
+
+            // Set up user info button click listener
+            if (userInfoButton != null) {
+                userInfoButton.setOnClickListener(v -> {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION && listener != null) {
+                        int reviewPosition = isLoading ? position - 8 : position;
+                        if (reviewPosition >= 0 && reviewPosition < reviews.size()) {
+                            Review review = reviews.get(reviewPosition);
+                            listener.onUserClick(review.getUserId());
+                        }
+                    }
+                });
+            }
 
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
@@ -138,6 +159,30 @@ public class ReviewWidgetAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             if (tvAccuracy != null) {
                 tvAccuracy.setText(String.format(Locale.getDefault(), "%.0f%%", review.getAccuracyPercent()));
+            }
+            
+            // Bind user information
+            if (tvUserName != null) {
+                String userName = review.getUserName();
+                if (userName != null && !userName.trim().isEmpty()) {
+                    tvUserName.setText(userName);
+                } else {
+                    tvUserName.setText(itemView.getContext().getString(R.string.user_name_placeholder));
+                }
+            }
+            
+            if (ivUserAvatar != null) {
+                String avatarUrl = review.getUserAvatarUrl();
+                if (avatarUrl != null && !avatarUrl.trim().isEmpty()) {
+                    Glide.with(itemView.getContext())
+                            .load(avatarUrl)
+                            .placeholder(R.drawable.ic_person)
+                            .error(R.drawable.ic_person)
+                            .circleCrop()
+                            .into(ivUserAvatar);
+                } else {
+                    ivUserAvatar.setImageResource(R.drawable.ic_person);
+                }
             }
             if (ivRestaurantImage != null) {
                 // Clear any previous state

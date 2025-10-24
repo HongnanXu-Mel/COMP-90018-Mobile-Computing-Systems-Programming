@@ -9,6 +9,8 @@ public class Review {
     private String userId;
     @Exclude
     private String userName; // Not stored in database. dynamically fetched
+    @Exclude
+    private String userAvatarUrl; // Not stored in database. dynamically fetched
     private String restaurantId;
     @Exclude
     private String restaurantName; // Not stored in database. dynamically fetched
@@ -59,6 +61,9 @@ public class Review {
 
     public String getUserName() { return userName; }
     public void setUserName(String userName) { this.userName = userName; }
+
+    public String getUserAvatarUrl() { return userAvatarUrl; }
+    public void setUserAvatarUrl(String userAvatarUrl) { this.userAvatarUrl = userAvatarUrl; }
 
     public String getRestaurantId() { return restaurantId; }
     public void setRestaurantId(String restaurantId) { this.restaurantId = restaurantId; }
