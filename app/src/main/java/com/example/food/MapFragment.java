@@ -231,11 +231,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         // Setup RecyclerView
         List<Review> reviews = new ArrayList<>();
-        ReviewWidgetAdapter adapter = new ReviewWidgetAdapter(reviews, (review, restaurantData) -> {
-            // Open review details dialog
-            ReviewDetailsDialog dialog = new ReviewDetailsDialog(requireContext(), review, restaurantData);
-            dialog.show();
-            bottomSheet.dismiss();
+        ReviewWidgetAdapter adapter = new ReviewWidgetAdapter(reviews, new ReviewWidgetAdapter.OnReviewClickListener() {
+            @Override
+            public void onReviewClick(Review review, Restaurant restaurantData) {
+                // Open review details dialog
+                ReviewDetailsDialog dialog = new ReviewDetailsDialog(requireContext(), review, restaurantData);
+                dialog.show();
+                bottomSheet.dismiss();
+            }
+            
+            @Override
+            public void onUserClick(String userId) {
+                // Navigate to user profile
+                Intent intent = new Intent(getActivity(), UserProfileActivity.class);
+                intent.putExtra("userId", userId);
+                startActivity(intent);
+            }
         });
         rvPosts.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvPosts.setAdapter(adapter);
