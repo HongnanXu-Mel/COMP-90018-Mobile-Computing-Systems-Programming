@@ -38,6 +38,11 @@ public class ReviewService {
         void onSuccess();
         void onError(Exception e);
     }
+    
+    public interface OnReviewsLoadedListener {
+        void onReviewsLoaded(List<Review> reviews);
+        void onError(String error);
+    }
 
     /**
      * Load all reviews ordered by createdAt (newest first)
@@ -122,6 +127,34 @@ public class ReviewService {
                 callback.onError(e);
             }
         });
+    }
+    
+    /**
+     * Load reviews by specific user ID
+     */
+    public void getReviewsByUser(String userId, OnReviewsLoadedListener listener) {
+        reviewsRef.whereEqualTo("userId", userId)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<Review> reviews = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            try {
+                                Review review = document.toObject(Review.class);
+                                review.setId(document.getId());
+                                reviews.add(review);
+                            } catch (Exception e) {
+                                Log.w(TAG, "Error parsing review: " + document.getId(), e);
+                            }
+                        }
+                        listener.onReviewsLoaded(reviews);
+                        Log.d(TAG, "Loaded " + reviews.size() + " reviews for user: " + userId);
+                    } else {
+                        Log.w(TAG, "Error getting reviews for user: " + userId, task.getException());
+                        listener.onError(task.getException() != null ? task.getException().getMessage() : "Unknown error");
+                    }
+                });
     }
     
     /**
