@@ -26,7 +26,7 @@ import com.example.food.adapters.ReviewWidgetAdapter;
 import com.example.food.data.Review;
 import com.example.food.dialogs.ReviewDetailsDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-// FragmentManager和FragmentTransaction不再需要，已简化地图初始化
+// FragmentManager and FragmentTransaction no longer needed, simplified map initialization
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -45,7 +45,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.example.food.model.Restaurant;
-// FirebaseDataUploader已删除，不再需要上传功能
+// FirebaseDataUploader removed, no longer need upload functionality
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,11 +58,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private PlacesClient placesClient;
     private FirebaseFirestore db;
     
-    // 放大缩小按钮
+    // Zoom in/out buttons
     private ImageButton btnZoomIn;
     private ImageButton btnZoomOut;
 
-    // 高分餐厅数据
+    // High-rated restaurant data
     private List<Restaurant> highRatedRestaurants;
 
     private final ActivityResultLauncher<String[]> permissionLauncher =
@@ -86,11 +86,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // 初始化放大缩小按钮
+        // Initialize zoom in/out buttons
         btnZoomIn = view.findViewById(R.id.btn_zoom_in);
         btnZoomOut = view.findViewById(R.id.btn_zoom_out);
         
-        // 设置按钮点击监听器
+        // Set button click listeners
         btnZoomIn.setOnClickListener(v -> zoomIn());
         btnZoomOut.setOnClickListener(v -> zoomOut());
 
@@ -101,10 +101,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
         placesClient = Places.createClient(requireContext());
         
-        // 初始化Firebase Firestore
+        // Initialize Firebase Firestore
         db = FirebaseFirestore.getInstance();
 
-        // 简化地图初始化
+        // Simplified map initialization
         SupportMapFragment mapFragment = SupportMapFragment.newInstance();
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.map_container, mapFragment)
@@ -119,7 +119,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         googleMap.getUiSettings().setMapToolbarEnabled(false);
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         
-        // 设置标记点击监听器
+        // Set marker click listener
         googleMap.setOnMarkerClickListener(marker -> {
             Restaurant restaurant = (Restaurant) marker.getTag();
             if (restaurant != null) {
@@ -141,41 +141,41 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             permissionLauncher.launch(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION});
         }
         
-        // 无论是否有位置权限，都显示地图和餐厅标记
+        // Show map and restaurant markers regardless of location permission
         moveToMelbourne();
         addRestaurantMarkers();
     }
     
-    // 上传功能已删除，现在只从Firebase加载数据
+    // Upload functionality removed, now only load data from Firebase
 
     private void moveToMelbourne() {
-        // 墨尔本市中心坐标（更精确的坐标）
+        // Melbourne city center coordinates (more precise coordinates)
         LatLng melbourne = new LatLng(-37.810272, 144.962646);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(melbourne, 10f));
     }
     
-    // 从Firebase加载餐厅数据并添加标记
+    // Load restaurant data from Firebase and add markers
     private void addRestaurantMarkers() {
         if (googleMap == null) {
             return;
         }
         
-        // 显示加载提示
-        Toast.makeText(requireContext(), "正在从Firebase加载餐厅数据...", Toast.LENGTH_SHORT).show();
+        // Show loading prompt
+        Toast.makeText(requireContext(), "Loading restaurant data from Firebase...", Toast.LENGTH_SHORT).show();
         
-        Log.d(TAG, "开始从Firebase加载餐厅数据...");
+        Log.d(TAG, "Starting to load restaurant data from Firebase...");
         
         db.collection("restaurants")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    Log.d(TAG, "Firebase连接成功，文档数量: " + queryDocumentSnapshots.size());
+                    Log.d(TAG, "Firebase connection successful, document count: " + queryDocumentSnapshots.size());
                     
                     if (queryDocumentSnapshots.isEmpty()) {
-                        // Firebase中没有数据
-                        Log.d(TAG, "Firebase中无餐厅数据");
-                        Toast.makeText(requireContext(), "Firebase中暂无餐厅数据，请等待数据上传完成", Toast.LENGTH_LONG).show();
+                        // No data in Firebase
+                        Log.d(TAG, "No restaurant data in Firebase");
+                        Toast.makeText(requireContext(), "No restaurant data in Firebase, please wait for data upload to complete", Toast.LENGTH_LONG).show();
                     } else {
-                        // Firebase中有数据，加载并显示
+                        // Data exists in Firebase, load and display
                         List<Restaurant> restaurants = new ArrayList<>();
                         for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                             try {
@@ -183,7 +183,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 restaurant.setId(document.getId());
                                 restaurants.add(restaurant);
                                 
-                                // 添加地图标记
+                                // Add map marker
                                 LatLng position = new LatLng(restaurant.getLatitude(), restaurant.getLongitude());
                                 MarkerOptions markerOptions = new MarkerOptions()
                                         .position(position)
@@ -196,17 +196,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                     marker.setTag(restaurant);
                                 }
                             } catch (Exception e) {
-                                Log.e(TAG, "解析餐厅数据失败: " + document.getId(), e);
+                                Log.e(TAG, "Failed to parse restaurant data: " + document.getId(), e);
                             }
                         }
                         
-                        Log.d(TAG, "成功加载 " + restaurants.size() + " 家餐厅");
-                        Toast.makeText(requireContext(), "已从Firebase加载 " + restaurants.size() + " 家好评餐厅", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "Successfully loaded " + restaurants.size() + " restaurants");
+                        Toast.makeText(requireContext(), "Loaded " + restaurants.size() + " highly-rated restaurants from Firebase", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Firebase加载失败", e);
-                    Toast.makeText(requireContext(), "Firebase连接失败: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.e(TAG, "Firebase loading failed", e);
+                    Toast.makeText(requireContext(), "Firebase connection failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
 
@@ -304,14 +304,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             });
     }
     
-    // 放大功能
+    // Zoom in functionality
     private void zoomIn() {
         if (googleMap != null) {
             googleMap.animateCamera(CameraUpdateFactory.zoomIn());
         }
     }
     
-    // 缩小功能
+    // Zoom out functionality
     private void zoomOut() {
         if (googleMap != null) {
             googleMap.animateCamera(CameraUpdateFactory.zoomOut());
@@ -342,9 +342,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         } catch (Exception e) {
             Log.e(TAG, "Error opening navigation", e);
-            Toast.makeText(requireContext(), "无法打开导航，请检查是否安装了Google Maps", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Unable to open navigation, please check if Google Maps is installed", Toast.LENGTH_SHORT).show();
         }
     }
     
-    // 上传功能已删除，现在只从Firebase加载数据
+    // Upload functionality removed, now only load data from Firebase
 }
