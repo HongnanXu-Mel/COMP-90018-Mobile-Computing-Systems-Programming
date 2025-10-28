@@ -57,7 +57,7 @@
             android:name=".UserProfileActivity"
             android:exported="false"
             android:theme="@style/Theme.Food" />
-        <!-- Post相关Activity已删除，现在只使用Review功能 -->
+        <!-- Post-related Activities removed, now only using Review functionality -->
     </application>
 
 </manifest>
