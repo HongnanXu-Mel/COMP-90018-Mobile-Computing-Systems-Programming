@@ -76,10 +76,21 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        reviewAdapter = new ReviewWidgetAdapter(allReviews, (review, restaurant) -> {
-            // Open review details dialog
-            ReviewDetailsDialog dialog = new ReviewDetailsDialog(getContext(), review, restaurant);
-            dialog.show();
+        reviewAdapter = new ReviewWidgetAdapter(allReviews, new ReviewWidgetAdapter.OnReviewClickListener() {
+            @Override
+            public void onReviewClick(Review review, Restaurant restaurant) {
+                // Open review details dialog
+                ReviewDetailsDialog dialog = new ReviewDetailsDialog(getContext(), review, restaurant);
+                dialog.show();
+            }
+            
+            @Override
+            public void onUserClick(String userId) {
+                // Navigate to user profile
+                Intent intent = new Intent(getActivity(), UserProfileActivity.class);
+                intent.putExtra("userId", userId);
+                startActivity(intent);
+            }
         });
         
         // Set up staggered grid layout for Xiaohongshu-like appearance
@@ -124,7 +135,7 @@ public class HomeFragment extends Fragment {
                 getActivity().runOnUiThread(() -> {
                     allReviews.clear();
                     allReviews.addAll(reviews);
-                    loadUserNames();
+                    loadUserInfoForReviews(reviews);
                     loadRestaurants();
                     showLoading(false);
                 });
@@ -331,6 +342,50 @@ public class HomeFragment extends Fragment {
     private void showError(String message) {
         if (getContext() != null) {
             Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+        }
+    }
+    
+    private void loadUserInfoForReviews(List<Review> reviews) {
+        if (reviews.isEmpty()) return;
+        
+        // Get unique user IDs
+        java.util.Set<String> userIds = new java.util.HashSet<>();
+        for (Review review : reviews) {
+            if (review.getUserId() != null) {
+                userIds.add(review.getUserId());
+            }
+        }
+        
+        // Load user information for each unique user
+        for (String userId : userIds) {
+            db.collection("users").document(userId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String userName = documentSnapshot.getString("name");
+                        String userAvatarUrl = documentSnapshot.getString("avatarUrl");
+                        
+                        // Update all reviews for this user
+                        for (Review review : allReviews) {
+                            if (userId.equals(review.getUserId())) {
+                                if (userName != null) {
+                                    review.setUserName(userName);
+                                }
+                                if (userAvatarUrl != null) {
+                                    review.setUserAvatarUrl(userAvatarUrl);
+                                }
+                            }
+                        }
+                        
+                        // Notify adapter of changes
+                        if (reviewAdapter != null) {
+                            reviewAdapter.notifyDataSetChanged();
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error loading user info for user: " + userId, e);
+                });
         }
     }
 }

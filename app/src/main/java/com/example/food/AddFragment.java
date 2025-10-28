@@ -510,18 +510,18 @@ public class AddFragment extends Fragment {
     }
     
     private void createReview(List<String> imageUrls) {
-        String userId = mAuth.getCurrentUser().getUid();
+        final String userId = mAuth.getCurrentUser().getUid();
         String userName = mAuth.getCurrentUser().getDisplayName();
         if (userName == null || userName.isEmpty()) {
             userName = mAuth.getCurrentUser().getEmail();
         }
+        final String finalUserName = userName;
         
-        String caption = etCaption.getText().toString().trim();
-        String description = etDescription.getText().toString().trim();
-        float rating = selectedRating;
+        final String caption = etCaption.getText().toString().trim();
+        final String description = etDescription.getText().toString().trim();
+        final float rating = selectedRating;
         
-      
-        double accuracyPercent = 0.0; // default 0%
+        final double accuracyPercent = 0.0; // default 0%
         
         // Determine first image type
         String firstImageType = "SQUARE"; // Default
@@ -530,54 +530,107 @@ public class AddFragment extends Fragment {
             Uri firstImageUri = selectedImageUris.get(0);
             firstImageType = getImageOrientation(firstImageUri);
         }
+        final String finalFirstImageType = firstImageType;
         
         // Create votes map (empty initially)
-        Map<String, Map<String, Object>> votes = new HashMap<>();
+        final Map<String, Map<String, Object>> votes = new HashMap<>();
         
         // Create comments list (empty initially)
-        List<com.example.food.data.Comment> comments = new ArrayList<>();
+        final List<com.example.food.data.Comment> comments = new ArrayList<>();
         
-        Review review = new Review();
-        review.setUserId(userId);
-        // userName and restaurantName are not stored - they will be fetched dynamically
-        review.setRestaurantId(selectedRestaurant.getId());
-        review.setCaption(caption);
-        review.setDescription(description);
-        review.setRating(rating);
-        review.setAccuracyPercent(accuracyPercent);
-        review.setImageUrls(imageUrls);
-        review.setFirstImageType(firstImageType);
-        review.setCreatedAt(new Date()); // Use current date
-        review.setVotes(votes);
-        review.setComments(comments);
-        
-        // Save to Firebase
-        reviewService.saveReview(review, new ReviewService.ReviewSaveCallback() {
-            @Override
-            public void onSuccess() {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        Toast.makeText(getContext(), "Review submitted successfully!", Toast.LENGTH_SHORT).show();
-                        clearForm();
-                        resetSubmitButton();
-                        
-                        // Update user stats after successful review submission
-                        UserStatsService.updateUserScoresOnReviewChange(userId);
-                    });
+        // Get user profile information including avatar
+        db.collection("users").document(userId)
+            .get()
+            .addOnSuccessListener(documentSnapshot -> {
+                String userAvatarUrl = null;
+                if (documentSnapshot.exists()) {
+                    userAvatarUrl = documentSnapshot.getString("avatarUrl");
                 }
-            }
-            
-            @Override
-            public void onError(Exception e) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        Toast.makeText(getContext(), "Failed to submit review: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.e(TAG, "Error saving review", e);
-                        resetSubmitButton();
-                    });
-                }
-            }
-        });
+                
+                Review review = new Review();
+                review.setUserId(userId);
+                review.setUserName(finalUserName);
+                review.setUserAvatarUrl(userAvatarUrl);
+                // userName and restaurantName are not stored - they will be fetched dynamically
+                review.setRestaurantId(selectedRestaurant.getId());
+                review.setCaption(caption);
+                review.setDescription(description);
+                review.setRating(rating);
+                review.setAccuracyPercent(accuracyPercent);
+                review.setImageUrls(imageUrls);
+                review.setFirstImageType(finalFirstImageType);
+                review.setCreatedAt(new Date()); // Use current date
+                review.setVotes(votes);
+                review.setComments(comments);
+                
+                // Save to Firebase
+                reviewService.saveReview(review, new ReviewService.ReviewSaveCallback() {
+                    @Override
+                    public void onSuccess() {
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                Toast.makeText(getContext(), "Review submitted successfully!", Toast.LENGTH_SHORT).show();
+                                clearForm();
+                                resetSubmitButton();
+                            });
+                        }
+                    }
+                    
+                    @Override
+                    public void onError(Exception e) {
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                Toast.makeText(getContext(), "Failed to submit review: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Log.e(TAG, "Error saving review", e);
+                                resetSubmitButton();
+                            });
+                        }
+                    }
+                });
+            })
+            .addOnFailureListener(e -> {
+                Log.e(TAG, "Error loading user profile", e);
+                // Still create review without avatar URL
+                Review review = new Review();
+                review.setUserId(userId);
+                review.setUserName(finalUserName);
+                review.setUserAvatarUrl(null);
+                review.setRestaurantId(selectedRestaurant.getId());
+                review.setCaption(caption);
+                review.setDescription(description);
+                review.setRating(rating);
+                review.setAccuracyPercent(accuracyPercent);
+                review.setImageUrls(imageUrls);
+                review.setFirstImageType(finalFirstImageType);
+                review.setCreatedAt(new Date());
+                review.setVotes(votes);
+                review.setComments(comments);
+                
+                // Save to Firebase
+                reviewService.saveReview(review, new ReviewService.ReviewSaveCallback() {
+                    @Override
+                    public void onSuccess() {
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                Toast.makeText(getContext(), "Review submitted successfully!", Toast.LENGTH_SHORT).show();
+                                clearForm();
+                                resetSubmitButton();
+                            });
+                        }
+                    }
+                    
+                    @Override
+                    public void onError(Exception e) {
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                Toast.makeText(getContext(), "Failed to submit review: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Log.e(TAG, "Error saving review", e);
+                                resetSubmitButton();
+                            });
+                        }
+                    }
+                });
+            });
     }
     
     private void clearForm() {

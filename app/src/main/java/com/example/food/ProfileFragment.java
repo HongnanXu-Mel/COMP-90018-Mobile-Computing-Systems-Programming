@@ -1,5 +1,6 @@
 package com.example.food;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -398,6 +399,14 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onReviewClick(Review review, Restaurant restaurant) {
                 showReviewDetails(review, restaurant);
+            }
+            
+            @Override
+            public void onUserClick(String userId) {
+                // Navigate to user profile
+                Intent intent = new Intent(getActivity(), UserProfileActivity.class);
+                intent.putExtra("userId", userId);
+                startActivity(intent);
             }
         });
         
