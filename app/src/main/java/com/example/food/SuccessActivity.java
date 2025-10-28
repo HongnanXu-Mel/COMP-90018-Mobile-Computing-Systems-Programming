@@ -29,7 +29,7 @@ public class SuccessActivity extends AppCompatActivity {
 
         btnLogout.setOnClickListener(v -> {
             mAuth.signOut();
-            // 登出成功
+            // Logout successful
             startActivity(new Intent(SuccessActivity.this, LoginActivity.class));
             finish();
         });
