@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <title>墨尔本 CBD 餐厅定位 - Maps JS + Places</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    /* 页面布局 */
+    html, body { height: 100%; margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; }
+    .app { display: grid; grid-template-columns: 380px 1fr; height: 100%; }
+    .sidebar {
+      border-right: 1px solid #e5e7eb; padding: 12px; overflow: auto; background: #fafafa;
+      display: grid; grid-template-rows: auto auto 1fr auto; gap: 10px;
+    }
+    .toolbar { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .filters { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .filters label { font-size: 12px; color: #374151; }
+    .filters select, .filters input, .toolbar button {
+      width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 10px; background: white;
+    }
+    .toolbar button { cursor: pointer; border: 1px solid #2563eb; color: white; background: #2563eb; }
+    .toolbar button.secondary { border-color: #6b7280; background: #6b7280; }
+    .results { overflow: auto; display: grid; gap: 8px; }
+    .card {
+      background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 12px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+      cursor: pointer;
+    }
+    .card:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.06); }
+    .card .title { font-weight: 600; margin-bottom: 4px; }
+    .meta { font-size: 12px; color: #4b5563; display: flex; gap: 8px; flex-wrap: wrap; }
+    .addr { font-size: 12px; color: #6b7280; margin-top: 4px; }
+    .pagination { display: flex; gap: 8px; padding: 8px 0; }
+    .pagination button {
+      padding: 8px 10px; border: 1px solid #d1d5db; border-radius: 10px; background: white; cursor: pointer;
+    }
+    .map { position: relative; }
+    #map { width: 100%; height: 100%; }
+    .details {
+      position: absolute; right: 12px; top: 12px; width: 320px; max-height: 80%; overflow: auto;
+      background: rgba(255,255,255,0.98); border: 1px solid #e5e7eb; border-radius: 14px; padding: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12); display: none;
+    }
+    .details .title { font-weight: 700; font-size: 16px; margin-bottom: 6px; }
+    .details .row { font-size: 13px; margin: 4px 0; color: #374151; }
+    .badge { padding: 2px 6px; border-radius: 999px; border: 1px solid #e5e7eb; font-size: 11px; color: #374151; }
+    .hint { font-size: 12px; color: #6b7280; }
+    .cbd-badge { position: absolute; left: 12px; top: 12px; background:#111827; color:#fff; font-size:12px; padding:6px 8px; border-radius:12px;}
+    .footnote { font-size: 11px; color:#6b7280; }
+  </style>
+  <!-- 用你的 API Key 替换 YOUR_API_KEY；注意 libraries=places & callback=initMap & v=weekly -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&v=weekly&callback=initMap" async defer></script>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div>
+        <h2 style="margin:0 0 6px;">墨尔本 CBD 餐厅</h2>
+        <div class="hint">基于 Google Maps JS + Places（前端纯静态页面）</div>
+      </div>
+
+      <div class="filters">
+        <div>
+          <label for="minRating">评分下限</label>
+          <select id="minRating">
+            <option value="0">不限</option>
+            <option value="3.5">≥ 3.5</option>
+            <option value="4.0" selected>≥ 4.0</option>
+            <option value="4.5">≥ 4.5</option>
+          </select>
+        </div>
+        <div style="display:flex; align-items:flex-end; gap:8px;">
+          <label style="display:flex; align-items:center; gap:6px; margin-bottom: 0;">
+            <input id="onlyOpen" type="checkbox" checked /> 只看“营业中”
+          </label>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <button id="btnSearch">在 CBD 搜餐厅</button>
+        <button class="secondary" id="btnClear">清除标记</button>
+      </div>
+
+      <div class="results" id="results"></div>
+
+      <div class="pagination">
+        <button id="btnPrev" disabled>上一页</button>
+        <button id="btnNext" disabled>下一页</button>
+      </div>
+
+      <div class="footnote">
+        小贴士：点击列表或地图标记可看详情（网站、电话、营业时间等）。
+      </div>
+    </aside>
+
+    <main class="map">
+      <div id="map"></div>
+      <div class="cbd-badge">区域：Melbourne CBD（Hoddle Grid）</div>
+      <div class="details" id="details"></div>
+    </main>
+  </div>
+
+  <script>
+    let map, placesService, infoWindow;
+    let markers = [];
+    let lastResults = [];
+    let pagination = { prev: null, next: null };
+    const resultsEl = document.getElementById('results');
+    const detailsEl = document.getElementById('details');
+
+    // 粗略圈定 CBD（Hoddle Grid）边界，便于限制搜索范围
+    // 你也可以用更精确的 polygon；这里用 bounds 即可。
+    const CBD_BOUNDS = new google.maps.LatLngBounds(
+      new google.maps.LatLng(-37.8265, 144.9515), // SW
+      new google.maps.LatLng(-37.8060, 144.9755)  // NE
+    );
+    const CBD_CENTER = { lat: -37.8136, lng: 144.9631 };
+
+    window.initMap = function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: CBD_CENTER,
+        zoom: 15,
+        mapId: 'DEMO_MAP_ID' // 可选：如果你创建了 MapID，可替换
+      });
+      map.fitBounds(CBD_BOUNDS);
+      placesService = new google.maps.places.PlacesService(map);
+      infoWindow = new google.maps.InfoWindow();
+
+      // 画出 CBD 边界的可视化框（仅作提示，非必须）
+      new google.maps.Rectangle({
+        bounds: CBD_BOUNDS,
+        map,
+        strokeColor: '#2563eb',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#2563eb',
+        fillOpacity: 0.06
+      });
+
+      document.getElementById('btnSearch').addEventListener('click', doSearch);
+      document.getElementById('btnClear').addEventListener('click', clearMarkers);
+      document.getElementById('btnNext').addEventListener('click', () => pagination.next && pagination.next());
+      document.getElementById('btnPrev').addEventListener('click', () => pagination.prev && pagination.prev());
+
+      // 初次加载自动搜一遍
+      doSearch();
+    }
+
+    function doSearch() {
+      clearMarkers();
+      resultsEl.innerHTML = '正在搜索…';
+
+      const minRating = parseFloat(document.getElementById('minRating').value || '0');
+      const onlyOpen = document.getElementById('onlyOpen').checked;
+
+      // Nearby Search（基于半径 + 类型），再结合 bounds 做视觉限制
+      const request = {
+        location: CBD_CENTER,
+        radius: 900,               // 900 米覆盖大部分 Hoddle Grid
+        type: 'restaurant',
+        openNow: onlyOpen || undefined
+      };
+
+      placesService.nearbySearch(request, (results, status, pag) => {
+        if (status !== google.maps.places.PlacesServiceStatus.OK || !results) {
+          resultsEl.innerHTML = '未找到结果或出错。';
+          setPagination(null, null);
+          return;
+        }
+
+        // 过滤在 CBD_BOUNDS 内 + 评分（若设定了下限）
+        const filtered = results.filter(r => {
+          const inCBD = CBD_BOUNDS.contains(r.geometry?.location);
+          const ratingOK = !minRating || (r.rating || 0) >= minRating;
+          return inCBD && ratingOK;
+        });
+
+        lastResults = filtered;
+        renderResults(filtered);
+        addMarkers(filtered);
+
+        // 处理分页
+        setPagination(
+          pag?.hasPrevPage ? () => { pag.previousPage(); } : null,
+          pag?.hasNextPage ? () => { pag.nextPage(); } : null
+        );
+      });
+    }
+
+    function setPagination(prevFn, nextFn) {
+      pagination.prev = prevFn;
+      pagination.next = nextFn;
+      const btnPrev = document.getElementById('btnPrev');
+      const btnNext = document.getElementById('btnNext');
+      btnPrev.disabled = !prevFn;
+      btnNext.disabled = !nextFn;
+    }
+
+    function addMarkers(places) {
+      const bounds = new google.maps.LatLngBounds();
+      places.forEach((place, idx) => {
+        if (!place.geometry || !place.geometry.location) return;
+        const marker = new google.maps.Marker({
+          map,
+          position: place.geometry.location,
+          label: String((idx + 1)),
+          title: place.name
+        });
+        marker.addListener('click', () => {
+          selectPlace(place, marker);
+        });
+        markers.push(marker);
+        bounds.extend(place.geometry.location);
+      });
+      if (!bounds.isEmpty()) {
+        const union = new google.maps.LatLngBounds(CBD_BOUNDS.getSouthWest(), CBD_BOUNDS.getNorthEast());
+        union.union(bounds);
+        map.fitBounds(union, 50);
+      }
+    }
+
+    function clearMarkers() {
+      markers.forEach(m => m.setMap(null));
+      markers = [];
+      resultsEl.innerHTML = '';
+      detailsEl.style.display = 'none';
+      infoWindow.close();
+    }
+
+    function renderResults(places) {
+      if (!places.length) {
+        resultsEl.innerHTML = '没有符合条件的餐厅。请放宽筛选。';
+        return;
+      }
+      resultsEl.innerHTML = '';
+      places.forEach((p, idx) => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = `
+          <div class="title">${idx + 1}. ${escapeHtml(p.name || '未命名')}</div>
+          <div class="meta">
+            <span class="badge">评分：${p.rating ?? '—'}</span>
+            <span class="badge">评论数：${p.user_ratings_total ?? '—'}</span>
+            ${p.price_level != null ? `<span class="badge">价位：${'💲'.repeat(p.price_level + 1)}</span>` : ''}
+          </div>
+          <div class="addr">${escapeHtml(p.vicinity || p.formatted_address || '')}</div>
+        `;
+        div.addEventListener('click', () => {
+          // 找到对应 marker
+          const marker = markers[idx];
+          selectPlace(p, marker);
+        });
+        resultsEl.appendChild(div);
+      });
+    }
+
+    function selectPlace(place, marker) {
+      if (marker) {
+        map.panTo(marker.getPosition());
+        infoWindow.setContent(`<div style="font-weight:600;">${escapeHtml(place.name || '')}</div><div style="font-size:12px;color:#4b5563;">${escapeHtml(place.vicinity || '')}</div>`);
+        infoWindow.open(map, marker);
+      }
+      // 拉详细信息
+      if (place.place_id) {
+        placesService.getDetails({
+          placeId: place.place_id,
+          fields: ['name','formatted_address','international_phone_number','website','rating','price_level','opening_hours','url','photos','geometry']
+        }, (details, status) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && details) {
+            renderDetails(details);
+          } else {
+            // 如果详情失败也至少显示基础信息
+            renderDetails({
+              name: place.name,
+              formatted_address: place.vicinity || place.formatted_address,
+              rating: place.rating,
+              price_level: place.price_level
+            });
+          }
+        });
+      }
+    }
+
+    function renderDetails(d) {
+      detailsEl.style.display = 'block';
+      const opening = (d.opening_hours?.weekday_text || []).map(line => `<div>${escapeHtml(line)}</div>`).join('') || '—';
+      const photoUrl = d.photos?.[0]?.getUrl({maxWidth: 640, maxHeight: 320});
+      detailsEl.innerHTML = `
+        ${photoUrl ? `<img src="${photoUrl}" alt="photo" style="width:100%;height:auto;border-radius:10px;margin-bottom:8px;" />` : ''}
+        <div class="title">${escapeHtml(d.name || '—')}</div>
+        <div class="row"><b>地址：</b>${escapeHtml(d.formatted_address || '—')}</div>
+        <div class="row"><b>电话：</b>${escapeHtml(d.international_phone_number || '—')}</div>
+        <div class="row"><b>评分：</b>${d.rating ?? '—'} &nbsp;&nbsp; <b>价位：</b>${d.price_level != null ? '💲'.repeat(d.price_level + 1) : '—'}</div>
+        <div class="row"><b>营业时间：</b><div style="margin-top:4px;">${opening}</div></div>
+        <div class="row"><b>链接：</b>
+          ${(d.website ? `<a href="${d.website}" target="_blank" rel="noopener">官网</a>` : '—')}
+          ${(d.url ? ` &nbsp;|&nbsp; <a href="${d.url}" target="_blank" rel="noopener">在 Google Maps 打开</a>` : '')}
+        </div>
+      `;
+    }
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+    }
+  </script>
+</body>
+</html>
