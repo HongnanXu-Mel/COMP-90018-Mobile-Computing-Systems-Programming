@@ -34,6 +34,7 @@ import com.example.food.data.Review;
 import com.example.food.data.CrowdFeedback;
 import com.example.food.dialogs.ReviewDetailsDialog;
 import com.example.food.service.CrowdDensityService;
+import com.example.food.service.GooglePlacesRestaurantSyncService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -71,6 +72,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private FirebaseFirestore db;
     private CrowdDensityService crowdDensityService;
     private FirebaseAuth mAuth;
+    private GooglePlacesRestaurantSyncService placesSyncService;
+    private boolean hasTriggeredPlacesSync;
     
     // Map control buttons
     private ImageButton btnZoomIn;
@@ -128,8 +131,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
+        Config.INSTANCE.initialize(requireContext());
         if (!Places.isInitialized()) {
-            Places.initialize(requireContext().getApplicationContext(), getString(R.string.google_maps_key));
+            Places.initialize(requireContext().getApplicationContext(), Config.INSTANCE.getGoogleMapsKey());
         }
         placesClient = Places.createClient(requireContext());
         
@@ -147,6 +151,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         
         // Load restaurants for search
         loadRestaurants();
+    triggerPlacesSync();
 
         // if special restaurant id argument then open details as soon as ready
         Bundle args = getArguments();
@@ -208,9 +213,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     // Upload functionality removed, now only load data from Firebase
 
     private void moveToMelbourne() {
-        // Melbourne city center coordinates (more precise coordinates)
-        LatLng melbourne = new LatLng(-37.810272, 144.962646);
+        LatLng melbourne = getMelbourneCenter();
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(melbourne, 10f));
+    }
+
+    private LatLng getMelbourneCenter() {
+        return new LatLng(-37.810272, 144.962646);
     }
     
     // Load restaurant data from Firebase and add markers
@@ -656,6 +664,59 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 }
             }, 100);
         }
+    }
+
+    private void triggerPlacesSync() {
+        if (!isAdded() || hasTriggeredPlacesSync) {
+            return;
+        }
+        android.content.Context context = getContext();
+        if (context == null) {
+            return;
+        }
+        
+        // check if we synced this week
+        android.content.SharedPreferences prefs = context.getSharedPreferences("places_sync", android.content.Context.MODE_PRIVATE);
+        long lastSync = prefs.getLong("last_sync_time", 0);
+        long weekInMillis = 7L * 24 * 60 * 60 * 1000;
+        long now = System.currentTimeMillis();
+        
+        if (now - lastSync < weekInMillis) {
+            Log.d(TAG, "Skipping sync - last synced less than a week ago");
+            hasTriggeredPlacesSync = true;
+            return;
+        }
+        
+        hasTriggeredPlacesSync = true;
+        if (placesSyncService == null) {
+            placesSyncService = new GooglePlacesRestaurantSyncService(context.getApplicationContext());
+        }
+
+        LatLng cbd = getMelbourneCenter();
+        placesSyncService.syncRestaurants("Melbourne CBD", "restaurant", cbd.latitude, cbd.longitude, 8000,
+                new GooglePlacesRestaurantSyncService.SyncCallback() {
+                    @Override
+                    public void onSuccess(GooglePlacesRestaurantSyncService.SyncSummary summary) {
+                        if (!isAdded()) {
+                            return;
+                        }
+                        // save sync time
+                        prefs.edit().putLong("last_sync_time", System.currentTimeMillis()).apply();
+                        
+                        if (summary.getNewCount() > 0 && googleMap != null) {
+                            googleMap.clear();
+                            restaurantMarkers.clear();
+                            addRestaurantMarkers();
+                            loadRestaurants();
+                        }
+                        Log.d(TAG, "Sync complete: " + summary.getNewCount() + " new, " + summary.getProcessedCount() + " total");
+                    }
+
+                    @Override
+                    public void onError(Exception exception) {
+                        Log.e(TAG, "Sync failed", exception);
+                    }
+                });
     }
 
     /**

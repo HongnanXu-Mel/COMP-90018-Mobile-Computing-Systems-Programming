@@ -5,6 +5,8 @@ plugins {
     id("com.google.gms.google-services")
 }
 
+import java.util.Properties
+
 android {
     namespace = "com.example.food"
     compileSdk = 34
@@ -17,6 +19,16 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        
+        // Load API keys from local.properties or environment
+        val localProperties = Properties()
+        val localPropsFile = rootProject.file("local.properties")
+        if (localPropsFile.exists()) {
+            localPropsFile.inputStream().use { localProperties.load(it) }
+        }
+        
+        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = 
+            localProperties.getProperty("GOOGLE_MAPS_API_KEY") ?: ""
     }
 
     buildTypes {

@@ -26,4 +26,12 @@ object Config {
     fun getSupabaseKey(): String {
         return properties?.getProperty("SUPABASE_KEY") ?: ""
     }
+    
+    fun getGoogleMapsKey(): String {
+        return properties?.getProperty("GOOGLE_MAPS_KEY") ?: ""
+    }
+    
+    fun getGooglePlacesKey(): String {
+        return properties?.getProperty("GOOGLE_PLACES_KEY") ?: ""
+    }
 }
