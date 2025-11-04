@@ -7,6 +7,7 @@ public class Restaurant {
     private double latitude;
     private double longitude;
     private String category;
+    
     private String region;
 
     // No-args constructor (required by Firebase)
