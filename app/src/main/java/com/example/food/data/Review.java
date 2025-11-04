@@ -1,34 +1,65 @@
 package com.example.food.data;
 
+/**
+ * Review - Data model representing a restaurant review
+ * 
+ * This class stores all review information:
+ * - User and restaurant identifiers
+ * - Review content (caption, description, rating)
+ * - Images and image metadata
+ * - Accuracy voting data
+ * - Comments from other users
+ * - Timestamps
+ * 
+ * Note: userName and restaurantName are excluded from Firestore storage
+ * and fetched dynamically when needed
+ */
+
 import com.google.firebase.firestore.Exclude;
 import java.util.Date;
 import java.util.List;
 
 public class Review {
-    private String id;
-    private String userId;
+    // Basic identifiers
+    private String id; // Review document ID
+    private String userId; // Author's user ID
     @Exclude
-    private String userName; // Not stored in database - fetched dynamically
-    private String restaurantId;
+    private String userName; // Author name (not stored - fetched dynamically)
+    private String restaurantId; // Restaurant document ID
     @Exclude
-    private String restaurantName; // Not stored in database - fetched dynamically
-    private String description;
-    private String caption;
-    private float rating;
-    private int accuracy;
-    private double accuracyPercent;
-    private List<String> imageUrls;
-    private String firstImageType;
-    private Date createdAt;
-    private Date updatedAt;
-    private int helpfulCount;
-    private java.util.Map<String, Boolean> votes;
-    private List<Comment> comments;
+    private String restaurantName; // Restaurant name (not stored - fetched dynamically)
+    
+    // Review content
+    private String description; // Detailed review text
+    private String caption; // Short title/summary
+    private float rating; // Star rating (1-5)
+    
+    // Accuracy metrics
+    private int accuracy; // Numeric accuracy score
+    private double accuracyPercent; // Percentage accuracy from votes
+    
+    // Images
+    private List<String> imageUrls; // List of image URLs
+    private String firstImageType; // First image orientation (SQUARE/PORTRAIT/HORIZONTAL)
+    
+    // Timestamps
+    private Date createdAt; // When review was created
+    private Date updatedAt; // Last update time
+    
+    // Engagement
+    private int helpfulCount; // Count of helpful votes
+    private java.util.Map<String, Boolean> votes; // User ID -> accurate/inaccurate vote
+    private List<Comment> comments; // List of comments on this review
 
+    /**
+     * Default constructor required for Firebase Firestore
+     */
     public Review() {
-        // Default constructor required for Firestore
     }
 
+    /**
+     * Full constructor with all fields
+     */
     public Review(String id, String userId, String userName, String restaurantId,
                  String restaurantName, String caption, String description, float rating,
                  int accuracy, List<String> imageUrls, Date createdAt) {
@@ -44,13 +75,13 @@ public class Review {
         this.imageUrls = imageUrls;
         this.createdAt = createdAt;
         this.helpfulCount = 0;
-        this.accuracyPercent = 100.0; // Default accuracy percent
-        this.firstImageType = "SQUARE"; // Default image type
-        this.votes = new java.util.HashMap<>();
-        this.comments = new java.util.ArrayList<>();
+        this.accuracyPercent = 100.0; // New reviews start at 100% accuracy
+        this.firstImageType = "SQUARE"; // Default to square image type
+        this.votes = new java.util.HashMap<>(); // Initialize empty votes map
+        this.comments = new java.util.ArrayList<>(); // Initialize empty comments list
     }
 
-    // Getters and Setters
+    // Getters and Setters for all fields
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -102,20 +133,26 @@ public class Review {
     public List<Comment> getComments() { return comments; }
     public void setComments(List<Comment> comments) { this.comments = comments; }
 
-    //if the first image is portrait based on stored image type
-    //return true if the first image is portrait, false otherwise
+    /**
+     * Check if the first image is portrait orientation
+     * @return true if portrait, false otherwise
+     */
     public boolean isFirstImagePortrait() {
         return "PORTRAIT".equals(firstImageType);
     }
 
-    //if the first image is square based on stored image type
-    //return true if the first image is square, false otherwise
+    /**
+     * Check if the first image is square
+     * @return true if square, false otherwise
+     */
     public boolean isFirstImageSquare() {
         return "SQUARE".equals(firstImageType);
     }
 
-    //if the first image is horizontal based on stored image type
-    //return true if the first image is horizontal, false otherwise
+    /**
+     * Check if the first image is horizontal orientation
+     * @return true if horizontal, false otherwise
+     */
     public boolean isFirstImageHorizontal() {
         return "HORIZONTAL".equals(firstImageType);
     }

@@ -12,13 +12,18 @@
     <!-- Modern Light Theme Colors -->
     <color name="background_light">#FFFFFF</color>
     <color name="surface_light">#F8F9FA</color>
+    <color name="surface_elevated">#FAFBFC</color>
     <color name="text_primary_light">#1A1A1A</color>
     <color name="text_secondary_light">#8E8E93</color>
     <color name="text_hint_light">#C7C7CC</color>
+    <color name="text_disabled">#D1D1D6</color>
     
     <!-- Modern Gradient Colors - Orange Theme -->
     <color name="primary_gradient_start">#EF7722</color>
     <color name="primary_gradient_end">#FAA533</color>
+    <color name="primary_gradient_mid">#F48F2A</color>
+    <color name="primary_light">#FFF4ED</color>
+    <color name="primary_dark">#D66A1E</color>
     
     <!-- Rating and Accuracy Colors -->
     <color name="rating_text_color">#FAA533</color>
@@ -32,8 +37,11 @@
     <color name="input_border_focused">#EF7722</color>
     
     <!-- Card Colors -->
-    <color name="card_border_light">#D0D0D0</color>
+    <color name="card_border_light">#E8E8E8</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="card_background_hover">#FAFAFA</color>
     <color name="input_shadow">#F3F4F6</color>
+    <color name="divider_light">#F0F0F0</color>
     
     <!-- Tab Colors - Orange Theme -->
     <color name="tab_selected">#FFFFFF</color>
@@ -47,8 +55,11 @@
     <color name="accent_warning">#FAA533</color>
     
     <!-- Shadows and Elevation -->
-    <color name="shadow_light">#1A000000</color>
-    <color name="shadow_medium">#33000000</color>
+    <color name="shadow_light">#0D000000</color>
+    <color name="shadow_medium">#1A000000</color>
+    <color name="shadow_strong">#33000000</color>
+    <color name="overlay_light">#0D000000</color>
+    <color name="overlay_dark">#80000000</color>
     
     <!-- Premium Logo Colors -->
     <color name="logo_primary">#EF7722</color>
@@ -98,7 +109,27 @@
     <color name="star_badge_color">#FAA533</color>
     <color name="accuracy_badge_color">#10B981</color>
 
-    <!-- Missing Colors -->
+    <!-- Additional UI Colors -->
     <color name="gray">#808080</color>
     <color name="light_gray">#E0E0E0</color>
+    <color name="gray_50">#F9FAFB</color>
+    <color name="gray_100">#F3F4F6</color>
+    <color name="gray_200">#E5E7EB</color>
+    <color name="gray_300">#D1D5DB</color>
+    <color name="gray_400">#9CA3AF</color>
+    <color name="gray_500">#6B7280</color>
+    <color name="gray_600">#4B5563</color>
+    <color name="gray_700">#374151</color>
+    <color name="gray_800">#1F2937</color>
+    <color name="gray_900">#111827</color>
+    
+    <!-- Semantic Colors -->
+    <color name="success_light">#D1FAE5</color>
+    <color name="success_dark">#059669</color>
+    <color name="warning_light">#FEF3C7</color>
+    <color name="warning_dark">#D97706</color>
+    <color name="error_light">#FEE2E2</color>
+    <color name="error_dark">#DC2626</color>
+    <color name="info_light">#DBEAFE</color>
+    <color name="info_dark">#0BA6DF</color>
 </resources>

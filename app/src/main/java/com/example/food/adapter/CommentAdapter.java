@@ -1,5 +1,14 @@
 package com.example.food.adapter;
 
+/**
+ * CommentAdapter - RecyclerView adapter for displaying comment list
+ * 
+ * This adapter:
+ * - Binds Comment data to comment item views
+ * - Displays username, timestamp, and comment text
+ * - Formats timestamp as relative time (e.g., "2h ago")
+ */
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +29,19 @@ import java.util.Locale;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
     
+    // List of comments to display
     private List<Comment> comments;
 
+    /**
+     * Constructor - initializes with empty list
+     */
     public CommentAdapter() {
         this.comments = new ArrayList<>();
     }
 
+    /**
+     * Update the comment list and refresh the view
+     */
     public void updateComments(List<Comment> comments) {
         this.comments = comments;
         notifyDataSetChanged();
@@ -50,10 +66,14 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         return comments.size();
     }
 
+    /**
+     * ViewHolder for comment items
+     */
     static class CommentViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvUsername;
-        private TextView tvTime;
-        private TextView tvContent;
+        // UI components
+        private TextView tvUsername; // Comment author name
+        private TextView tvTime; // Comment timestamp
+        private TextView tvContent; // Comment text
 
         public CommentViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -62,16 +82,22 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             tvContent = itemView.findViewById(R.id.tv_comment_content);
         }
 
+        /**
+         * Bind comment data to view elements
+         */
         public void bind(Comment comment) {
             tvUsername.setText(comment.getUserName());
             tvContent.setText(comment.getText());
 
-            // Format timestamp
+            // Format timestamp to relative time
             if (comment.getCreatedAt() != null) {
                 tvTime.setText(getTimeAgo(comment.getCreatedAt()));
             }
         }
 
+        /**
+         * Convert timestamp to relative time string (e.g., "2h ago")
+         */
         private String getTimeAgo(Date date) {
             long time = date.getTime();
             long now = System.currentTimeMillis();

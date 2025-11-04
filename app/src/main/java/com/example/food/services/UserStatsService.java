@@ -1,5 +1,17 @@
 package com.example.food.services;
 
+/**
+ * UserStatsService - Service for calculating and updating user statistics
+ * 
+ * This service:
+ * - Calculates credibility and experience scores
+ * - Updates user scores in Firestore when reviews/votes change
+ * - Provides methods to retrieve user scores
+ * - Uses ScoreCalculator for score computation logic
+ * 
+ * All methods are static for easy access throughout the app
+ */
+
 import android.util.Log;
 
 import com.example.food.utils.ScoreCalculator;
@@ -9,9 +21,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserStatsService {
+    // Tag for logging
     private static final String TAG = "UserStatsService";
+    // Firestore database instance
     private static final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    /**
+     * Update all scores for a user (credibility and experience)
+     * This is the main entry point for score updates
+     * @param userId User ID to update scores for
+     */
     public static void updateUserScores(String userId) {
         if (userId == null || userId.trim().isEmpty()) {
             Log.w(TAG, "Cannot update scores: userId is null or empty");
@@ -20,7 +39,7 @@ public class UserStatsService {
 
         Log.d(TAG, "Updating scores for user: " + userId);
 
-        // Recalculate scores and save to Firestore
+        // Recalculate scores using ScoreCalculator and save to Firestore
         ScoreCalculator.calculateUserStats(userId, db, new ScoreCalculator.OnStatsCalculatedListener() {
             @Override
             public void onStatsCalculated(Map<String, Object> stats, double credibilityScore, double experienceScore) {
@@ -34,11 +53,20 @@ public class UserStatsService {
         });
     }
 
+    /**
+     * Update user scores when their review changes
+     * @param userId User who owns the review
+     */
     public static void updateUserScoresOnReviewChange(String userId) {
         Log.d(TAG, "Review change detected for user: " + userId);
         updateUserScores(userId);
     }
 
+    /**
+     * Update review author's scores when their review receives a vote
+     * Looks up the review to find the author, then updates their scores
+     * @param reviewId ID of the review that received a vote
+     */
     public static void updateUserScoresOnVoteChange(String reviewId) {
         if (reviewId == null || reviewId.trim().isEmpty()) {
             Log.w(TAG, "Cannot update scores: reviewId is null or empty");
@@ -47,7 +75,7 @@ public class UserStatsService {
 
         Log.d(TAG, "Vote change detected for review: " + reviewId);
 
-        // Find the review author and update their scores
+        // Find the review to get the author's user ID
         db.collection("reviews")
                 .document(reviewId)
                 .get()
@@ -69,6 +97,13 @@ public class UserStatsService {
                 });
     }
 
+    /**
+     * Save calculated scores to Firestore user document
+     * @param userId User ID to update
+     * @param stats Calculated statistics map
+     * @param credibilityScore Calculated credibility score
+     * @param experienceScore Calculated experience score
+     */
     private static void saveScoresToFirestore(String userId, Map<String, Object> stats, 
                                             double credibilityScore, double experienceScore) {
         Map<String, Object> updates = new HashMap<>();
@@ -91,6 +126,11 @@ public class UserStatsService {
                 });
     }
 
+    /**
+     * Retrieve user scores from Firestore
+     * @param userId User ID to get scores for
+     * @param listener Callback to receive scores
+     */
     public static void getUserScores(String userId, OnScoresRetrievedListener listener) {
         if (userId == null || userId.trim().isEmpty()) {
             Log.w(TAG, "Cannot get scores: userId is null or empty");
@@ -136,6 +176,9 @@ public class UserStatsService {
                 });
     }
 
+    /**
+     * Callback interface for score retrieval
+     */
     public interface OnScoresRetrievedListener {
         void onScoresRetrieved(double credibilityScore, double experienceScore);
     }

@@ -1,5 +1,16 @@
 package com.example.food;
 
+/**
+ * HomeFragment - Main feed fragment displaying all restaurant reviews
+ * 
+ * Features:
+ * - Display reviews in a staggered grid layout (Pinterest/Xiaohongshu style)
+ * - Search functionality to filter reviews by text
+ * - Pull-to-refresh to reload content
+ * - Load restaurant data for each review
+ * - Click reviews to open detail dialog
+ */
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -32,19 +43,27 @@ import java.util.List;
 import java.util.Map;
 
 public class HomeFragment extends Fragment {
+    // Tag for logging
     private static final String TAG = "HomeFragment";
     
-    private RecyclerView rvReviews;
-    private ReviewWidgetAdapter reviewAdapter;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private EditText etSearch;
-    private LinearLayout layoutEmptyState;
+    // UI Components
     
-    private ReviewService reviewService;
-    private List<Review> allReviews;
-    private Map<String, Restaurant> restaurantMap;
-    private FirebaseFirestore db;
+    private RecyclerView rvReviews; // Grid of review cards
+    private ReviewWidgetAdapter reviewAdapter; // Adapter for review cards
+    private SwipeRefreshLayout swipeRefreshLayout; // Pull-to-refresh
+    private EditText etSearch; // Search input field
+    private LinearLayout layoutEmptyState; // Empty state view
+    
+    // Services and data
+    
+    private ReviewService reviewService; // Service for loading reviews
+    private List<Review> allReviews; // All loaded reviews
+    private Map<String, Restaurant> restaurantMap; // Restaurant data by ID
+    private FirebaseFirestore db; // Firestore database instance
 
+    /**
+     * Create and initialize the fragment view
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -65,6 +84,9 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Initialize UI component references
+     */
     private void initViews(View view) {
         rvReviews = view.findViewById(R.id.rv_posts);
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
@@ -72,6 +94,9 @@ public class HomeFragment extends Fragment {
         layoutEmptyState = view.findViewById(R.id.layout_empty_state);
     }
 
+    /**
+     * Configure RecyclerView with staggered grid layout
+     */
     private void setupRecyclerView() {
         reviewAdapter = new ReviewWidgetAdapter(allReviews, (review, restaurant) -> {
             // Open review details dialog
@@ -79,7 +104,7 @@ public class HomeFragment extends Fragment {
             dialog.show();
         });
         
-        // Set up staggered grid layout for Xiaohongshu-like appearance
+        // Set up staggered grid layout for Pinterest/Xiaohongshu-like appearance
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         rvReviews.setLayoutManager(layoutManager);
         rvReviews.setAdapter(reviewAdapter);
@@ -88,11 +113,17 @@ public class HomeFragment extends Fragment {
         reviewAdapter.setRestaurantMap(restaurantMap);
     }
 
+    /**
+     * Setup pull-to-refresh functionality
+     */
     private void setupSwipeRefresh() {
         swipeRefreshLayout.setColorSchemeResources(R.color.primary_gradient_start);
         swipeRefreshLayout.setOnRefreshListener(this::refreshReviews);
     }
 
+    /**
+     * Setup search functionality with real-time filtering
+     */
     private void setupSearch() {
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -108,8 +139,9 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-
-
+    /**
+     * Load all reviews from Firebase and then load associated restaurants
+     */
     private void loadReviews() {
         showLoading(true);
         
@@ -139,6 +171,9 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    /**
+     * Refresh reviews data (called by pull-to-refresh)
+     */
     private void refreshReviews() {
         reviewService.loadReviews(new ReviewService.ReviewsLoadCallback() {
             @Override
@@ -166,6 +201,9 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    /**
+     * Load restaurant data for all reviews in the list
+     */
     private void loadRestaurants() {
         if (allReviews.isEmpty()) {
             updateUI();
@@ -209,6 +247,10 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    /**
+     * Filter reviews based on search query
+     * @param query Search text to filter by
+     */
     private void filterReviews(String query) {
         if (reviewAdapter != null) {
             // Simple filtering based on review content
@@ -230,6 +272,9 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    /**
+     * Update adapter with current data and restaurant mappings
+     */
     private void updateUI() {
         if (reviewAdapter != null) {
             reviewAdapter.setReviews(allReviews);
@@ -238,6 +283,9 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    /**
+     * Show/hide empty state based on review count
+     */
     private void updateEmptyState() {
         if (reviewAdapter != null && layoutEmptyState != null && rvReviews != null) {
             if (reviewAdapter.getItemCount() == 0) {
@@ -250,12 +298,18 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    /**
+     * Show or hide loading indicator
+     */
     private void showLoading(boolean show) {
         if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setRefreshing(show);
         }
     }
 
+    /**
+     * Display error message to user
+     */
     private void showError(String message) {
         if (getContext() != null) {
             Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();

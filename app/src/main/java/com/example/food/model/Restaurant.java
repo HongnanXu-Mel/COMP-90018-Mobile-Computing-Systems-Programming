@@ -1,20 +1,35 @@
 package com.example.food.model;
 
-public class Restaurant {
-    private String id;
-    private String name;
-    private String address;
-    private double latitude;
-    private double longitude;
-    private String category;
-    
-    private String region;
+/**
+ * Restaurant - Data model representing a restaurant
+ * 
+ * This class stores restaurant information:
+ * - Basic info (ID, name, address)
+ * - Geographic location (latitude, longitude)
+ * - Classification (category, region)
+ * 
+ * Used for displaying restaurants on maps and in reviews
+ */
 
-    // No-args constructor (required by Firebase)
+public class Restaurant {
+    // Restaurant data fields
+    private String id; // Unique restaurant ID
+    private String name; // Restaurant name
+    private String address; // Street address
+    private double latitude; // GPS latitude coordinate
+    private double longitude; // GPS longitude coordinate
+    private String category; // Cuisine type (e.g., "Italian", "Chinese")
+    private String region; // Location region (e.g., "Melbourne CBD")
+
+    /**
+     * No-args constructor required by Firebase Firestore
+     */
     public Restaurant() {
     }
 
-    // Full constructor
+    /**
+     * Full constructor with all fields
+     */
     public Restaurant(String id, String name, String address, double latitude, double longitude, String category, String region) {
         this.id = id;
         this.name = name;
@@ -25,14 +40,17 @@ public class Restaurant {
         this.region = region;
     }
 
-    // Simplified constructor (for backward compatibility)
+    /**
+     * Simplified constructor for backward compatibility
+     * Uses default values for category and region
+     */
     public Restaurant(String name, String address, double latitude, double longitude) {
         this.name = name;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.category = "Restaurant";
-        this.region = "Melbourne";
+        this.category = "Restaurant"; // Default category
+        this.region = "Melbourne"; // Default region
     }
 
     // Getters and Setters

@@ -1,5 +1,16 @@
 package com.example.food;
 
+/**
+ * LoginActivity - User login screen with email/password authentication
+ * 
+ * Features:
+ * - Email and password input with validation
+ * - Password visibility toggle
+ * - Remember me checkbox (stores login for 30 days)
+ * - Navigate to forgot password and register screens
+ * - Firebase Authentication integration
+ */
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,20 +36,31 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private TextInputEditText etEmail, etPassword;
-    private Button btnLogin;
-    private TextView tvForgotPassword, tvSignUp, tvLoginError;
-    private ImageView ivPasswordToggle;
-    private CheckBox cbRememberMe;
-    private FirebaseAuth mAuth;
-    private boolean isPasswordVisible = false;
+    // UI Components
+    private TextInputEditText etEmail, etPassword; // Input fields
+    private Button btnLogin; // Login button
+    private TextView tvForgotPassword, tvSignUp, tvLoginError; // Navigation and error text
+    private ImageView ivPasswordToggle; // Toggle password visibility icon
+    private CheckBox cbRememberMe; // Remember me checkbox
+    
+    // Firebase
+    private FirebaseAuth mAuth; // Firebase Authentication instance
+    
+    // State
+    private boolean isPasswordVisible = false; // Track password visibility state
+    
+    // SharedPreferences for Remember Me functionality
     private SharedPreferences sharedPreferences;
+    // Constants for SharedPreferences keys
     private static final String PREFS_NAME = "MyAppPrefs";
     private static final String KEY_REMEMBER_ME = "REMEMBER_ME";
     private static final String KEY_USER_EMAIL = "USER_EMAIL";
     private static final String KEY_LOGIN_TIME = "LOGIN_TIME";
     private static final long THIRTY_DAYS_IN_MILLIS = 30L * 24L * 60L * 60L * 1000L; // 30 days in milliseconds
 
+    /**
+     * Initialize activity and setup UI components
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +98,9 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Initialize all UI component references
+     */
     private void initViews() {
         etEmail = findViewById(R.id.etLoginEmail); 
         etPassword = findViewById(R.id.etLoginPassword); 
@@ -87,6 +112,9 @@ public class LoginActivity extends AppCompatActivity {
         cbRememberMe = findViewById(R.id.cbRememberMe);
     }
 
+    /**
+     * Setup password visibility toggle icon functionality
+     */
     private void setupPasswordToggle() {
         ivPasswordToggle.setOnClickListener(v -> {
             if (isPasswordVisible) {
@@ -102,11 +130,17 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Authenticate user with Firebase using email and password
+     */
     private void loginUser() {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
+        // Hide any previous error messages
         tvLoginError.setVisibility(View.GONE);
+
+        // Validate: email is required
 
         if (TextUtils.isEmpty(email)) {
             etEmail.setError("Email is required");
@@ -126,22 +160,26 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Show loading state
+        // Show loading state on button
         setLoadingState(true);
+
+        // Attempt Firebase authentication
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        // Hide loading state
+                        // Restore button to normal state
                         setLoadingState(false);
                         
                         if (task.isSuccessful()) {
+                            // Login successful - save remember me state and navigate to main
                             // Save remember me state
                             saveRememberMeState(email);
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         } else {
+                            // Login failed - show error message
                             tvLoginError.setText("Email or password is incorrect");
                             tvLoginError.setVisibility(View.VISIBLE);
                         }
@@ -149,6 +187,9 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Set button loading state (disabled with loading text)
+     */
     private void setLoadingState(boolean isLoading) {
         if (isLoading) {
             btnLogin.setEnabled(false);
@@ -158,14 +199,15 @@ public class LoginActivity extends AppCompatActivity {
             btnLogin.setText("Login");
         }
     }
-
-
+    /**
+     * Load saved remember me state and auto-login if valid
+     */
     private void loadRememberMeState() {
         boolean rememberMe = sharedPreferences.getBoolean(KEY_REMEMBER_ME, false);
         cbRememberMe.setChecked(rememberMe);
         
         if (rememberMe) {
-            // Check if login is still valid (within 30 days)
+            // Check if saved login is still valid (within 30 days)
             long loginTime = sharedPreferences.getLong(KEY_LOGIN_TIME, 0);
             long currentTime = System.currentTimeMillis();
             
@@ -180,12 +222,15 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 }
             } else {
-                // Login expired, clear remember me state
+                // Login time expired - clear saved data
                 clearRememberMeState(sharedPreferences);
             }
         }
     }
 
+    /**
+     * Save remember me preference and login timestamp
+     */
     private void saveRememberMeState(String email) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(KEY_REMEMBER_ME, cbRememberMe.isChecked());
@@ -200,7 +245,9 @@ public class LoginActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    // Method to clear remember me state on logout
+    /**
+     * Clear saved remember me state (called on logout)
+     */
     public static void clearRememberMeState(SharedPreferences sharedPreferences) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(KEY_REMEMBER_ME, false);

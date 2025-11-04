@@ -1,25 +1,48 @@
 package com.example.food.data;
 
+/**
+ * UserProfile - Data model representing a user's profile information
+ * 
+ * This class stores:
+ * - Basic user info (UID, name, email, bio)
+ * - Profile picture URL
+ * - Calculated scores (credibility, experience)
+ * - User statistics
+ * - Timestamps for creation and updates
+ */
+
 import java.util.Map;
 
 public class UserProfile {
-    private String uid;
-    private String name;
-    private String displayName;
-    private String email;
-    private String bio;
-    private String avatarUrl;
-    private long createdAt;
-    private long updatedAt;
-    private double credibilityScore;
-    private double experienceScore;
-    private Map<String, Object> stats;
+    // Basic user information
+    private String uid; // Firebase Auth UID
+    private String name; // User's display name
+    private String displayName; // Alternative display name field
+    private String email; // User's email address
+    private String bio; // User biography/description
+    private String avatarUrl; // Profile picture URL
+    
+    // Timestamps
+    private long createdAt; // Account creation timestamp
+    private long updatedAt; // Last profile update timestamp
+    
+    // Calculated scores
+    private double credibilityScore; // User's credibility score (0-100+)
+    private double experienceScore; // User's experience score (0-100+)
+    
+    // Statistics
+    private Map<String, Object> stats; // Detailed user statistics
 
-    // Default constructor required for Firebase
+    /**
+     * Default constructor required for Firebase Firestore
+     */
     public UserProfile() {
     }
 
-    // Constructor with all fields
+    /**
+     * Constructor with main fields
+     * Sets timestamps to current time
+     */
     public UserProfile(String uid, String name, String displayName, String email, String bio) {
         this.uid = uid;
         this.name = name;
@@ -119,6 +142,9 @@ public class UserProfile {
         this.stats = stats;
     }
 
+    /**
+     * String representation for debugging
+     */
     @Override
     public String toString() {
         return "UserProfile{" +

@@ -1,5 +1,15 @@
 package com.example.food.adapters;
 
+/**
+ * ImagePagerAdapter - RecyclerView adapter for image carousel/gallery
+ * 
+ * This adapter:
+ * - Displays a horizontal scrolling list of images
+ * - Loads images from URLs using Glide
+ * - Shows placeholders for missing images
+ * - Used in ViewPager2 for image galleries in review details
+ */
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,14 +27,21 @@ import java.util.List;
 
 public class ImagePagerAdapter extends RecyclerView.Adapter<ImagePagerAdapter.ImageViewHolder> {
 
-    private Context context;
-    private List<String> images;
+    // Data
+    private Context context; // Context for Glide image loading
+    private List<String> images; // List of image URLs
 
+    /**
+     * Constructor
+     */
     public ImagePagerAdapter(Context context) {
         this.context = context;
         this.images = new ArrayList<>();
     }
 
+    /**
+     * Update image list and refresh display
+     */
     public void setImages(List<String> images) {
         this.images = images != null ? images : new ArrayList<>();
         notifyDataSetChanged();
@@ -48,18 +65,27 @@ public class ImagePagerAdapter extends RecyclerView.Adapter<ImagePagerAdapter.Im
         return images.size();
     }
 
+    /**
+     * ViewHolder for image items
+     */
     class ImageViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imageView;
+        // UI component
+        private ImageView imageView; // The image view
 
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageView);
         }
 
+        /**
+         * Bind image URL to ImageView using Glide
+         */
         public void bind(String imageUrl) {
+            // Handle placeholder special case
             if ("placeholder".equals(imageUrl)) {
                 imageView.setImageResource(R.drawable.ic_restaurant);
             } else if (imageUrl != null && !imageUrl.trim().isEmpty()) {
+                // Load actual image from URL using Glide
                 Glide.with(context)
                         .load(imageUrl)
                         .fitCenter()

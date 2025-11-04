@@ -1,5 +1,16 @@
 package com.example.food;
 
+/**
+ * MainActivity - Main container activity with bottom navigation
+ * 
+ * This is the main entry point after login. Features:
+ * - Bottom navigation bar with 5 tabs (Home, Map, Add, Profile, Settings)
+ * - Fragment container to display selected tab content
+ * - Icon state changes (outline/filled) based on selection
+ * - System bar theming (white status bar and navigation bar)
+ * - User authentication check on startup
+ */
+
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +36,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Firebase Authentication
     private FirebaseAuth mAuth;
     private TextView tvWelcome;
     private Button btnLogout;
@@ -34,27 +46,28 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // Configure status bar and navigation bar colors
+        // Configure white status bar and navigation bar
         setupSystemBars();
         
         setContentView(R.layout.activity_main);
 
-        // Initialize FirebaseAuth instance
+        // Initialize Firebase Authentication instance
         mAuth = FirebaseAuth.getInstance();
 
-        // Check if user is already logged in
+        // Check user authentication status
         if (mAuth.getCurrentUser() == null) {
-            // User not logged in, redirect to login page
+            // Not logged in - redirect to login page
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
             return;
         }
 
+        // Setup bottom navigation bar and fragment switching
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             
-            // Update icons based on selection
+            // Update navigation icons to show selected state
             updateNavIcons(bottomNav, id);
             
             if (id == R.id.nav_home) {
@@ -76,15 +89,17 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
+        // Set default selected tab to Home
         bottomNav.setSelectedItemId(R.id.nav_home);
         updateNavIcons(bottomNav, R.id.nav_home);
         
-        // Auto-upload functionality deleted, now only loads data from Firebase
+        // Note: Auto-upload functionality removed, now loads data from Firebase only
     }
     
-    // Upload functionality deleted, now only loads data from Firebase
-
-    private void setupSystemBars() {
+    /**
+     * Setup system UI bars (status bar and navigation bar) with light theme
+     * Sets white background with black text/icons
+     */
         Window window = getWindow();
         
         // Set status bar color to white with black text
@@ -114,6 +129,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Switch the currently displayed fragment
+     * @param fragment The fragment to display
+     */
     private void switchFragment(Fragment fragment) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction tx = fm.beginTransaction();
@@ -121,21 +140,27 @@ public class MainActivity extends AppCompatActivity {
         tx.commit();
     }
     
+    /**
+     * Update bottom navigation icons based on selected tab
+     * Changes icons from outline to filled for selected item
+     * @param bottomNav The bottom navigation view
+     * @param selectedId The ID of the selected menu item
+     */
     private void updateNavIcons(BottomNavigationView bottomNav, int selectedId) {
-        // Reset all icons to outline versions
+        // Reset all icons to outline (unselected) versions
         bottomNav.getMenu().findItem(R.id.nav_home).setIcon(R.drawable.ic_home_outline);
         bottomNav.getMenu().findItem(R.id.nav_map).setIcon(R.drawable.ic_map_outline);
         bottomNav.getMenu().findItem(R.id.nav_add).setIcon(R.drawable.ic_add_outline);
         bottomNav.getMenu().findItem(R.id.nav_profile).setIcon(R.drawable.ic_profile_outline);
         bottomNav.getMenu().findItem(R.id.nav_settings).setIcon(R.drawable.ic_settings_outline);
         
-        // Set the selected icon to filled version
+        // Set the selected icon to filled version based on which tab is selected
         if (selectedId == R.id.nav_home) {
             bottomNav.getMenu().findItem(R.id.nav_home).setIcon(R.drawable.ic_home_filled);
         } else if (selectedId == R.id.nav_map) {
             bottomNav.getMenu().findItem(R.id.nav_map).setIcon(R.drawable.ic_map_filled);
         } else if (selectedId == R.id.nav_add) {
-            // Add button becomes filled when selected
+            // Add button uses filled icon when selected
             bottomNav.getMenu().findItem(R.id.nav_add).setIcon(R.drawable.ic_add_filled);
         } else if (selectedId == R.id.nav_profile) {
             bottomNav.getMenu().findItem(R.id.nav_profile).setIcon(R.drawable.ic_profile_filled);

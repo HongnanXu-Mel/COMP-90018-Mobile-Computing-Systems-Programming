@@ -1,5 +1,12 @@
 package com.example.food.adapters;
 
+/**
+ * CommentsAdapter - RecyclerView adapter for displaying comments
+ * 
+ * Similar to CommentAdapter but used in different contexts.
+ * Displays comment username, date, and text content.
+ */
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +21,12 @@ import com.example.food.data.Comment;
 import java.util.List;
 
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.CommentViewHolder> {
+    // List of comments to display
     private List<Comment> comments;
 
+    /**
+     * Constructor
+     */
     public CommentsAdapter(List<Comment> comments) {
         this.comments = comments;
     }
@@ -41,15 +52,22 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         return comments != null ? comments.size() : 0;
     }
 
+    /**
+     * Update comment list and refresh display
+     */
     public void setComments(List<Comment> comments) {
         this.comments = comments;
         notifyDataSetChanged();
     }
 
+    /**
+     * ViewHolder for comment items
+     */
     static class CommentViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvUserName;
-        private TextView tvCommentDate;
-        private TextView tvCommentText;
+        // UI components
+        private TextView tvUserName; // Comment author name
+        private TextView tvCommentDate; // Comment date/time
+        private TextView tvCommentText; // Comment content
 
         public CommentViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -58,6 +76,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
             tvCommentText = itemView.findViewById(R.id.tv_comment_content);
         }
 
+        /**
+         * Bind comment data to views with null checks
+         */
         public void bind(Comment comment) {
             if (tvUserName != null) {
                 tvUserName.setText(comment.getUserName());

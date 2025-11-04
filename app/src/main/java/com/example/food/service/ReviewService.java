@@ -14,33 +14,52 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Service for loading review data from Firebase Firestore
- * This class handles data retrieval for reviews
+ * ReviewService - Service layer for managing review data operations
+ * 
+ * This service provides methods for:
+ * - Loading reviews from Firebase Firestore
+ * - Saving new reviews to Firestore
+ * - Searching and filtering reviews
+ * - Pagination support
+ * 
+ * All operations are asynchronous with callback interfaces
  */
 public class ReviewService {
+    // Tag for logging
     private static final String TAG = "ReviewService";
+    // Firestore collection name for reviews
     private static final String COLLECTION_REVIEWS = "reviews";
     
-    private FirebaseFirestore db;
-    private CollectionReference reviewsRef;
+    // Firebase instances
+    private FirebaseFirestore db; // Firestore database instance
+    private CollectionReference reviewsRef; // Reference to reviews collection
 
+    /**
+     * Constructor - initializes Firebase Firestore
+     */
     public ReviewService() {
         db = FirebaseFirestore.getInstance();
         reviewsRef = db.collection(COLLECTION_REVIEWS);
     }
 
+    /**
+     * Callback interface for review list operations
+     */
     public interface ReviewsLoadCallback {
         void onSuccess(List<Review> reviews);
         void onError(Exception e);
     }
     
+    /**
+     * Callback interface for single review save operations
+     */
     public interface ReviewSaveCallback {
         void onSuccess();
         void onError(Exception e);
     }
 
     /**
-     * Load all reviews ordered by createdAt (newest first)
+     * Load all reviews from Firestore, ordered by creation date (newest first)
      */
     public void loadReviews(ReviewsLoadCallback callback) {
         reviewsRef.orderBy("createdAt", Query.Direction.DESCENDING)
@@ -68,6 +87,8 @@ public class ReviewService {
 
     /**
      * Load reviews with pagination limit
+     * @param limit Maximum number of reviews to load
+     * @param callback Callback for results
      */
     public void loadReviewsWithLimit(int limit, ReviewsLoadCallback callback) {
         reviewsRef.orderBy("createdAt", Query.Direction.DESCENDING)
@@ -95,7 +116,10 @@ public class ReviewService {
     }
 
     /**
-     * Search reviews by description, caption, or restaurant name (client-side filtering)
+     * Search reviews by text query (client-side filtering)
+     * Searches in description, caption, and restaurant name
+     * @param query Search text
+     * @param callback Callback for filtered results
      */
     public void searchReviews(String query, ReviewsLoadCallback callback) {
         // Load all reviews first, then filter on client side
@@ -126,9 +150,12 @@ public class ReviewService {
     
     /**
      * Save a new review to Firebase Firestore
+     * Note: userName and restaurantName are excluded (fetched dynamically)
+     * @param review The review object to save
+     * @param callback Callback for save result
      */
     public void saveReview(Review review, ReviewSaveCallback callback) {
-        // Manually create a map to ensure userName and restaurantName are not stored
+        // Manually create a map to ensure excluded fields are not stored
         Map<String, Object> reviewData = new HashMap<>();
         reviewData.put("userId", review.getUserId());
         reviewData.put("restaurantId", review.getRestaurantId());
@@ -142,7 +169,7 @@ public class ReviewService {
         reviewData.put("votes", review.getVotes());
         reviewData.put("comments", review.getComments());
         
-        // Use auto-generated document ID. Do not store an explicit id/helpfulCount field
+        // Use Firestore auto-generated document ID
         reviewsRef
                 .add(reviewData)
                 .addOnSuccessListener(aVoid -> {

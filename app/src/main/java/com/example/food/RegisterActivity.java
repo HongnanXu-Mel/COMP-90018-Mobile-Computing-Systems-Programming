@@ -1,5 +1,18 @@
 package com.example.food;
 
+/**
+ * RegisterActivity - User registration screen
+ * 
+ * Features:
+ * - User registration with email, password, and name
+ * - Password strength validation (8+ chars, uppercase, lowercase, number, special char)
+ * - Password confirmation matching
+ * - Email format validation
+ * - Password visibility toggle
+ * - Save user data to Firebase Auth and Firestore
+ * - Navigate to login after successful registration
+ */
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -30,21 +43,29 @@ import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private TextInputEditText etName, etEmail, etPassword, etConfirmPassword;
-    private Button btnRegister;
-    private TextView tabLogin, tabRegister, tvNameError, tvEmailError, tvPasswordMismatchError, tvPasswordStrengthError;
-    private ImageView ivPasswordToggle, ivConfirmPasswordToggle;
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
-    private boolean isPasswordVisible = false;
-    private boolean isConfirmPasswordVisible = false;
+    // UI Components
+    private TextInputEditText etName, etEmail, etPassword, etConfirmPassword; // Input fields
+    private Button btnRegister; // Register button
+    private TextView tabLogin, tabRegister, tvNameError, tvEmailError, tvPasswordMismatchError, tvPasswordStrengthError; // Tabs and error messages
+    private ImageView ivPasswordToggle, ivConfirmPasswordToggle; // Password visibility toggles
+    
+    // Firebase
+    private FirebaseAuth mAuth; // Firebase Authentication
+    private FirebaseFirestore db; // Firestore database
+    
+    // State
+    private boolean isPasswordVisible = false; // Password visibility state
+    private boolean isConfirmPasswordVisible = false; // Confirm password visibility state
 
+    /**
+     * Initialize activity and setup UI
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // Initialize FirebaseAuth instance
+        // Initialize Firebase instances
         mAuth = FirebaseAuth.getInstance();
         // Initialize Firestore instance
         db = FirebaseFirestore.getInstance();
@@ -77,6 +98,9 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Initialize all UI component references
+     */
     private void initViews() {
         etName = findViewById(R.id.etName);
         etEmail = findViewById(R.id.etEmail);
@@ -93,6 +117,9 @@ public class RegisterActivity extends AppCompatActivity {
         tvPasswordStrengthError = findViewById(R.id.tvPasswordStrengthError);
     }
 
+    /**
+     * Setup password visibility toggles for both password fields
+     */
     private void setupPasswordToggle() {
         ivPasswordToggle.setOnClickListener(v -> {
             if (isPasswordVisible) {
@@ -120,7 +147,10 @@ public class RegisterActivity extends AppCompatActivity {
             etConfirmPassword.setSelection(etConfirmPassword.getText().length());
         });
     }
-    
+    /**
+     * Register new user with Firebase
+     * Validates all inputs and creates account
+     */
     private void registerUser() {
         String name = etName.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
@@ -133,8 +163,10 @@ public class RegisterActivity extends AppCompatActivity {
         tvPasswordMismatchError.setVisibility(View.GONE);
         tvPasswordStrengthError.setVisibility(View.GONE);
 
-        // Show loading state
+        // Show loading state on button
         setLoadingState(true);
+
+        // Validate name is not empty
 
         if (TextUtils.isEmpty(name)) {
             setLoadingState(false);
@@ -184,13 +216,13 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // Create user with Firebase
+        // Create Firebase Auth account with email and password
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Registration successful, save user info to Firestore
+                            // Account created successfully - now save user info to Firestore
                             saveUserInfo(name, email);
                         } else {
                             setLoadingState(false);
@@ -205,13 +237,16 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Save user information to Firestore after Firebase Auth account creation
+     */
     private void saveUserInfo(String name, String email) {
-        // Create user info mapping
+        // Create user data map
         Map<String, Object> user = new HashMap<>();
         user.put("name", name);
         user.put("email", email);
 
-        // Save user info to Firestore
+        // Save to Firestore users collection
         db.collection("users")
                 .document(mAuth.getCurrentUser().getUid())
                 .set(user)
@@ -235,9 +270,13 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Validate password strength according to requirements
+     * @return Error message string, or empty string if valid
+     */
     private String validatePasswordStrength(String password) {
         StringBuilder errors = new StringBuilder();
-        
+        // Check each requirement and build error list
         if (password.length() < 8) {
             errors.append("• At least 8 characters\n");
         }
@@ -266,10 +305,16 @@ public class RegisterActivity extends AppCompatActivity {
         return errorList;
     }
 
+    /**
+     * Validate email address format
+     */
     private boolean isValidEmail(String email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
+    /**
+     * Set button loading state
+     */
     private void setLoadingState(boolean isLoading) {
         if (isLoading) {
             btnRegister.setEnabled(false);

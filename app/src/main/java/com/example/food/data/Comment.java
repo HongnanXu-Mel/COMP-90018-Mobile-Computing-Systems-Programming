@@ -1,22 +1,38 @@
 package com.example.food.data;
 
+/**
+ * Comment - Data model representing a user comment on a review
+ * 
+ * This class stores comment data including:
+ * - Comment ID and text content
+ * - User information (ID and username)
+ * - Creation timestamp
+ * - Likes/reactions from other users
+ */
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
 public class Comment {
-    private String id;
-    private String userId;
-    private String userName;
-    private String text;
-    private Date createdAt;
-    private Map<String, Boolean> likes;
+    // Comment data fields
+    private String id; // Unique comment ID
+    private String userId; // ID of user who wrote the comment
+    private String userName; // Display name of comment author
+    private String text; // Comment text content
+    private Date createdAt; // When comment was created
+    private Map<String, Boolean> likes; // Map of user IDs who liked this comment
 
+    /**
+     * Default constructor required for Firebase Firestore
+     */
     public Comment() {
-        // Default constructor for Firestore
     }
 
+    /**
+     * Constructor with all fields
+     */
     public Comment(String id, String userId, String userName, String text, Date createdAt) {
         this.id = id;
         this.userId = userId;
@@ -25,7 +41,7 @@ public class Comment {
         this.createdAt = createdAt;
     }
 
-    // Getters and setters
+    // Getters and setters for all fields
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -41,6 +57,9 @@ public class Comment {
     public Date getCreatedAt() { return createdAt; }
     public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
 
+    /**
+     * Get formatted date string for display (e.g., "Jan 15, 2024")
+     */
     public String getFormattedDate() {
         if (createdAt == null) return "";
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());

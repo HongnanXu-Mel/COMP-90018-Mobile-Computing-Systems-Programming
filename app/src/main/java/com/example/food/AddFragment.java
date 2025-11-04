@@ -1,5 +1,17 @@
 package com.example.food;
 
+/**
+ * AddFragment - Fragment for creating and submitting new restaurant reviews
+ * 
+ * This fragment allows users to:
+ * - Select a restaurant from a dropdown
+ * - Choose a visit date
+ * - Upload up to 3 images
+ * - Provide rating (1-5 stars)
+ * - Add caption and description
+ * - Submit review to Firebase Firestore and Firebase Storage
+ */
+
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -48,27 +60,37 @@ import java.util.Map;
 import java.util.UUID;
 
 public class AddFragment extends Fragment {
+    // Constants for request codes and tag logging
     private static final String TAG = "AddFragment";
-    private static final int PICK_IMAGE_REQUEST = 1;
+    private static final int PICK_IMAGE_REQUEST = 1; // Request code for image picker
     
-    private EditText etCaption, etDescription;
-    private RatingBar ratingBar;
-    private Spinner spinnerRestaurant;
-    private TextView tvSelectedDate;
-    private Button btnSelectDate, btnSelectImages, btnSubmit;
-    private ImageView ivPreview1, ivPreview2, ivPreview3;
+    // UI Components
     
-    private List<Restaurant> restaurants;
-    private Restaurant selectedRestaurant;
-    private Date selectedDate;
-    private List<Uri> selectedImageUris;
-    private List<String> uploadedImageUrls;
+    private EditText etCaption, etDescription; // Input fields for caption and description
+    private RatingBar ratingBar; // Star rating selector
+    private Spinner spinnerRestaurant; // Dropdown to select restaurant
+    private TextView tvSelectedDate; // Display selected visit date
+    private Button btnSelectDate, btnSelectImages, btnSubmit; // Action buttons
+    private ImageView ivPreview1, ivPreview2, ivPreview3; // Preview images
+    
+    // Data
+    
+    private List<Restaurant> restaurants; // List of all restaurants
+    private Restaurant selectedRestaurant; // Currently selected restaurant
+    private Date selectedDate; // Visit date chosen by user
+    private List<Uri> selectedImageUris; // Local URIs of selected images
+    private List<String> uploadedImageUrls; // URLs of images uploaded to Firebase Storage
+    
+    // Firebase instances
     
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseStorage storage;
     private ReviewService reviewService;
 
+    /**
+     * Create and initialize the fragment view
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -82,6 +104,9 @@ public class AddFragment extends Fragment {
         return view;
     }
     
+    /**
+     * Initialize all UI components and data structures
+     */
     private void initViews(View view) {
         etCaption = view.findViewById(R.id.et_caption);
         etDescription = view.findViewById(R.id.et_description);
@@ -104,15 +129,24 @@ public class AddFragment extends Fragment {
         updateDateDisplay();
     }
     
+    /**
+     * Setup click listeners for all interactive UI elements
+     */
+    
     private void setupListeners() {
+        // Date picker button
         btnSelectDate.setOnClickListener(v -> showDatePicker());
+        // Image selection button
         btnSelectImages.setOnClickListener(v -> selectImages());
+        // Submit review button
         btnSubmit.setOnClickListener(v -> submitReview());
         
+        // Restaurant spinner selection listener
         spinnerRestaurant.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position > 0) { // Skip the first "Select Restaurant" item
+                // Skip the first "Select Restaurant" item
+                if (position > 0) {
                     selectedRestaurant = restaurants.get(position - 1);
                 } else {
                     selectedRestaurant = null;
@@ -126,6 +160,9 @@ public class AddFragment extends Fragment {
         });
     }
     
+    /**
+     * Initialize Firebase services (Auth, Firestore, Storage)
+     */
     private void initializeFirebase() {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -133,6 +170,9 @@ public class AddFragment extends Fragment {
         reviewService = new ReviewService();
     }
     
+    /**
+     * Load all restaurants from Firestore for the dropdown selector
+     */
     private void loadRestaurants() {
         db.collection("restaurants")
             .get()
@@ -153,6 +193,9 @@ public class AddFragment extends Fragment {
             });
     }
     
+    /**
+     * Populate the restaurant spinner with loaded data
+     */
     private void setupRestaurantSpinner() {
         List<String> restaurantNames = new ArrayList<>();
         restaurantNames.add("Select Restaurant");
@@ -167,6 +210,9 @@ public class AddFragment extends Fragment {
         spinnerRestaurant.setAdapter(adapter);
     }
     
+    /**
+     * Display date picker dialog for selecting visit date
+     */
     private void showDatePicker() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(selectedDate);
@@ -186,11 +232,17 @@ public class AddFragment extends Fragment {
         datePickerDialog.show();
     }
     
+    /**
+     * Update the date display text with selected date
+     */
     private void updateDateDisplay() {
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
         tvSelectedDate.setText(sdf.format(selectedDate));
     }
     
+    /**
+     * Launch system image picker to select up to 3 images
+     */
     private void selectImages() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
@@ -198,6 +250,9 @@ public class AddFragment extends Fragment {
         startActivityForResult(Intent.createChooser(intent, "Select Images"), PICK_IMAGE_REQUEST);
     }
     
+    /**
+     * Handle result from image picker activity
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -221,6 +276,9 @@ public class AddFragment extends Fragment {
         }
     }
     
+    /**
+     * Update image preview displays with selected images
+     */
     private void updateImagePreviews() {
         // Clear all previews first
         ivPreview1.setImageDrawable(null);
@@ -239,6 +297,9 @@ public class AddFragment extends Fragment {
         }
     }
     
+    /**
+     * Validate input and start review submission process
+     */
     private void submitReview() {
         if (!validateInput()) {
             return;
@@ -247,11 +308,17 @@ public class AddFragment extends Fragment {
         btnSubmit.setEnabled(false);
         btnSubmit.setText("Submitting...");
         
-        // Upload images first
+        // Upload images first, then create review
         uploadImagesAndCreateReview();
     }
     
+    /**
+     * Validate all required input fields
+     * @return true if all inputs are valid, false otherwise
+     */
+    
     private boolean validateInput() {
+        // Check caption
         if (TextUtils.isEmpty(etCaption.getText().toString().trim())) {
             Toast.makeText(getContext(), "Please enter a caption", Toast.LENGTH_SHORT).show();
             return false;
@@ -275,6 +342,9 @@ public class AddFragment extends Fragment {
         return true;
     }
     
+    /**
+     * Upload selected images to Firebase Storage, then create review
+     */
     private void uploadImagesAndCreateReview() {
         if (selectedImageUris.isEmpty()) {
             createReview(new ArrayList<>());
@@ -285,6 +355,10 @@ public class AddFragment extends Fragment {
         uploadNextImage(0);
     }
     
+    /**
+     * Recursively upload images one by one
+     * @param index Current image index to upload
+     */
     private void uploadNextImage(int index) {
         if (index >= selectedImageUris.size()) {
             createReview(uploadedImageUrls);
@@ -319,6 +393,10 @@ public class AddFragment extends Fragment {
         }
     }
     
+    /**
+     * Create review object and save to Firestore
+     * @param imageUrls List of uploaded image URLs from Firebase Storage
+     */
     private void createReview(List<String> imageUrls) {
         String userId = mAuth.getCurrentUser().getUid();
         String userName = mAuth.getCurrentUser().getDisplayName();
@@ -330,11 +408,11 @@ public class AddFragment extends Fragment {
         String description = etDescription.getText().toString().trim();
         float rating = ratingBar.getRating();
         
-        // Calculate accuracy percent (you can modify this logic as needed)
-        double accuracyPercent = 100.0; // Default to 100%
+        // Calculate accuracy percent - default to 100% for new reviews
+        double accuracyPercent = 100.0;
         
-        // Determine first image type
-        String firstImageType = "SQUARE"; // Default
+        // Determine first image type (SQUARE/PORTRAIT/HORIZONTAL)
+        String firstImageType = "SQUARE"; // Default type
         if (!imageUrls.isEmpty()) {
             // You can implement logic to determine image orientation
             // For now, defaulting to SQUARE
@@ -387,6 +465,9 @@ public class AddFragment extends Fragment {
         });
     }
     
+    /**
+     * Clear all form inputs and reset to default state
+     */
     private void clearForm() {
         etCaption.setText("");
         etDescription.setText("");
@@ -399,6 +480,9 @@ public class AddFragment extends Fragment {
         updateImagePreviews();
     }
     
+    /**
+     * Reset submit button to enabled state with original text
+     */
     private void resetSubmitButton() {
         btnSubmit.setEnabled(true);
         btnSubmit.setText("Submit Review");
