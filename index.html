@@ -2,10 +2,10 @@
 <html lang="zh">
 <head>
   <meta charset="utf-8" />
-  <title>墨尔本 CBD 餐厅定位 - Maps JS + Places</title>
+  <title>Mel CBD Restaurant - Maps JS + Places</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    /* 页面布局 */
+    /* layout */
     html, body { height: 100%; margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; }
     .app { display: grid; grid-template-columns: 380px 1fr; height: 100%; }
     .sidebar {
@@ -48,22 +48,22 @@
     .cbd-badge { position: absolute; left: 12px; top: 12px; background:#111827; color:#fff; font-size:12px; padding:6px 8px; border-radius:12px;}
     .footnote { font-size: 11px; color:#6b7280; }
   </style>
-  <!-- 用你的 API Key 替换 YOUR_API_KEY；注意 libraries=places & callback=initMap & v=weekly -->
+  <!-- Use API Key replace YOUR_API_KEY；note: libraries=places & callback=initMap & v=weekly -->
   <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&v=weekly&callback=initMap" async defer></script>
 </head>
 <body>
   <div class="app">
     <aside class="sidebar">
       <div>
-        <h2 style="margin:0 0 6px;">墨尔本 CBD 餐厅</h2>
-        <div class="hint">基于 Google Maps JS + Places（前端纯静态页面）</div>
+        <h2 style="margin:0 0 6px;">Mel CBD Resturant</h2>
+        <div class="hint">based on Google Maps JS + Places（frontend page）</div>
       </div>
 
       <div class="filters">
         <div>
-          <label for="minRating">评分下限</label>
+          <label for="minRating">Lower limit of rating</label>
           <select id="minRating">
-            <option value="0">不限</option>
+            <option value="0">No limit</option>
             <option value="3.5">≥ 3.5</option>
             <option value="4.0" selected>≥ 4.0</option>
             <option value="4.5">≥ 4.5</option>
@@ -71,14 +71,14 @@
         </div>
         <div style="display:flex; align-items:flex-end; gap:8px;">
           <label style="display:flex; align-items:center; gap:6px; margin-bottom: 0;">
-            <input id="onlyOpen" type="checkbox" checked /> 只看“营业中”
+            <input id="onlyOpen" type="checkbox" checked /> Only view "Open for Business"
           </label>
         </div>
       </div>
 
       <div class="toolbar">
-        <button id="btnSearch">在 CBD 搜餐厅</button>
-        <button class="secondary" id="btnClear">清除标记</button>
+        <button id="btnSearch">Search for restaurants in the CBD</button>
+        <button class="secondary" id="btnClear">Clear markers</button>
       </div>
 
       <div class="results" id="results"></div>
@@ -89,13 +89,13 @@
       </div>
 
       <div class="footnote">
-        小贴士：点击列表或地图标记可看详情（网站、电话、营业时间等）。
+        Tip: Click on the list or map markers to see details (website, phone number, business hours, etc.).
       </div>
     </aside>
 
     <main class="map">
       <div id="map"></div>
-      <div class="cbd-badge">区域：Melbourne CBD（Hoddle Grid）</div>
+      <div class="cbd-badge">area：Melbourne CBD（Hoddle Grid）</div>
       <div class="details" id="details"></div>
     </main>
   </div>
@@ -108,8 +108,8 @@
     const resultsEl = document.getElementById('results');
     const detailsEl = document.getElementById('details');
 
-    // 粗略圈定 CBD（Hoddle Grid）边界，便于限制搜索范围
-    // 你也可以用更精确的 polygon；这里用 bounds 即可。
+    // Roughly delineate the boundaries of the CBD (Hoddle Grid) to help limit the search area.
+    // You can also use a more precise polygon; here, you can use bounds.
     const CBD_BOUNDS = new google.maps.LatLngBounds(
       new google.maps.LatLng(-37.8265, 144.9515), // SW
       new google.maps.LatLng(-37.8060, 144.9755)  // NE
@@ -120,13 +120,13 @@
       map = new google.maps.Map(document.getElementById('map'), {
         center: CBD_CENTER,
         zoom: 15,
-        mapId: 'DEMO_MAP_ID' // 可选：如果你创建了 MapID，可替换
+        mapId: 'DEMO_MAP_ID' // Optional: If you created a MapID, you can replace it.
       });
       map.fitBounds(CBD_BOUNDS);
       placesService = new google.maps.places.PlacesService(map);
       infoWindow = new google.maps.InfoWindow();
 
-      // 画出 CBD 边界的可视化框（仅作提示，非必须）
+      // Draw a visual outline of the CBD boundary (this is just a hint, not required).
       new google.maps.Rectangle({
         bounds: CBD_BOUNDS,
         map,
@@ -142,33 +142,33 @@
       document.getElementById('btnNext').addEventListener('click', () => pagination.next && pagination.next());
       document.getElementById('btnPrev').addEventListener('click', () => pagination.prev && pagination.prev());
 
-      // 初次加载自动搜一遍
+      // Automatically search once on first load
       doSearch();
     }
 
     function doSearch() {
       clearMarkers();
-      resultsEl.innerHTML = '正在搜索…';
+      resultsEl.innerHTML = 'Searching...';
 
       const minRating = parseFloat(document.getElementById('minRating').value || '0');
       const onlyOpen = document.getElementById('onlyOpen').checked;
 
-      // Nearby Search（基于半径 + 类型），再结合 bounds 做视觉限制
+      // Nearby Search(Based on radius + type), combined with bounds for visual constraints.
       const request = {
         location: CBD_CENTER,
-        radius: 900,               // 900 米覆盖大部分 Hoddle Grid
+        radius: 900,               // 900 meters covers most of Hoddle Grid
         type: 'restaurant',
         openNow: onlyOpen || undefined
       };
 
       placesService.nearbySearch(request, (results, status, pag) => {
         if (status !== google.maps.places.PlacesServiceStatus.OK || !results) {
-          resultsEl.innerHTML = '未找到结果或出错。';
+          resultsEl.innerHTML = 'No results found or an error occurred.';
           setPagination(null, null);
           return;
         }
 
-        // 过滤在 CBD_BOUNDS 内 + 评分（若设定了下限）
+        // Filter within CBD_BOUNDS + rating (if a lower limit is set)
         const filtered = results.filter(r => {
           const inCBD = CBD_BOUNDS.contains(r.geometry?.location);
           const ratingOK = !minRating || (r.rating || 0) >= minRating;
@@ -179,7 +179,7 @@
         renderResults(filtered);
         addMarkers(filtered);
 
-        // 处理分页
+        // Pagination handling
         setPagination(
           pag?.hasPrevPage ? () => { pag.previousPage(); } : null,
           pag?.hasNextPage ? () => { pag.nextPage(); } : null
@@ -229,7 +229,7 @@
 
     function renderResults(places) {
       if (!places.length) {
-        resultsEl.innerHTML = '没有符合条件的餐厅。请放宽筛选。';
+        resultsEl.innerHTML = 'No restaurants meet the criteria. Please broaden your search.';
         return;
       }
       resultsEl.innerHTML = '';
@@ -237,16 +237,16 @@
         const div = document.createElement('div');
         div.className = 'card';
         div.innerHTML = `
-          <div class="title">${idx + 1}. ${escapeHtml(p.name || '未命名')}</div>
+          <div class="title">${idx + 1}. ${escapeHtml(p.name || 'Unnamed')}</div>
           <div class="meta">
-            <span class="badge">评分：${p.rating ?? '—'}</span>
-            <span class="badge">评论数：${p.user_ratings_total ?? '—'}</span>
-            ${p.price_level != null ? `<span class="badge">价位：${'💲'.repeat(p.price_level + 1)}</span>` : ''}
+            <span class="badge">score：${p.rating ?? '—'}</span>
+            <span class="badge">Number of comments：${p.user_ratings_total ?? '—'}</span>
+            ${p.price_level != null ? `<span class="badge">Price range：${'💲'.repeat(p.price_level + 1)}</span>` : ''}
           </div>
           <div class="addr">${escapeHtml(p.vicinity || p.formatted_address || '')}</div>
         `;
         div.addEventListener('click', () => {
-          // 找到对应 marker
+          // Find the corresponding marker
           const marker = markers[idx];
           selectPlace(p, marker);
         });
@@ -260,7 +260,7 @@
         infoWindow.setContent(`<div style="font-weight:600;">${escapeHtml(place.name || '')}</div><div style="font-size:12px;color:#4b5563;">${escapeHtml(place.vicinity || '')}</div>`);
         infoWindow.open(map, marker);
       }
-      // 拉详细信息
+      // Pull for detailed information
       if (place.place_id) {
         placesService.getDetails({
           placeId: place.place_id,
@@ -269,7 +269,7 @@
           if (status === google.maps.places.PlacesServiceStatus.OK && details) {
             renderDetails(details);
           } else {
-            // 如果详情失败也至少显示基础信息
+            // If details fail, at least basic information should be displayed.
             renderDetails({
               name: place.name,
               formatted_address: place.vicinity || place.formatted_address,
@@ -288,13 +288,13 @@
       detailsEl.innerHTML = `
         ${photoUrl ? `<img src="${photoUrl}" alt="photo" style="width:100%;height:auto;border-radius:10px;margin-bottom:8px;" />` : ''}
         <div class="title">${escapeHtml(d.name || '—')}</div>
-        <div class="row"><b>地址：</b>${escapeHtml(d.formatted_address || '—')}</div>
-        <div class="row"><b>电话：</b>${escapeHtml(d.international_phone_number || '—')}</div>
-        <div class="row"><b>评分：</b>${d.rating ?? '—'} &nbsp;&nbsp; <b>价位：</b>${d.price_level != null ? '💲'.repeat(d.price_level + 1) : '—'}</div>
-        <div class="row"><b>营业时间：</b><div style="margin-top:4px;">${opening}</div></div>
-        <div class="row"><b>链接：</b>
-          ${(d.website ? `<a href="${d.website}" target="_blank" rel="noopener">官网</a>` : '—')}
-          ${(d.url ? ` &nbsp;|&nbsp; <a href="${d.url}" target="_blank" rel="noopener">在 Google Maps 打开</a>` : '')}
+        <div class="row"><b>ADD：</b>${escapeHtml(d.formatted_address || '—')}</div>
+        <div class="row"><b>TEL：</b>${escapeHtml(d.international_phone_number || '—')}</div>
+        <div class="row"><b>RATING：</b>${d.rating ?? '—'} &nbsp;&nbsp; <b>价位：</b>${d.price_level != null ? '💲'.repeat(d.price_level + 1) : '—'}</div>
+        <div class="row"><b>OPERATING TIME：</b><div style="margin-top:4px;">${opening}</div></div>
+        <div class="row"><b>LINK：</b>
+          ${(d.website ? `<a href="${d.website}" target="_blank" rel="noopener">WEB</a>` : '—')}
+          ${(d.url ? ` &nbsp;|&nbsp; <a href="${d.url}" target="_blank" rel="noopener">open in Google Maps </a>` : '')}
         </div>
       `;
     }
@@ -305,3 +305,4 @@
   </script>
 </body>
 </html>
+
