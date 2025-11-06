@@ -20,15 +20,15 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         
-        // Load API keys from local.properties or environment
-        val localProperties = Properties()
-        val localPropsFile = rootProject.file("local.properties")
-        if (localPropsFile.exists()) {
-            localPropsFile.inputStream().use { localProperties.load(it) }
+        // Load API keys from config.properties
+        val configProperties = Properties()
+        val configPropsFile = file("src/main/assets/config.properties")
+        if (configPropsFile.exists()) {
+            configPropsFile.inputStream().use { configProperties.load(it) }
         }
         
         manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = 
-            localProperties.getProperty("GOOGLE_MAPS_API_KEY") ?: ""
+            configProperties.getProperty("GOOGLE_MAPS_KEY") ?: ""
     }
 
     buildTypes {
